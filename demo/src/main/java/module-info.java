@@ -4,6 +4,6 @@ module org.example.demo {
 
     requires org.kordamp.bootstrapfx.core;
 
-    opens org.example.demo to javafx.fxml;
-    exports org.example.demo;
+    opens org.example.app to javafx.fxml;
+    exports org.example.app;
 }
