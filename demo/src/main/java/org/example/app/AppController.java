@@ -17,7 +17,7 @@ public class AppController {
     }
 
     @FXML
-    protected void fondoCuadriculado() throws IOException {
+    protected void fondoCuadriculado() {
         Image image = new Image("C:\\Users\\jerem\\OneDrive\\Documents\\Cosas\\Scripts Java\\Proyecto-PSEint\\demo\\src\\main\\resources\\org\\example\\app\\fondoCuadriculado.jpg");
         BackgroundSize backgroundSize = new BackgroundSize(100, 100, true, true, true, false);
         BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, backgroundSize);
