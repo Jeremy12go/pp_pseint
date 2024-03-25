@@ -70,16 +70,13 @@ public class AppController {
 
     @FXML
     protected void fondoCuadriculado() {
-        Image image = new Image("C:\\Users\\Renatto\\IdeaProjects\\pp_pseint\\demo\\src\\main\\resources\\org\\example\\app\\fondoCuadriculado.jpg");
+        Image image = new Image("C:\\Users\\jerem\\OneDrive\\Documents\\Cosas\\Scripts Java\\Proyecto-PSEint\\demo\\src\\main\\resources\\org\\example\\app\\fondoCuadriculado.jpg");
         BackgroundSize backgroundSize = new BackgroundSize(100, 100, true, true, true, false);
         BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, backgroundSize);
         Background background = new Background(backgroundImage);
         panel_Diagrama.setBackground(background);
         panel_Diagrama.setMinSize(740, 1500);
     }
-
-
-
     public void ajustar_ScrollPane(double ancho, double largo){
         panel_contenedor.setMinSize(ancho,largo);
     }
@@ -106,6 +103,4 @@ public class AppController {
             });
         }
     }
-
-
 }
