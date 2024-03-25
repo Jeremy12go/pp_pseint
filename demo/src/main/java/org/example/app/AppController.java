@@ -20,6 +20,7 @@ import java.util.Objects;
 import javafx.scene.shape.ArcType;
 import javafx.scene.input.ClipboardContent;
 import java.math.*;
+import javafx.scene.image.ImageView;
 
 public class AppController {
     @FXML
@@ -38,14 +39,14 @@ public class AppController {
     public void initialize() throws IOException {
         fondoCuadriculado(740,1500);
         figurasInicio_fin();
-        fondoCuadriculado();
-        Image image1 = new Image("C:\\Users\\Renatto\\IdeaProjects\\pp_pseint\\demo\\src\\main\\resources\\org\\example\\app\\diagrama_1.png");
+
+        Image image1 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("diagrama_1.png")));
         diagrama_1.setImage(image1);
-        Image image2 = new Image("C:\\Users\\Renatto\\IdeaProjects\\pp_pseint\\demo\\src\\main\\resources\\org\\example\\app\\diagrama_2.png");
+        Image image2 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("diagrama_2.png")));
         diagrama_2.setImage(image2);
-        Image image3 = new Image("C:\\Users\\Renatto\\IdeaProjects\\pp_pseint\\demo\\src\\main\\resources\\org\\example\\app\\diagrama_3.png");
+        Image image3 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("diagrama_3.png")));
         diagrama_3.setImage(image3);
-        Image image4 = new Image("C:\\Users\\Renatto\\IdeaProjects\\pp_pseint\\demo\\src\\main\\resources\\org\\example\\app\\diagrama_4.png");
+        Image image4 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("diagrama_4.png")));
         diagrama_4.setImage(image4);
     }
 
