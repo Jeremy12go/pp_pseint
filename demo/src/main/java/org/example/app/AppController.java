@@ -44,17 +44,18 @@ public class AppController {
     private void onMousePressed(MouseEvent event) {
         initialX = event.getSceneX();
         initialY = event.getSceneY();
+
     }
 
     @FXML
     private void onMouseDragged(MouseEvent event) {
-
         double deltaX = event.getSceneX() - initialX;
         double deltaY = event.getSceneY() - initialY;
 
-        //solucionar
-        diagrama_1.setLayoutX(diagrama_1.getLayoutX() + deltaX);
-        diagrama_1.setLayoutY(diagrama_1.getLayoutY() + deltaY);
+        ImageView sourceDiagram = (ImageView) event.getSource();
+        //ImageView copyDiagram = new ImageView(sourceDiagram.getImage());
+        sourceDiagram.setLayoutX(sourceDiagram.getLayoutX() + deltaX);
+        sourceDiagram.setLayoutY(sourceDiagram.getLayoutY() + deltaY);
 
         initialX = event.getSceneX();
         initialY = event.getSceneY();
