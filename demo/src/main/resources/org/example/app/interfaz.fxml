@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.app.AppController">
    <children>
       <BorderPane prefHeight="600.0" prefWidth="900.0">
          <center>
             <Pane prefHeight="540.0" prefWidth="760.0" BorderPane.alignment="CENTER">
                <children>
-                  <ScrollPane fx:id="panel_contenedor" fitToWidth="true" fitToHeight="true" prefHeight="540.0" prefWidth="760.0">
+                  <ScrollPane fx:id="panel_contenedor" fitToHeight="true" fitToWidth="true" prefHeight="540.0" prefWidth="760.0">
                     <content>
                       <AnchorPane fx:id="panel_Diagrama" minHeight="0.0" minWidth="0.0" prefHeight="540.0" prefWidth="740.0" />
                     </content>
@@ -29,7 +27,8 @@
          <left>
             <Pane prefHeight="540.0" prefWidth="140.0" BorderPane.alignment="CENTER">
                <children>
-                  <Pane prefHeight="540.0" prefWidth="140.0" />
+                  <Pane prefHeight="540.0" prefWidth="140.0">
+                  </Pane>
                </children>
             </Pane>
          </left>

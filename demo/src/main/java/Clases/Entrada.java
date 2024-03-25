@@ -2,8 +2,8 @@ package Clases;
 
 public class Entrada extends Figura{
 
-    public Entrada(String contenido, Posicion posicion, Punto punto_conexion) {
-        super(contenido, posicion, punto_conexion);
+    public Entrada(String contenido, Vertice vertice_direccion, Vertice vertice_conexion, Arista dimension) {
+        super(contenido, vertice_direccion, vertice_conexion, dimension);
     }
     public void leer(){}
 }

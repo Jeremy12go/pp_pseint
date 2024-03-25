@@ -19,9 +19,9 @@ public class App extends Application {
         Parent root = fxmlLoader.load();
         AppController appController = fxmlLoader.getController();
 
-        //Dimensiones panel inicial
+        //Dimensiones panel contenedor inicial
         double initialWidth = 740;
-        double initialHeight = 1500;
+        double initialHeight = 540;
         appController.ajustar_ScrollPane(initialWidth, initialHeight);
 
         Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("Icono_PP_white.png")));
@@ -32,12 +32,13 @@ public class App extends Application {
                 double screenWidth = screenBounds.getWidth();
                 double screenHeight = screenBounds.getHeight();
                 appController.ajustar_ScrollPane(screenWidth, screenHeight);
-                appController.rellenarImagen();
+                //Reajuste de las dimensiones luego de cambiar las dimensiones de la ventana
+                appController.fondoCuadriculado(screenWidth-110, screenHeight+1200);
             } else {
-                appController.ajustar_ScrollPane(740, 1500);
+                appController.ajustar_ScrollPane(initialWidth, initialHeight);
+                appController.fondoCuadriculado(initialWidth, initialHeight+1000);
             }
         });
-
         stage.getIcons().add(image);
         stage.setTitle("DiagramFlex");
         stage.setScene(new Scene(root));

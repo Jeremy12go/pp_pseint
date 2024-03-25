@@ -1,20 +1,20 @@
 package Clases;
 
 public class Conector {
-    public Punto punto_inicial;
-    public Punto punto_nuevaFigura;
-    public Punto punto_final;
+    public Vertice vertice_inicial;
+    public Vertice vertice_nuevaFigura;
+    public Vertice vertice_final;
 
-    public Conector(Punto punto_inicial, Punto punto_nuevaFigura, Punto punto_final) {
-        this.punto_inicial = punto_inicial;
-        this.punto_nuevaFigura = punto_nuevaFigura;
-        this.punto_final = punto_final;
+    public Conector(Vertice vertice_inicial, Vertice vertice_nuevaFigura, Vertice vertice_final) {
+        this.vertice_inicial = vertice_inicial;
+        this.vertice_nuevaFigura = vertice_nuevaFigura;
+        this.vertice_final = vertice_final;
     }
 
-    public void reconexion(Punto punto_inicial, Punto punto_nuevaFigura, Punto punto_final){
+    public void reconexion(Vertice vertice_inicial, Vertice vertice_nuevaFigura, Vertice vertice_final){
 
     }
-    public void dibujar(Punto punto_inicial, Punto punto_final){
+    public void dibujar(Vertice vertice_inicial, Vertice vertice_final){
 
     }
 }
