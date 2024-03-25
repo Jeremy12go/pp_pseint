@@ -14,6 +14,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import java.io.IOException;
+import javafx.scene.input.MouseEvent;
 import java.util.ArrayList;
 import java.util.Objects;
 import javafx.scene.shape.ArcType;
@@ -29,10 +30,62 @@ public class AppController {
     Button btn_entrada;
 
     @FXML
+    private double initialX;
+    @FXML
+    private double initialY;
+
+    @FXML
     public void initialize() throws IOException {
         fondoCuadriculado(740,1500);
         figurasInicio_fin();
+        fondoCuadriculado();
+        Image image1 = new Image("C:\\Users\\Renatto\\IdeaProjects\\pp_pseint\\demo\\src\\main\\resources\\org\\example\\app\\diagrama_1.png");
+        diagrama_1.setImage(image1);
+        Image image2 = new Image("C:\\Users\\Renatto\\IdeaProjects\\pp_pseint\\demo\\src\\main\\resources\\org\\example\\app\\diagrama_2.png");
+        diagrama_2.setImage(image2);
+        Image image3 = new Image("C:\\Users\\Renatto\\IdeaProjects\\pp_pseint\\demo\\src\\main\\resources\\org\\example\\app\\diagrama_3.png");
+        diagrama_3.setImage(image3);
+        Image image4 = new Image("C:\\Users\\Renatto\\IdeaProjects\\pp_pseint\\demo\\src\\main\\resources\\org\\example\\app\\diagrama_4.png");
+        diagrama_4.setImage(image4);
     }
+
+    //--------------------------------------------------
+    @FXML
+    private ImageView diagrama_1;
+    @FXML
+    private ImageView diagrama_2;
+    @FXML
+    private ImageView diagrama_3;
+    @FXML
+    private ImageView diagrama_4;
+
+    @FXML
+    private void onMousePressed(MouseEvent event) {
+        initialX = event.getSceneX();
+        initialY = event.getSceneY();
+
+    }
+
+    @FXML
+    private void onMouseDragged(MouseEvent event) {
+        double deltaX = event.getSceneX() - initialX;
+        double deltaY = event.getSceneY() - initialY;
+
+        ImageView sourceDiagram = (ImageView) event.getSource();
+        //ImageView copyDiagram = new ImageView(sourceDiagram.getImage());
+        sourceDiagram.setLayoutX(sourceDiagram.getLayoutX() + deltaX);
+        sourceDiagram.setLayoutY(sourceDiagram.getLayoutY() + deltaY);
+
+        initialX = event.getSceneX();
+        initialY = event.getSceneY();
+    }
+
+    @FXML
+    private void onMouseReleased(MouseEvent event) {
+        // Agregar accciones adicionales
+    }
+
+    //--------------------------------------------------
 
     @FXML
     protected void fondoCuadriculado(double width, double height) {
