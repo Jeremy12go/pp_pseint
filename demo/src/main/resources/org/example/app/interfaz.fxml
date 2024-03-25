@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
@@ -41,36 +39,3 @@
             </Pane>
          </left>
       </BorderPane>
-
-   </children>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.app.AppController">
-   <TabPane prefHeight="600.0" prefWidth="900.0">
-      <Tab text="Pestaña 1">
-         <Pane prefHeight="540.0" prefWidth="140.0"/>
-      </Tab>
-      <Tab text="Pestaña 2">
-         <Pane prefHeight="540.0" prefWidth="140.0"/>
-      </Tab>
-   </TabPane>
-   <BorderPane prefHeight="600.0" prefWidth="900.0">
-      <center>
-         <Pane prefHeight="540.0" prefWidth="760.0" BorderPane.alignment="CENTER">
-            <ScrollPane fx:id="panel_contenedor" fitToHeight="true" fitToWidth="true" layoutY="-30.0" prefHeight="570.0"
-                        prefWidth="760.0">
-               <AnchorPane fx:id="panel_Diagrama" minHeight="0.0" minWidth="0.0" prefHeight="568.0"
-                           prefWidth="723.0"/>
-            </ScrollPane>
-         </Pane>
-      </center>
-      <top>
-         <Pane prefHeight="60.0" prefWidth="900.0" BorderPane.alignment="CENTER">
-            <Pane prefHeight="60.0" prefWidth="900.0"/>
-         </Pane>
-      </top>
-      <left>
-         <Pane prefHeight="540.0" prefWidth="140.0" BorderPane.alignment="CENTER">
-            <Pane prefHeight="540.0" prefWidth="140.0"/>
-         </Pane>
-      </left>
-   </BorderPane>
-</AnchorPane>
