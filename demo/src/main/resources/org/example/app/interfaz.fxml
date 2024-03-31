@@ -1,51 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.image.ImageView?>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.app.AppController">
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.app.AppController">
    <children>
       <Pane prefHeight="200.0" prefWidth="100.0" />
          <BorderPane prefHeight="600.0" prefWidth="900.0">
             <center>
                <Pane prefHeight="540.0" prefWidth="760.0" BorderPane.alignment="CENTER">
-                  <ScrollPane fx:id="panel_contenedor" fitToHeight="true" fitToWidth="true" layoutY="-30.0" prefHeight="570.0"
-                              prefWidth="760.0">
+                  <ScrollPane fx:id="panel_contenedor" fitToHeight="true" fitToWidth="true" layoutY="-30.0" prefHeight="570.0" prefWidth="760.0">
                      <content>
-                        <AnchorPane fx:id="panel_Diagrama" minHeight="0.0" minWidth="0.0" prefHeight="568.0"
-                                    prefWidth="723.0"/>
+                        <AnchorPane fx:id="panel_Diagrama" minHeight="0.0" minWidth="0.0" prefHeight="568.0" prefWidth="723.0" />
                      </content>
                   </ScrollPane>
                </Pane>
             </center>
             <top>
-               <Pane prefHeight="60.0" prefWidth="900.0" BorderPane.alignment="CENTER">
+               <Pane prefHeight="30.0" prefWidth="900.0" BorderPane.alignment="CENTER">
                   <children>
                      <TabPane prefHeight="600.0" prefWidth="900.0">
                         <Tab text="Pestaña 1">
-                           <Pane prefHeight="540.0" prefWidth="140.0"/>
+                           <Pane prefHeight="540.0" prefWidth="140.0" />
                         </Tab>
                         <Tab text="Pestaña 2">
-                           <Pane prefHeight="540.0" prefWidth="140.0"/>
+                           <Pane prefHeight="540.0" prefWidth="140.0" />
                         </Tab>
                      </TabPane>
                   </children>
                </Pane>
             </top>
             <left>
-               <Pane prefHeight="540.0" prefWidth="140.0" BorderPane.alignment="CENTER">
+               <Pane prefHeight="570.0" prefWidth="145.0" BorderPane.alignment="CENTER">
                   <children>
                      <Pane prefHeight="540.0" prefWidth="140.0">
                      </Pane>
-                     <Pane fx:id="PaneMenu" prefHeight="540.0" prefWidth="140.0" />
+                     <Pane fx:id="panel_menu" prefHeight="540.0" prefWidth="140.0" />
                   </children>
-                  <ImageView fx:id="diagrama_1" pickOnBounds="true" preserveRatio="true" fitWidth="140.0" fitHeight="240.0"  onMousePressed="#onMousePressed" onMouseDragged="#onMouseDragged" onMouseReleased="#onMouseReleased"/>
-                  <ImageView fx:id="diagrama_2" pickOnBounds="true" preserveRatio="true" fitWidth="140.0" fitHeight="240.0" layoutY="135.0" onMousePressed="#onMousePressed" onMouseDragged="#onMouseDragged" onMouseReleased="#onMouseReleased"/>
-                  <ImageView fx:id="diagrama_3" pickOnBounds="true" preserveRatio="true" fitWidth="140.0" fitHeight="240.0" layoutY="270.0" onMousePressed="#onMousePressed" onMouseDragged="#onMouseDragged" onMouseReleased="#onMouseReleased"/>
-                  <ImageView fx:id="diagrama_4" pickOnBounds="true" preserveRatio="true" fitWidth="140.0" fitHeight="240.0" layoutY="405.0" onMousePressed="#onMousePressed" onMouseDragged="#onMouseDragged" onMouseReleased="#onMouseReleased"/>
+                  <ImageView fx:id="figura_procesoE" fitHeight="240.0" fitWidth="140.0" layoutY="0.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="figura_proceso" fitHeight="240.0" fitWidth="140.0" layoutY="0.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="figura_entrada_salidaE" fitHeight="240.0" fitWidth="140.0" layoutY="135.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="figura_entrada_salida" fitHeight="240.0" fitWidth="140.0" layoutY="135.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="figura_condiconalE" fitHeight="240.0" fitWidth="140.0" layoutY="270.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="figura_condiconal" fitHeight="240.0" fitWidth="140.0" layoutY="270.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="figura_documentoE" fitHeight="240.0" fitWidth="140.0" layoutY="405.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="figura_documento" fitHeight="240.0" fitWidth="140.0" layoutY="405.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" pickOnBounds="true" preserveRatio="true" />
                </Pane>
             </left>
          </BorderPane>
