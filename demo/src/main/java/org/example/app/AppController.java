@@ -32,6 +32,8 @@ public class AppController {
     Pane panel_menu;
     @FXML
     Button btn_entrada;
+    @FXML
+    Pane basurero;
 
     @FXML
     private double initialX;
@@ -57,6 +59,8 @@ public class AppController {
     private ImageView figura_condiconalE;
     @FXML
     private ImageView figura_documentoE;
+    @FXML
+    private ImageView trash;
 
     @FXML
     public void initialize() throws IOException {
@@ -75,6 +79,11 @@ public class AppController {
         Image image4 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("figura_documento.png")));
         figura_documento.setImage(image4);
         figura_documentoE.setImage(image4);
+        Image image5 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("trash.png")));
+        trash.setImage(image5);
+
+
+
     }
 
     @FXML
@@ -84,6 +93,7 @@ public class AppController {
         ImageView sourceDiagram = (ImageView) event.getSource();
         originalX = sourceDiagram.getLayoutX();
         originalY = sourceDiagram.getLayoutY();
+        basurero.setVisible(true);
 
     }
     @FXML
@@ -169,6 +179,8 @@ public class AppController {
             double y = coordinates[1];
             dibujarFigura(x, y,sourceDiagram);
         }
+
+        basurero.setVisible(false);
     }
 
     private double[] obtenerCoordenadas(MouseEvent event) {
@@ -237,7 +249,7 @@ public class AppController {
 
         //curvas laterales
         gc.strokeArc(vertices.get(0).getX(), vertices.get(0).getY(), vertices.get(3).getX()+75,
-                 vertices.get(3).getY()-25, 90,180, ArcType.OPEN);
+                vertices.get(3).getY()-25, 90,180, ArcType.OPEN);
         gc.strokeArc(vertices.get(0).getX()+figura.getDimenciones().getAncho()-141, vertices.get(0).getY(),
                 vertices.get(3).getX()+75, vertices.get(3).getY()-25, 270,180, ArcType.OPEN);
 
@@ -285,7 +297,7 @@ public class AppController {
         //funcionalidad (En proceso)
         canvas_Finicio.setOnMouseClicked(event ->{
             //editar titulo
-                System.out.println("CLICK!");
+            System.out.println("CLICK!");
         });
         //Parametros figura Fin
         //establecer valores adecuados y centralizados
