@@ -1,5 +1,4 @@
 package org.example.app;
-
 import Clases.Diagrama;
 import Clases.Persistencia;
 import javafx.application.Application;
@@ -10,7 +9,6 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.util.Objects;
 
@@ -24,7 +22,7 @@ public class App extends Application {
         //Dimensiones panel contenedor inicial
         double initialWidth = 740;
         double initialHeight = 540;
-        appController.ajustar_ScrollPane(initialWidth, initialHeight);
+        appController.ajustar_Panes(initialWidth, initialHeight);
 
         Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("Icono_PP_white.png")));
 
@@ -33,11 +31,11 @@ public class App extends Application {
                 Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
                 double screenWidth = screenBounds.getWidth();
                 double screenHeight = screenBounds.getHeight();
-                appController.ajustar_ScrollPane(screenWidth, screenHeight);
+                appController.ajustar_Panes(screenWidth, screenHeight);
                 //Reajuste de las dimensiones luego de cambiar las dimensiones de la ventana
                 appController.fondoCuadriculado(screenWidth-110, screenHeight+1200);
             } else {
-                appController.ajustar_ScrollPane(initialWidth, initialHeight);
+                appController.ajustar_Panes(initialWidth, initialHeight);
                 appController.fondoCuadriculado(initialWidth, initialHeight+1000);
             }
         });
