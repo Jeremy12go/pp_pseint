@@ -1,6 +1,7 @@
 package org.example.app;
 import Clases.*;
 import javafx.fxml.FXML;
+import javafx.geometry.Bounds;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
@@ -29,36 +30,61 @@ public class AppController {
     @FXML
     TabPane panel_ventanas;
     @FXML
+    Pane panel_menu;
+    @FXML
     Button btn_entrada;
+    @FXML
+    Pane basurero;
     @FXML
     private double initialX;
     @FXML
     private double initialY;
+    @FXML
+    private double originalX;
+    @FXML
+    private double originalY;
+    @FXML
+    private ImageView figura_proceso;
+    @FXML
+    private ImageView figura_entrada_salida;
+    @FXML
+    private ImageView figura_condiconal;
+    @FXML
+    private ImageView figura_documento;
+    @FXML
+    private ImageView figura_procesoE;
+    @FXML
+    private ImageView figura_entrada_salidaE;
+    @FXML
+    private ImageView figura_condiconalE;
+    @FXML
+    private ImageView figura_documentoE;
+    @FXML
+    private ImageView trash;
 
     @FXML
     public void initialize() throws IOException {
         fondoCuadriculado(740,1500);
         figurasInicio_fin();
 
-        Image image1 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("diagrama_1.png")));
-        diagrama_1.setImage(image1);
-        Image image2 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("diagrama_2.png")));
-        diagrama_2.setImage(image2);
-        Image image3 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("diagrama_3.png")));
-        diagrama_3.setImage(image3);
-        Image image4 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("diagrama_4.png")));
-        diagrama_4.setImage(image4);
-    }
+        Image image1 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("figura_proceso.png")));
+        figura_proceso.setImage(image1);
+        figura_procesoE.setImage(image1);
+        Image image2 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("figura_entrada_salida.png")));
+        figura_entrada_salida.setImage(image2);
+        figura_entrada_salidaE.setImage(image2);
+        Image image3 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("figura_condiconal.png")));
+        figura_condiconal.setImage(image3);
+        figura_condiconalE.setImage(image3);
+        Image image4 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("figura_documento.png")));
+        figura_documento.setImage(image4);
+        figura_documentoE.setImage(image4);
+        Image image5 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("trash.png")));
+        trash.setImage(image5);
 
-    //--------------------------------------------------
-    @FXML
-    private ImageView diagrama_1;
-    @FXML
-    private ImageView diagrama_2;
-    @FXML
-    private ImageView diagrama_3;
-    @FXML
-    private ImageView diagrama_4;
+
+
+    }
 
     //parametros
     double tamañoTxt = 1;
@@ -76,29 +102,115 @@ public class AppController {
     private void onMousePressed(MouseEvent event) {
         initialX = event.getSceneX();
         initialY = event.getSceneY();
-
+        ImageView sourceDiagram = (ImageView) event.getSource();
+        originalX = sourceDiagram.getLayoutX();
+        originalY = sourceDiagram.getLayoutY();
+        basurero.setVisible(true);
     }
-
     @FXML
     private void onMouseDragged(MouseEvent event) {
-        double deltaX = event.getSceneX() - initialX;
-        double deltaY = event.getSceneY() - initialY;
-
         ImageView sourceDiagram = (ImageView) event.getSource();
-        //ImageView copyDiagram = new ImageView(sourceDiagram.getImage());
-        sourceDiagram.setLayoutX(sourceDiagram.getLayoutX() + deltaX);
-        sourceDiagram.setLayoutY(sourceDiagram.getLayoutY() + deltaY);
 
-        initialX = event.getSceneX();
-        initialY = event.getSceneY();
+        double mouseX = event.getSceneX();
+        double mouseY = event.getSceneY();
+
+        // Calcular la distancia que se ha movido el ratón desde la posición inicial de la imagen
+        double deltaX = mouseX - initialX;
+        double deltaY = mouseY - initialY;
+
+        // Calcular las nuevas coordenadas de la imagen
+        double newX = sourceDiagram.getLayoutX() + deltaX;
+        double newY = sourceDiagram.getLayoutY() + deltaY;
+
+        // Limitar las coordenadas dentro del Pane
+        Bounds paneBounds = panel_menu.getBoundsInLocal();
+        newY = clamp(newY, 0, paneBounds.getHeight());
+
+        // Limitar las coordenadas dentro del ScrollPane
+        Bounds scrollPaneBounds = panel_contenedor.getViewportBounds();
+        newX = clamp(newX, 0, scrollPaneBounds.getWidth() );
+        newY = clamp(newY, 0, scrollPaneBounds.getHeight());
+
+        // Establecer las nuevas coordenadas de la imagen
+        sourceDiagram.setLayoutX(newX);
+        sourceDiagram.setLayoutY(newY);
+
+        // Actualizar las coordenadas iniciales del ratón
+        initialX = mouseX;
+        initialY = mouseY;
+    }
+
+    private double clamp(double value, double min, double max) {
+        return Math.min(max, Math.max(min, value));
     }
 
     @FXML
     private void onMouseReleased(MouseEvent event) {
-        // Agregar accciones adicionales
+        // Devolver la imagen a su posición original
+        ImageView sourceDiagram = (ImageView) event.getSource();
+        sourceDiagram.setLayoutX(originalX);
+        sourceDiagram.setLayoutY(originalY);
+        // Verificar si la imagen que se soltó es figura_condicional
+        /*
+        if (sourceDiagram == figura_condiconal) {
+            // Obtener las coordenadas donde se soltó la imagen
+            // Obtener las coordenadas del evento con respecto al panel_Diagrama
+            double x = event.getSceneX() - panel_Diagrama.getLayoutX() - 210;
+            double y = event.getSceneY() - panel_Diagrama.getLayoutY() - 65;
+
+            // Dibujar el rombo en las coordenadas obtenidas
+            dibujo_condicional(x, y);
+        } else if (sourceDiagram == figura_documento) {
+            // Obtener las coordenadas donde se soltó la imagen
+            // Obtener las coordenadas del evento con respecto al panel_Diagrama
+            double x = event.getSceneX() - panel_Diagrama.getLayoutX() - 210;
+            double y = event.getSceneY() - panel_Diagrama.getLayoutY() - 65;
+
+            // Dibujar
+        }else if (sourceDiagram == figura_entrada_salida) {
+            // Obtener las coordenadas donde se soltó la imagen
+            // Obtener las coordenadas del evento con respecto al panel_Diagrama
+            double x = event.getSceneX() - panel_Diagrama.getLayoutX() - 210;
+            double y = event.getSceneY() - panel_Diagrama.getLayoutY() - 65;
+
+            // Dibujar
+        }else if (sourceDiagram == figura_proceso) {
+            // Obtener las coordenadas donde se soltó la imagen
+            // Obtener las coordenadas del evento con respecto al panel_Diagrama
+            double x = event.getSceneX() - panel_Diagrama.getLayoutX() - 210;
+            double y = event.getSceneY() - panel_Diagrama.getLayoutY() - 65;
+
+            // Dibujar
+        }
+        */
+        // Verificar la imagen soltada
+        if (sourceDiagram == figura_condiconal || sourceDiagram == figura_documento || sourceDiagram == figura_entrada_salida || sourceDiagram == figura_proceso) {
+            double[] coordinates = obtenerCoordenadas(event);
+            double x = coordinates[0];
+            double y = coordinates[1];
+            dibujarFigura(x, y,sourceDiagram);
+        }
+
+        basurero.setVisible(false);
     }
 
-    //--------------------------------------------------
+    private double[] obtenerCoordenadas(MouseEvent event) {
+        double x = event.getSceneX() - panel_Diagrama.getLayoutX() - 210;
+        double y = event.getSceneY() - panel_Diagrama.getLayoutY() - 65;
+        return new double[]{x, y};
+    }
+
+    private void dibujarFigura(double x, double y, ImageView sourceDiagram) {
+        if (figura_condiconal == sourceDiagram) {
+            dibujo_condicional(x, y);
+        } else if (figura_documento == sourceDiagram) {
+            // Dibujar la imagen de documento
+        } else if (figura_entrada_salida == sourceDiagram) {
+            // Dibujar la imagen de entrada/salida
+        } else if (figura_proceso == sourceDiagram) {
+            // Dibujar la imagen de proceso
+        }
+    }
 
     @FXML
     protected void fondoCuadriculado(double width, double height) {
@@ -113,9 +225,8 @@ public class AppController {
         panel_Diagrama.setMinSize(width, height);
     }
 
-    public void ajustar_Panes(double width, double height){
+    public void ajustar_ScrollPane(double width, double height){
         panel_contenedor.setMinSize(width, height);
-        panel_ventanas.setMinSize(width,height);
     }
 
     public ArrayList<Vertice> calcular_vertices(Figura figura){
@@ -291,8 +402,6 @@ public class AppController {
             //editar titulo
             System.out.println("CLICK!");
         });
-
-
         //Parametros figura Fin
         //establecer valores adecuados y centralizados
         Vertice p_Ffin_direccion = new Vertice(cx,cy);
@@ -339,31 +448,23 @@ public class AppController {
 
 
     }
+    public void dibujo_condicional(double x, double y){
+        double size = 110; // Tamaño del rombo
 
-    @FXML
-    private void onDragDetected() {
-        Dragboard dragboard = btn_entrada.startDragAndDrop(TransferMode.COPY);
-        ClipboardContent content = new ClipboardContent();
-        //Agregar figura que se arrastrara
-        content.putString("Figura");
-        dragboard.setContent(content);
+        Canvas canvas = new Canvas(size, size);
+        canvas.setLayoutX(x);
+        canvas.setLayoutY(y);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+
+        // Calcular los puntos del rombo
+        double[] xPoints = { size / 2, size, size / 2, 0 };
+        double[] yPoints = { 0, size / 2, size, size / 2 };
+
+        gc.setFill(Color.RED);
+        gc.fillPolygon(xPoints, yPoints, 4);
+        gc.setStroke(Color.BLACK);
+        gc.setLineWidth(2);
+        gc.strokePolygon(xPoints, yPoints, 4);
+        panel_Diagrama.getChildren().add(canvas);
     }
-    @FXML
-    private void onDragDropped(javafx.scene.input.DragEvent event) {
-        Dragboard db = event.getDragboard();
-        boolean success = false;
-
-        if (db.hasString()) {
-            String figura = db.getString();
-            if ("Figura".equals(figura)) {
-                //espacio para generar la figura
-
-                //panel_Diagrama.getChildren().add(circle);
-                success = true;
-            }
-        }
-        event.setDropCompleted(success);
-        event.consume();
-    }
-
 }
