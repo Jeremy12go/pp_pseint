@@ -1,12 +1,11 @@
 package org.example.app;
-import Clases.Arista;
-import Clases.Figura;
-import Clases.Vertice;
+import Clases.*;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
@@ -28,8 +27,9 @@ public class AppController {
     @FXML
     ScrollPane panel_contenedor;
     @FXML
+    TabPane panel_ventanas;
+    @FXML
     Button btn_entrada;
-
     @FXML
     private double initialX;
     @FXML
@@ -60,6 +60,18 @@ public class AppController {
     @FXML
     private ImageView diagrama_4;
 
+    //parametros
+    double tamañoTxt = 1;
+    double tamaño_Lbordes = 2;
+    double tamaño_Lfechas = 3.5;
+    double tamaño_Lconexiones = 0;
+    //colores
+    Color colorBordes = Color.web("#fc7c0c");
+    Color colorRelleno = Color.web("#242c3c");
+    Color colorTexto = Color.web("#ffffff");
+    Color colorFlecha = Color.web("#ffffff");
+
+    ArrayList<Conector> conexiones = new ArrayList<Conector>();
     @FXML
     private void onMousePressed(MouseEvent event) {
         initialX = event.getSceneX();
@@ -101,8 +113,9 @@ public class AppController {
         panel_Diagrama.setMinSize(width, height);
     }
 
-    public void ajustar_ScrollPane(double width, double height){
+    public void ajustar_Panes(double width, double height){
         panel_contenedor.setMinSize(width, height);
+        panel_ventanas.setMinSize(width,height);
     }
 
     public ArrayList<Vertice> calcular_vertices(Figura figura){
@@ -118,61 +131,152 @@ public class AppController {
         return vertices;
     }
 
+    public void dibujar_flecha(Canvas canvas, double origenX, double origenY, double angulo, double longitud){
+
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+
+        double pendiente = Math.tan(Math.toRadians(angulo));
+        double destinoX1_L1 = origenX + longitud * Math.cos(Math.toRadians(angulo));
+        double destinoY1_L1 = origenY + longitud * -Math.sin(Math.toRadians(angulo));
+
+        // Dibujar recta
+        gc.setLineWidth(3);
+        gc.strokeLine(origenX, origenY, destinoX1_L1, destinoY1_L1);
+
+        // Dibujar punta
+        //puntos
+        double destinoX1_L2 = destinoX1_L1 + 5 * Math.cos(Math.toRadians(angulo+90));
+        double destinoY1_L2 = destinoY1_L1 + 10 * -Math.sin(Math.toRadians(angulo+90));
+        double destinoX2_L1 = destinoX1_L1 + 10 * Math.cos(Math.toRadians(angulo));
+        double destinoY2_L1 = destinoY1_L1 + 10 * -Math.sin(Math.toRadians(angulo));
+        double destinoX2_L2 = destinoX1_L1 + 5 * Math.cos(Math.toRadians(angulo-90));
+        double destinoY2_L2 = destinoY1_L1 + 10 * -Math.sin(Math.toRadians(angulo-90));
+
+        //rectas
+        gc.setLineWidth(1);
+        gc.strokeLine(destinoX1_L1, destinoY1_L1, destinoX1_L2, destinoY1_L2);
+        gc.strokeLine(destinoX1_L2, destinoY1_L2, destinoX2_L1, destinoY2_L1);
+        gc.strokeLine(destinoX2_L1, destinoY2_L1, destinoX2_L2, destinoY2_L2);
+        gc.strokeLine(destinoX2_L2, destinoY2_L2, destinoX1_L1, destinoY1_L1);
+        //relleno
+        double[] xPoints = {destinoX1_L2, destinoX2_L1, destinoX2_L2};
+        double[] yPoints = {destinoY1_L2, destinoY2_L1, destinoY2_L2};
+        gc.fillPolygon(xPoints, yPoints, 3);
+    }
+
     public  void dibujo_rect_curvo(Canvas canvas, Figura figura){
 
         ArrayList<Vertice> vertices = calcular_vertices(figura);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
-        gc.setStroke(Color.BLACK);
-        gc.setLineWidth(1);
-        gc.strokeText(figura.getContenido(),vertices.get(0).getX()+figura.getDimenciones().getAncho()/2-60,
-                vertices.get(0).getY()+figura.getDimenciones().getAlto()/2-10, 190);
+        // Rellenar figura
+        gc.setFill(colorRelleno);
+        double angulo = -10;
+        double longitud = 10;
+        double destinoX_L2 = vertices.get(1).getX() + longitud * Math.cos(Math.toRadians(angulo));
+        double destinoY_L2 = vertices.get(1).getY()+2.5 + longitud * -Math.sin(Math.toRadians(angulo));
+        double destinoX_L3 = destinoX_L2-3 + longitud * Math.cos(Math.toRadians(angulo));
+        double destinoY_L3 = destinoY_L2+5 + longitud * -Math.sin(Math.toRadians(angulo));
+        double destinoX_L4 = destinoX_L3-15 + longitud * Math.cos(Math.toRadians(angulo));
+        double destinoY_L4 = destinoY_L3+7.5 + longitud * -Math.sin(Math.toRadians(angulo));
 
-        gc.setLineWidth(2.5);
-        gc.setStroke(Color.BLUE);
+        double destinoX_L7 = vertices.get(3).getX()-26 + longitud * Math.cos(Math.toRadians(-angulo));
+        double destinoY_L7 = vertices.get(3).getY()-2 + longitud * -Math.sin(Math.toRadians(-angulo));
+        double destinoX_L8 = destinoX_L7-14.5 + longitud * Math.cos(Math.toRadians(-angulo));
+        double destinoY_L8 = destinoY_L7-7 + longitud * -Math.sin(Math.toRadians(-angulo));
+        double destinoX_L9 = destinoX_L8-3.5 + longitud * Math.cos(Math.toRadians(-angulo));
+        double destinoY_L9 = destinoY_L8-7 + longitud * -Math.sin(Math.toRadians(-angulo));
+
+        double[] xPoints = {vertices.get(0).getX()+20,vertices.get(1).getX()-18.5,destinoX_L2-18.5,destinoX_L3-18.5,
+                destinoX_L4-18.5,vertices.get(2).getX()-18.5,vertices.get(3).getX()+15,destinoX_L7+20,destinoX_L8+20,
+                destinoX_L9+20};
+
+        double[] yPoints = {vertices.get(0).getY(), vertices.get(1).getY(), destinoY_L2, destinoY_L3, destinoY_L4,
+                vertices.get(2).getY(), vertices.get(3).getY(),destinoY_L7,destinoY_L8,destinoY_L9};
+
+        gc.fillPolygon(xPoints, yPoints, xPoints.length);
+
         //lineas Horizontales
-        gc.strokeLine(vertices.get(0).getX()+45, vertices.get(0).getY(), vertices.get(1).getX()-45, vertices.get(1).getY());
-        gc.strokeLine(vertices.get(2).getX()-45, vertices.get(2).getY(), vertices.get(3).getX()+45, vertices.get(3).getY());
-
+        gc.setLineWidth(tamaño_Lbordes);
+        gc.setStroke(colorBordes);
+        gc.strokeLine(vertices.get(0).getX()+20, vertices.get(0).getY(), vertices.get(1).getX()-20, vertices.get(1).getY());
+        gc.strokeLine(vertices.get(2).getX()-20, vertices.get(2).getY(), vertices.get(3).getX()+20, vertices.get(3).getY());
         //curvas laterales
-        gc.strokeArc(vertices.get(0).getX(), vertices.get(0).getY(), vertices.get(3).getX()+75,
-                 vertices.get(3).getY()-25, 90,180, ArcType.OPEN);
-        gc.strokeArc(vertices.get(0).getX()+figura.getDimenciones().getAncho()-141, vertices.get(0).getY(),
-                vertices.get(3).getX()+75, vertices.get(3).getY()-25, 270,180, ArcType.OPEN);
+        gc.strokeArc(vertices.get(0).getX(), vertices.get(0).getY(), vertices.get(3).getX()+12,
+                vertices.get(3).getY()-25, 90,180, ArcType.OPEN);
+        gc.strokeArc(vertices.get(0).getX()+figura.getDimenciones().getAncho()-80, vertices.get(0).getY(),
+                vertices.get(3).getX()+12, vertices.get(3).getY()-25, 270,180, ArcType.OPEN);
 
-        //lineas Verticales
-        //gc.strokeLine(vertices.get(1).getX(), vertices.get(1).getY(), vertices.get(2).getX(), vertices.get(2).getY());
-        //gc.strokeLine(vertices.get(3).getX(), vertices.get(3).getY(), vertices.get(0).getX(), vertices.get(0).getY());
+        //contenido
+        gc.setStroke(colorTexto);
+        gc.setLineWidth(tamañoTxt);
+        gc.strokeText(figura.getContenido(),vertices.get(0).getX()+figura.getContenido().length(),
+            vertices.get(0).getY()+figura.getDimenciones().getAlto()/2-10, 190);
     }
 
-    public void dibujo_paralelogramo(Canvas canvas, Figura figura){
-
+    public void dibujo_paralelogramo(Canvas canvas, Figura figura, int tipo){
         // Calcular los otros vértices
         ArrayList<Vertice> vertices = calcular_vertices(figura);
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
+        int delta = 14; //inclinacion
 
         // Dibujar el paralelogramo
-        gc.setStroke(Color.BLACK);
+        gc.setLineWidth(tamaño_Lbordes);
+        gc.setStroke(colorBordes);
+
+        // Rellenar figura
+        gc.setFill(colorRelleno);
+        double[] xPoints = {vertices.get(0).getX() + figura.getDimenciones().getAncho()/delta, vertices.get(1).getX(),
+                vertices.get(2).getX() - figura.getDimenciones().getAncho()/delta, vertices.get(3).getX()};
+        double[] yPoints = {vertices.get(0).getY(), vertices.get(1).getY(), vertices.get(2).getY(), vertices.get(3).getY()};
+
+        gc.fillPolygon(xPoints, yPoints, vertices.size());
+
         // Línea p1-p2
-        gc.strokeLine(vertices.get(0).getX(), vertices.get(0).getY(), vertices.get(1).getX(), vertices.get(1).getY());
+        gc.strokeLine(vertices.get(0).getX() + figura.getDimenciones().getAncho()/delta, vertices.get(0).getY(),
+                vertices.get(1).getX(), vertices.get(1).getY());
         // Línea p2-p3
-        gc.strokeLine(vertices.get(1).getX(), vertices.get(1).getY(), vertices.get(2).getX(), vertices.get(2).getY());
+        gc.strokeLine(vertices.get(1).getX(), vertices.get(1).getY(),
+                vertices.get(2).getX() - figura.getDimenciones().getAncho()/delta, vertices.get(2).getY());
         // Línea p3-p4
-        gc.strokeLine(vertices.get(2).getX(), vertices.get(2).getY(), vertices.get(3).getX(), vertices.get(3).getY());
+        gc.strokeLine(vertices.get(2).getX() - figura.getDimenciones().getAncho()/delta,
+                vertices.get(2).getY(), vertices.get(3).getX(), vertices.get(3).getY());
         // Línea p4-p1
-        gc.strokeLine(vertices.get(3).getX(), vertices.get(3).getY(), vertices.get(0).getX(), vertices.get(0).getY());
+        gc.strokeLine(vertices.get(3).getX(), vertices.get(3).getY(),
+                vertices.get(0).getX() + figura.getDimenciones().getAncho()/delta, vertices.get(0).getY());
+
+        //dibujo flecha
+        gc.setStroke(colorBordes);
+        gc.setFill(colorBordes);
+        //1=entrada -- 0=salida
+        if(tipo == 1){
+            dibujar_flecha(canvas, vertices.get(1).getX()-10, vertices.get(1).getY()/3, -135,10);
+        }else{
+            dibujar_flecha(canvas, vertices.get(1).getX()-30, vertices.get(1).getY()*2-vertices.get(1).getY(), 45,10);
+        }
+
+        //contenido
+        gc.setStroke(colorTexto);
+        gc.setLineWidth(tamañoTxt);
+        gc.strokeText(figura.getContenido(),vertices.get(0).getX()+figura.getContenido().length(),
+                vertices.get(0).getY()+figura.getDimenciones().getAlto()/2-10, 25*figura.getContenido().length());
+     }
+
+    public void conectar(){
 
     }
 
     public void figurasInicio_fin(){
 
+        double cx = 32.5;
+        double cy = 25;
         //Parametros figura Inicio
-        //establecer valores adecuados y centralizados en relacion a la proporcion 32.5x25.0
-        Vertice p_Finicio_direccion = new Vertice(32.5,25.0); //no cambiar
-        Vertice p_Finicio_conexion = new Vertice(1,1); //Reajustar
-        Arista dimencion_Finicio = new Arista(500, 75);
-        Figura figura_inicio = new Figura("Algoritmo titulo", p_Finicio_direccion, p_Finicio_conexion, dimencion_Finicio);
+        Vertice p_Finicio_direccion = new Vertice(cx,cy); //no cambiar
+        Vertice p_Finicio_conexion = new Vertice(cx/2,cy/2); //Reajustar
+        String contenido = "Algoritmo titulo y algo mas";
+        Arista dimencion_Finicio = new Arista(8*contenido.length()+25, 50);
+        Inicio_Fin figura_inicio = new Inicio_Fin(contenido, p_Finicio_direccion, p_Finicio_conexion, dimencion_Finicio);
 
         //considerar no salirse de las dimensiones del canvas
         Canvas canvas_Finicio = new Canvas(dimencion_Finicio.getAncho(), dimencion_Finicio.getAlto());
@@ -185,33 +289,55 @@ public class AppController {
         //funcionalidad (En proceso)
         canvas_Finicio.setOnMouseClicked(event ->{
             //editar titulo
-                System.out.println("CLICK!");
+            System.out.println("CLICK!");
         });
 
 
         //Parametros figura Fin
         //establecer valores adecuados y centralizados
-        Vertice p_Ffin_direccion = new Vertice(32.5,25.0);
-        Vertice p_Ffin_conexion = new Vertice(1,1); //Reajustar
-        Arista dimencion_Ffin = new Arista(500, 75);
-        Figura figura_fin = new Figura("Fin Algoritmo", p_Ffin_direccion, p_Ffin_conexion, dimencion_Ffin);
+        Vertice p_Ffin_direccion = new Vertice(cx,cy);
+        Vertice p_Ffin_conexion = new Vertice(cx/2,cy/2); //Reajustar
+        contenido="Fin Algoritmo";
+        Arista dimencion_Ffin = new Arista(8*contenido.length()+25, 50);
+        Inicio_Fin figura_fin = new Inicio_Fin(contenido, p_Ffin_direccion, p_Ffin_conexion, dimencion_Ffin);
 
         Canvas canvas_Ffin = new Canvas(dimencion_Ffin.getAncho(), dimencion_Ffin.getAlto());
         canvas_Ffin.setLayoutX(p_Ffin_direccion.getX());
         canvas_Ffin.setLayoutY(p_Ffin_direccion.getY());
 
-
         // Dibujo / diseño del Canvas
         dibujo_rect_curvo(canvas_Ffin,figura_fin);
 
-        panel_Diagrama.getChildren().addAll(canvas_Finicio,canvas_Ffin);
+        //conectar
+        Canvas f_conector = new Canvas(dimencion_Ffin.getAncho(),dimencion_Ffin.getAlto()+150);
 
-        AnchorPane.setTopAnchor(canvas_Finicio, p_Finicio_direccion.getY());
-        AnchorPane.setLeftAnchor(canvas_Finicio, p_Finicio_direccion.getX());
+        double x = p_Ffin_conexion.getX()-p_Finicio_conexion.getX();
+        double y = p_Ffin_conexion.getY()-p_Finicio_conexion.getY();
+        System.out.printf("x:"+x+"--y:"+y+"\n");
+
+        double largo = Math.sqrt(Math.pow(x,2)+(Math.pow(y,2)));
+        System.out.printf("largo:"+largo+"\n");
+
+        dibujar_flecha(f_conector,cx,0,-90, 150);
+
+        panel_Diagrama.getChildren().addAll(canvas_Finicio,canvas_Ffin,f_conector);
+
+        double recalcular = 10;
+
         //eliminar sobrecolocación de los canvas
-        double offset = 100;
-        AnchorPane.setTopAnchor(canvas_Ffin, p_Ffin_direccion.getY() + offset);
-        AnchorPane.setLeftAnchor(canvas_Ffin, p_Ffin_direccion.getX());
+        double offsetY = 7.7;
+        double offsetX = 50;
+        AnchorPane.setLeftAnchor(canvas_Finicio, offsetX);
+        AnchorPane.setTopAnchor(canvas_Finicio, 7.5);
+
+        AnchorPane.setLeftAnchor(f_conector, offsetX+(dimencion_Finicio.getAncho()/2)-20);
+        AnchorPane.setTopAnchor(f_conector, offsetY+(dimencion_Finicio.getAlto()/2)+24);
+
+        AnchorPane.setLeftAnchor(canvas_Ffin, offsetX+58);
+        AnchorPane.setTopAnchor(canvas_Ffin, offsetY*4.75*recalcular);
+
+
+
     }
 
     @FXML

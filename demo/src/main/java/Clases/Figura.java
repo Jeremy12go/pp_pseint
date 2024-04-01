@@ -13,7 +13,7 @@ public class Figura {
         this.dimenciones = dimenciones;
     }
     public void asignar_conexion(Vertice vertice_conexion){
-
+        this.vertice_conexion=vertice_conexion;
     }
     public void mover(Vertice vertice_direccion){
 
@@ -23,6 +23,10 @@ public class Figura {
     }
     public void editar(String contenido){
 
+    }
+
+    public void setVertice_cordenada(Vertice vertice_cordenada) {
+        this.vertice_cordenada = vertice_cordenada;
     }
 
     public String getContenido() {
