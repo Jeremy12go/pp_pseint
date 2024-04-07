@@ -16,4 +16,12 @@ public class Arista {
     public double getAlto() {
         return alto;
     }
+
+    public void setAncho(double ancho){
+        this.ancho = ancho;
+    }
+
+    public void setAlto(double alto){
+        this.alto = alto;
+    }
 }

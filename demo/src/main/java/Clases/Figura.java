@@ -29,6 +29,9 @@ public class Figura {
         this.vertice_cordenada = vertice_cordenada;
     }
 
+    public void setContenido(String contenido){
+        this.contenido = contenido;
+    }
     public String getContenido() {
         return contenido;
     }

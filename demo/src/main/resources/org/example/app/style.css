@@ -1,0 +1,19 @@
+.Contenido_edit{
+    -fx-alignment: top-left;
+    -fx-text-alignment: center;
+    -fx-border-color:black;
+    -fx-font-size: 14;
+    -fx-border-radius: 5,5,5,5;
+    -fx-padding: 5;
+    -fx-background-color: transparent;
+    -fx-text-fill: black;
+}
+.Contenido_edit .scroll-pane{
+    -fx-background-color: transparent;
+}
+.Contenido_edit .scroll-pane .viewport{
+    -fx-background-color: transparent;
+}
+.Contenido_edit .scroll-pane .content{
+    -fx-background-color: transparent;
+}

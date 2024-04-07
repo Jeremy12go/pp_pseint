@@ -7,18 +7,17 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
+import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import java.io.IOException;
-import javafx.scene.input.MouseEvent;
 import java.util.ArrayList;
 import java.util.Objects;
 import javafx.scene.shape.ArcType;
-import javafx.scene.input.ClipboardContent;
+
 import java.math.*;
 import javafx.scene.image.ImageView;
 
@@ -62,6 +61,20 @@ public class AppController {
     @FXML
     private ImageView trash;
 
+    private TextField textContenido = new TextField();
+    Diagrama ins = Diagrama.getInstance();
+
+    //parametros
+    double tamañoTxt = 1;
+    double tamaño_Lbordes = 2;
+    double tamaño_Lfechas = 3.5;
+    double tamaño_Lconexiones = 0;
+    //colores
+    Color colorBordes = Color.web("#fc7c0c");
+    Color colorRelleno = Color.web("#242c3c");
+    Color colorTexto = Color.web("#ffffff");
+    Color colorFlecha = Color.web("#ffffff");
+
     @FXML
     public void initialize() throws IOException {
         fondoCuadriculado(740,1500);
@@ -82,22 +95,12 @@ public class AppController {
         Image image5 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("trash.png")));
         trash.setImage(image5);
 
-
-
+        textContenido.setOpacity(0.0);
+        textContenido.getStyleClass().add("Contenido_edit");
+        textContenido.setDisable(true);
+        panel_Diagrama.getChildren().add(textContenido);
     }
 
-    //parametros
-    double tamañoTxt = 1;
-    double tamaño_Lbordes = 2;
-    double tamaño_Lfechas = 3.5;
-    double tamaño_Lconexiones = 0;
-    //colores
-    Color colorBordes = Color.web("#fc7c0c");
-    Color colorRelleno = Color.web("#242c3c");
-    Color colorTexto = Color.web("#ffffff");
-    Color colorFlecha = Color.web("#ffffff");
-
-    ArrayList<Conector> conexiones = new ArrayList<Conector>();
     @FXML
     private void onMousePressed(MouseEvent event) {
         initialX = event.getSceneX();
@@ -225,8 +228,9 @@ public class AppController {
         panel_Diagrama.setMinSize(width, height);
     }
 
-    public void ajustar_ScrollPane(double width, double height){
+    public void ajustar_Panes(double width, double height){
         panel_contenedor.setMinSize(width, height);
+        panel_ventanas.setMinSize(width,height);
     }
 
     public ArrayList<Vertice> calcular_vertices(Figura figura){
@@ -322,7 +326,7 @@ public class AppController {
         gc.setStroke(colorTexto);
         gc.setLineWidth(tamañoTxt);
         gc.strokeText(figura.getContenido(),vertices.get(0).getX()+figura.getContenido().length(),
-            vertices.get(0).getY()+figura.getDimenciones().getAlto()/2-10, 190);
+            vertices.get(0).getY()+figura.getDimenciones().getAlto()/2-10, 80*figura.getContenido().length());
     }
 
     public void dibujo_paralelogramo(Canvas canvas, Figura figura, int tipo){
@@ -374,6 +378,10 @@ public class AppController {
                 vertices.get(0).getY()+figura.getDimenciones().getAlto()/2-10, 25*figura.getContenido().length());
      }
 
+    public void limpiar_canvas(Canvas canvas){
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+    }
     public void conectar(){
 
     }
@@ -384,70 +392,86 @@ public class AppController {
         double cy = 25;
         //Parametros figura Inicio
         Vertice p_Finicio_direccion = new Vertice(cx,cy); //no cambiar
-        Vertice p_Finicio_conexion = new Vertice(cx/2,cy/2); //Reajustar
+        Vertice p_Finicio_conexion = new Vertice(cx*2,cy*2); //Reajustar
         String contenido = "Algoritmo titulo y algo mas";
         Arista dimencion_Finicio = new Arista(8*contenido.length()+25, 50);
         Inicio_Fin figura_inicio = new Inicio_Fin(contenido, p_Finicio_direccion, p_Finicio_conexion, dimencion_Finicio);
 
         //considerar no salirse de las dimensiones del canvas
         Canvas canvas_Finicio = new Canvas(dimencion_Finicio.getAncho(), dimencion_Finicio.getAlto());
-        canvas_Finicio.setLayoutX(p_Finicio_direccion.getX());
+        //posicion de la figura en relacion al AnchorPane
+        canvas_Finicio.setLayoutX(p_Finicio_direccion.getX()+150);
         canvas_Finicio.setLayoutY(p_Finicio_direccion.getY());
 
         // Dibujo / diseño del Canvas
         dibujo_rect_curvo(canvas_Finicio,figura_inicio);
 
-        //funcionalidad (En proceso)
+        //editar contenido
         canvas_Finicio.setOnMouseClicked(event ->{
-            //editar titulo
-            System.out.println("CLICK!");
+            textContenido.setLayoutX(p_Finicio_direccion.getX()+200);
+            textContenido.setLayoutY(p_Finicio_direccion.getY()+24);
+            textContenido.setMinWidth(canvas_Finicio.getWidth()/1.5);
+            textContenido.setMinHeight(canvas_Finicio.getHeight()/2);
+            textContenido.setOpacity(1.0);
+            textContenido.setDisable(false);
+            textContenido.setText(figura_inicio.getContenido());
+            double pre_largo = figura_inicio.getContenido().length();
+            System.out.printf("prelargo:"+pre_largo);
+            figura_inicio.setContenido("");
+
+            textContenido.setOnKeyPressed(event_2 -> {
+                if (event_2.getCode() == KeyCode.ENTER) {
+                    figura_inicio.setContenido(textContenido.getText());
+                    String new_text = textContenido.getText();
+                    dimencion_Finicio.setAncho(8*new_text.length()+25);
+                    canvas_Finicio.setWidth(8*new_text.length()+25);
+                    //editar posicion en relacion al largo
+                    /*double diferencia = (new_text.length()+25);
+                    System.out.printf("Largo:"+diferencia);
+                    canvas_Finicio.setLayoutX(p_Finicio_direccion.getX()+150/diferencia/2);*/
+                    //redibujo
+                    textContenido.setMinWidth(canvas_Finicio.getWidth()*0.5);
+                    limpiar_canvas(canvas_Finicio);
+                    dibujo_rect_curvo(canvas_Finicio,figura_inicio);
+                    textContenido.clear();
+                    textContenido.setOpacity(0.0);
+                    textContenido.setDisable(true);
+                }
+            });
         });
+
         //Parametros figura Fin
-        //establecer valores adecuados y centralizados
         Vertice p_Ffin_direccion = new Vertice(cx,cy);
-        Vertice p_Ffin_conexion = new Vertice(cx/2,cy/2); //Reajustar
+        //distancia entre las figuras iniciales
+        double diferencia = 150;
+        Vertice p_Ffin_conexion = new Vertice(cx*2,cy*2+diferencia);
         contenido="Fin Algoritmo";
         Arista dimencion_Ffin = new Arista(8*contenido.length()+25, 50);
         Inicio_Fin figura_fin = new Inicio_Fin(contenido, p_Ffin_direccion, p_Ffin_conexion, dimencion_Ffin);
 
         Canvas canvas_Ffin = new Canvas(dimencion_Ffin.getAncho(), dimencion_Ffin.getAlto());
-        canvas_Ffin.setLayoutX(p_Ffin_direccion.getX());
-        canvas_Ffin.setLayoutY(p_Ffin_direccion.getY());
+        canvas_Ffin.setLayoutX(p_Finicio_direccion.getX()*3+140);
+        canvas_Ffin.setLayoutY(p_Finicio_direccion.getY()+diferencia);
 
         // Dibujo / diseño del Canvas
-        dibujo_rect_curvo(canvas_Ffin,figura_fin);
+        dibujo_paralelogramo(canvas_Ffin,figura_fin,0);
 
         //conectar
-        Canvas f_conector = new Canvas(dimencion_Ffin.getAncho(),dimencion_Ffin.getAlto()+150);
+        Vertice vertice_Nfigura = new Vertice(0,0); //relacionar
+        Conector conector_inicial = new Conector(p_Finicio_conexion,vertice_Nfigura, p_Ffin_conexion);
 
-        double x = p_Ffin_conexion.getX()-p_Finicio_conexion.getX();
-        double y = p_Ffin_conexion.getY()-p_Finicio_conexion.getY();
-        System.out.printf("x:"+x+"--y:"+y+"\n");
+        Canvas f_conector = new Canvas(dimencion_Ffin.getAncho(),diferencia-25);
+        dibujar_flecha(f_conector,cx,0,-90, diferencia-35);//ajustar longitud en relacion a los puntos
 
-        double largo = Math.sqrt(Math.pow(x,2)+(Math.pow(y,2)));
-        System.out.printf("largo:"+largo+"\n");
-
-        dibujar_flecha(f_conector,cx,0,-90, 150);
+        f_conector.setLayoutX(p_Finicio_direccion.getX()*4+155);
+        f_conector.setLayoutY(p_Finicio_direccion.getY()+50);
 
         panel_Diagrama.getChildren().addAll(canvas_Finicio,canvas_Ffin,f_conector);
-
-        double recalcular = 10;
-
-        //eliminar sobrecolocación de los canvas
-        double offsetY = 7.7;
-        double offsetX = 50;
-        AnchorPane.setLeftAnchor(canvas_Finicio, offsetX);
-        AnchorPane.setTopAnchor(canvas_Finicio, 7.5);
-
-        AnchorPane.setLeftAnchor(f_conector, offsetX+(dimencion_Finicio.getAncho()/2)-20);
-        AnchorPane.setTopAnchor(f_conector, offsetY+(dimencion_Finicio.getAlto()/2)+24);
-
-        AnchorPane.setLeftAnchor(canvas_Ffin, offsetX+58);
-        AnchorPane.setTopAnchor(canvas_Ffin, offsetY*4.75*recalcular);
-
-
-
+        ins.agregarElemento(figura_inicio,0,0);
+        ins.agregarElemento(figura_fin,0,0);
+        ins.agregarElemento(conector_inicial,0,0);
     }
+
     public void dibujo_condicional(double x, double y){
         double size = 110; // Tamaño del rombo
 

@@ -52,7 +52,7 @@ public class App extends Application {
     public static void main(String[] args) {
         Persistencia persi = new Persistencia();
         Diagrama ins = new Diagrama();
-        ins.setList_elementos(persi.deserializar(ins.getList_elementos()));
+        ins.setList_elementos(persi.deserializar_figuras(ins.getList_figuras()),persi.deserializar_conexiones(ins.getList_conexiones()));
         launch();
     }
 }
