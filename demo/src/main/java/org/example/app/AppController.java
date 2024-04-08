@@ -393,7 +393,6 @@ public class AppController {
 
         //conectar
         Canvas f_conector = new Canvas(dimencion_Ffin.getAncho(),dimencion_Ffin.getAlto()+150);
-
         double x = p_Ffin_conexion.getX()-p_Finicio_conexion.getX();
         double y = p_Ffin_conexion.getY()-p_Finicio_conexion.getY();
         System.out.printf("x:"+x+"--y:"+y+"\n");
