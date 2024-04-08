@@ -416,22 +416,27 @@ public class AppController {
             textContenido.setMinHeight(canvas_Finicio.getHeight() / 2);
             textContenido.setText(figura_inicio.getContenido());
 
-            String text_previo = figura_inicio.getContenido();
+            String pre_text = figura_inicio.getContenido();
             figura_inicio.setContenido("");
             limpiar_canvas(canvas_Finicio);
             dibujo_rect_curvo(canvas_Finicio,figura_inicio);
-            double pre_largo = text_previo.length();
+            double pre_largo = pre_text.length();
 
             textContenido.setOnKeyPressed(event_2 -> {
                 if (event_2.getCode() == KeyCode.ENTER) {
                     figura_inicio.setContenido(textContenido.getText());
                     String new_text = textContenido.getText();
+                    double pre_dimension = dimencion_Finicio.getAncho();
                     dimencion_Finicio.setAncho(8*new_text.length()+25);
                     canvas_Finicio.setWidth(8*new_text.length()+25);
+
                     //editar posicion en relacion al largo
-                    /*double diferencia = (new_text.length()+25);
-                    System.out.printf("Largo:"+diferencia);
-                    canvas_Finicio.setLayoutX(p_Finicio_direccion.getX()+150/diferencia/2);*/
+                    /*
+                    double diferencia = (dimencion_Finicio.getAncho()-pre_dimension)/2;
+                    System.out.printf("Diferencia:"+diferencia);
+                    canvas_Finicio.setLayoutX(p_Finicio_direccion.getX()+150-diferencia);//150
+                    textContenido.setLayoutX(p_Finicio_direccion.getX()+150-diferencia);
+                    */
                     //redibujo
                     textContenido.setMinWidth(canvas_Finicio.getWidth()*0.5);
                     limpiar_canvas(canvas_Finicio);
