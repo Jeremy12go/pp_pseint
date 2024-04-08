@@ -10,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Objects;
 
 public class App extends Application {
@@ -42,6 +43,13 @@ public class App extends Application {
         stage.getIcons().add(image);
         stage.setTitle("DiagramFlex");
         stage.setScene(new Scene(root));
+        URL estiloURL = getClass().getResource("style.css");
+        if (estiloURL != null) {
+            root.getStylesheets().add(estiloURL.toExternalForm());
+        } else {
+            System.err.println("No se pudo encontrar el archivo de estilos 'estilos.css'");
+        }
+
         stage.show();
     }
 

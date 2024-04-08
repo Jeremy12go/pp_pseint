@@ -96,7 +96,6 @@ public class AppController {
         trash.setImage(image5);
 
         textContenido.setOpacity(0.0);
-        textContenido.getStyleClass().add("Contenido_edit");
         textContenido.setDisable(true);
         panel_Diagrama.getChildren().add(textContenido);
     }
@@ -407,17 +406,21 @@ public class AppController {
         dibujo_rect_curvo(canvas_Finicio,figura_inicio);
 
         //editar contenido
-        canvas_Finicio.setOnMouseClicked(event ->{
-            textContenido.setLayoutX(p_Finicio_direccion.getX()+200);
-            textContenido.setLayoutY(p_Finicio_direccion.getY()+24);
-            textContenido.setMinWidth(canvas_Finicio.getWidth()/1.5);
-            textContenido.setMinHeight(canvas_Finicio.getHeight()/2);
+        canvas_Finicio.setOnMouseClicked(event -> {
             textContenido.setOpacity(1.0);
             textContenido.setDisable(false);
+            textContenido.getStyleClass().add("Contenido_edit");
+            textContenido.setLayoutX(p_Finicio_direccion.getX() + 200);
+            textContenido.setLayoutY(p_Finicio_direccion.getY() + 24);
+            textContenido.setMinWidth(canvas_Finicio.getWidth() / 1.5);
+            textContenido.setMinHeight(canvas_Finicio.getHeight() / 2);
             textContenido.setText(figura_inicio.getContenido());
-            double pre_largo = figura_inicio.getContenido().length();
-            System.out.printf("prelargo:"+pre_largo);
+
+            String text_previo = figura_inicio.getContenido();
             figura_inicio.setContenido("");
+            limpiar_canvas(canvas_Finicio);
+            dibujo_rect_curvo(canvas_Finicio,figura_inicio);
+            double pre_largo = text_previo.length();
 
             textContenido.setOnKeyPressed(event_2 -> {
                 if (event_2.getCode() == KeyCode.ENTER) {

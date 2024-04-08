@@ -1,12 +1,12 @@
 .Contenido_edit{
     -fx-alignment: top-left;
     -fx-text-alignment: center;
-    -fx-border-color:black;
+    -fx-border-color: transparent;
     -fx-font-size: 14;
     -fx-border-radius: 5,5,5,5;
-    -fx-padding: 5;
+    -fx-padding: 1.5;
     -fx-background-color: transparent;
-    -fx-text-fill: black;
+    -fx-text-fill: white;
 }
 .Contenido_edit .scroll-pane{
     -fx-background-color: transparent;
