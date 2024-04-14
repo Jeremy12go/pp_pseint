@@ -50,15 +50,19 @@ public class AppController {
     @FXML
     private ImageView figura_proceso;
     @FXML
-    private ImageView figura_entrada_salida;
+    private ImageView figura_entradaE;
+    @FXML
+    private ImageView figura_entrada;
+    @FXML
+    private ImageView figura_salidaE;
+    @FXML
+    private ImageView figura_salida;
     @FXML
     private ImageView figura_condiconal;
     @FXML
     private ImageView figura_documento;
     @FXML
     private ImageView figura_procesoE;
-    @FXML
-    private ImageView figura_entrada_salidaE;
     @FXML
     private ImageView figura_condiconalE;
     @FXML
@@ -74,9 +78,12 @@ public class AppController {
         Image image1 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("figura_proceso.png")));
         figura_proceso.setImage(image1);
         figura_procesoE.setImage(image1);
-        Image image2 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("figura_entrada_salida.png")));
-        figura_entrada_salida.setImage(image2);
-        figura_entrada_salidaE.setImage(image2);
+        Image image2 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("figura_entrada.png")));
+        figura_entrada.setImage(image2);
+        figura_entradaE.setImage(image2);
+        Image image6 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("figura_salida.png")));
+        figura_salida.setImage(image6);
+        figura_salidaE.setImage(image6);
         Image image3 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("figura_condiconal.png")));
         figura_condiconal.setImage(image3);
         figura_condiconalE.setImage(image3);
@@ -145,7 +152,7 @@ public class AppController {
         sourceDiagram.setLayoutX(originalX);
         sourceDiagram.setLayoutY(originalY);
         // Verificar la imagen soltada
-        if (sourceDiagram == figura_condiconal || sourceDiagram == figura_documento || sourceDiagram == figura_entrada_salida || sourceDiagram == figura_proceso) {
+        if (sourceDiagram == figura_condiconal || sourceDiagram == figura_documento || sourceDiagram == figura_entrada || sourceDiagram == figura_proceso || sourceDiagram == figura_salida) {
             double releaseX = event.getSceneX();
             double releaseY = event.getSceneY();
             Bounds basureroBounds = basurero.localToScene(basurero.getBoundsInLocal());
@@ -183,11 +190,14 @@ public class AppController {
         } else if (figura_documento == sourceDiagram) {
             texto= " Documento ";
             dibujo_documento(texto,x, y);
-        } else if (figura_entrada_salida == sourceDiagram) {
-            texto= " Dato ";
+        } else if (figura_entrada == sourceDiagram) {
+            texto= " Entrada ";
+            //dibujo_paralelogramo();
+        } else if (figura_salida == sourceDiagram) {
+            texto= " Imprimir ";
             //dibujo_paralelogramo();
         } else if (figura_proceso == sourceDiagram) {
-            texto= " No Sé :'' ";
+            texto= " Proceso ";
             dibujo_rectangulo(texto,x,y);
         }
     }
@@ -554,12 +564,15 @@ public class AppController {
             if (clickCount == 2) {
                 // Restablecer el contador
                 clickCount = 0;
+
+                double currentX = canvas.getLayoutX();
+                double currentY = canvas.getLayoutY();
                 // Habilitar la edición del contenido
                 textContenido.setOpacity(1.0);
                 textContenido.setDisable(false);
                 textContenido.getStyleClass().add("Contenido_edit");
-                textContenido.setLayoutX(x); // Ajustar según tus necesidades
-                textContenido.setLayoutY(y); // Ajustar según tus necesidades
+                textContenido.setLayoutX(currentX); // Ajustar según tus necesidades
+                textContenido.setLayoutY(currentY); // Ajustar según tus necesidades
                 textContenido.setMinWidth(size); // Ajustar según tus necesidades
                 textContenido.setMinHeight(size); // Ajustar según tus necesidades
                 textContenido.setText(finalTexto);
@@ -583,7 +596,7 @@ public class AppController {
                         gc.fillText(newText, size / 2, size / 2);
 
                         panel_Diagrama.getChildren().remove(canvas);
-                        dibujo_condicional(newText, x, y);
+                        dibujo_condicional(newText, currentX, currentY);
                         // Deshabilitar la edición del contenido
                         textContenido.clear();
                         textContenido.setOpacity(0.0);
@@ -679,12 +692,15 @@ public class AppController {
             if (clickCount == 2) {
                 // Restablecer el contador
                 clickCount = 0;
+
+                double currentX = canvas.getLayoutX();
+                double currentY = canvas.getLayoutY();
                 // Habilitar la edición del contenido
                 textContenido.setOpacity(1.0);
                 textContenido.setDisable(false);
                 textContenido.getStyleClass().add("Contenido_edit");
-                textContenido.setLayoutX(x); // Ajustar según tus necesidades
-                textContenido.setLayoutY(y); // Ajustar según tus necesidades
+                textContenido.setLayoutX(currentX); // Ajustar según tus necesidades
+                textContenido.setLayoutY(currentY); // Ajustar según tus necesidades
                 textContenido.setMinWidth(size+(size*0.5)); // Ajustar según tus necesidades
                 textContenido.setMinHeight(size); // Ajustar según tus necesidades
                 textContenido.setText(finalTexto);
@@ -708,7 +724,7 @@ public class AppController {
                         gc.fillText(newText, size+(size*0.5) / 2, size / 2);
 
                         panel_Diagrama.getChildren().remove(canvas);
-                        dibujo_rectangulo(newText, x, y);
+                        dibujo_rectangulo(newText, currentX, currentY);
                         // Deshabilitar la edición del contenido
                         textContenido.clear();
                         textContenido.setOpacity(0.0);
