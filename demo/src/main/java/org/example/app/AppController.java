@@ -97,6 +97,11 @@ public class AppController {
         textContenido.setDisable(true);
         panel_Diagrama.getChildren().add(textContenido);
 
+
+        centrarPane();
+        panel_Diagrama.widthProperty().addListener((obs, oldVal, newVal) -> centrarPane());
+        panel_Diagrama.heightProperty().addListener((obs, oldVal, newVal) -> centrarPane());
+
     }
 
     Diagrama ins = Diagrama.getInstance();
@@ -880,5 +885,18 @@ public class AppController {
                 timeline.play();
             }
         });
+    }
+    // Método para centrar el Pane basurero y el ícono del basurero
+    private void centrarPane() {
+        double basureroX = (panel_Diagrama.getWidth() - basurero.getWidth()) / 2;
+        double basureroY = (panel_Diagrama.getHeight() - basurero.getHeight()) / 2;
+        basurero.setLayoutX(basureroX);
+        basurero.setLayoutY(basureroY);
+
+        // Centrar el ícono del basurero dentro del Pane basurero
+        double trashX = (basurero.getWidth() - trash.getFitWidth()) / 2;
+        double trashY = (basurero.getHeight() - trash.getFitHeight()) / 2;
+        trash.setLayoutX(trashX);
+        trash.setLayoutY(trashY);
     }
 }
