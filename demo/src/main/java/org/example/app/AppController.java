@@ -525,15 +525,15 @@ public class AppController {
         //MOVIMIENTO_FIGURA----------------------------------------------------
         finalCanvas.setOnMousePressed(event -> {
             // Registrar las coordenadas del mouse en relación con la esquina superior izquierda de la figura
-            previousX = event.getX();
-            previousY = event.getY();
+            previousX = event.getSceneX();
+            previousY = event.getSceneY();
         });
 
         finalCanvas.setOnMouseDragged(event -> {
             basurero.setVisible(true);
             // Calcular el desplazamiento del mouse desde la última posición
-            double deltaX = event.getX() - previousX;
-            double deltaY = event.getY() - previousY;
+            double deltaX = event.getSceneX() - previousX;
+            double deltaY = event.getSceneY() - previousY;
 
             // Calcular las nuevas coordenadas para la figura basadas en el desplazamiento del mouse
             double newX = finalCanvas.getLayoutX() + deltaX;
@@ -544,10 +544,8 @@ public class AppController {
             finalCanvas.setLayoutY(newY);
 
             // Actualizar la posición anterior del cursor
-            previousX = event.getX();
-            previousY = event.getY();
-            //panel_Diagrama.getChildren().remove(canvas);
-            //dibujo_documento(finalTexto,newX, newY);
+            previousX = event.getSceneX();
+            previousY = event.getSceneY();
         });
 
         finalCanvas.setOnMouseReleased(event -> {
@@ -653,15 +651,15 @@ public class AppController {
         //MOVIMIENTO_FIGURA----------------------------------------------------
         finalCanvas.setOnMousePressed(event -> {
             // Registrar las coordenadas del mouse en relación con la esquina superior izquierda de la figura
-            previousX = event.getX();
-            previousY = event.getY();
+            previousX = event.getSceneX();
+            previousY = event.getSceneY();
         });
 
         finalCanvas.setOnMouseDragged(event -> {
             basurero.setVisible(true);
             // Calcular el desplazamiento del mouse desde la última posición
-            double deltaX = event.getX() - previousX;
-            double deltaY = event.getY() - previousY;
+            double deltaX = event.getSceneX() - previousX;
+            double deltaY = event.getSceneY() - previousY;
 
             // Calcular las nuevas coordenadas para la figura basadas en el desplazamiento del mouse
             double newX = finalCanvas.getLayoutX() + deltaX;
@@ -672,10 +670,8 @@ public class AppController {
             finalCanvas.setLayoutY(newY);
 
             // Actualizar la posición anterior del cursor
-            previousX = event.getX();
-            previousY = event.getY();
-            //panel_Diagrama.getChildren().remove(canvas);
-            //dibujo_documento(finalTexto,newX, newY);
+            previousX = event.getSceneX();
+            previousY = event.getSceneY();
         });
 
         finalCanvas.setOnMouseReleased(event -> {
@@ -795,15 +791,15 @@ public class AppController {
         //MOVIMIENTO_FIGURA----------------------------------------------------
         finalCanvas.setOnMousePressed(event -> {
             // Registrar las coordenadas del mouse en relación con la esquina superior izquierda de la figura
-            previousX = event.getX();
-            previousY = event.getY();
+            previousX = event.getSceneX();
+            previousY = event.getSceneY();
         });
 
         finalCanvas.setOnMouseDragged(event -> {
             basurero.setVisible(true);
             // Calcular el desplazamiento del mouse desde la última posición
-            double deltaX = event.getX() - previousX;
-            double deltaY = event.getY() - previousY;
+            double deltaX = event.getSceneX() - previousX;
+            double deltaY = event.getSceneY() - previousY;
 
             // Calcular las nuevas coordenadas para la figura basadas en el desplazamiento del mouse
             double newX = finalCanvas.getLayoutX() + deltaX;
@@ -814,10 +810,8 @@ public class AppController {
             finalCanvas.setLayoutY(newY);
 
             // Actualizar la posición anterior del cursor
-            previousX = event.getX();
-            previousY = event.getY();
-            //panel_Diagrama.getChildren().remove(canvas);
-            //dibujo_documento(finalTexto,newX, newY);
+            previousX = event.getSceneX();
+            previousY = event.getSceneY();
         });
 
         finalCanvas.setOnMouseReleased(event -> {
@@ -831,7 +825,6 @@ public class AppController {
             }
             basurero.setVisible(false);
         });
-
         //ESCRITURA_FIGURA----------------------------------------------------
         // Declarar una variable para contar los clics
         finalCanvas.setOnMouseClicked(event -> {
