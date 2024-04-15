@@ -28,6 +28,7 @@ public class App extends Application {
         Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("Icono_PP_white.png")));
 
         stage.maximizedProperty().addListener((observable, oldValue, newValue) -> {
+            //reajustar la posicion de las figuras el maximar la ventana
             if (newValue) {
                 Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
                 double screenWidth = screenBounds.getWidth();

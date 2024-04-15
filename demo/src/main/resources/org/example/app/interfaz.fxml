@@ -24,7 +24,7 @@
          <children>
             <ScrollPane fx:id="panel_contenedor" fitToHeight="true" prefHeight="570.0" prefWidth="760.0">
                <content>
-                  <AnchorPane fx:id="panel_Diagrama" minHeight="0.0" minWidth="0.0" prefHeight="567.0" prefWidth="757.0" />
+                  <AnchorPane fx:id="panel_Diagrama" minHeight="0.0" minWidth="0.0" prefHeight="567.0" prefWidth="740.0" />
                </content>
             </ScrollPane>
          </children>
@@ -38,8 +38,9 @@
            </children>
            <ImageView fx:id="figura_procesoE" fitHeight="240.0" fitWidth="140.0" layoutY="0.0" pickOnBounds="true" preserveRatio="true" />
            <ImageView fx:id="figura_proceso" fitHeight="240.0" fitWidth="140.0" layoutY="0.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" pickOnBounds="true" preserveRatio="true" />
-           <ImageView fx:id="figura_entrada_salidaE" fitHeight="240.0" fitWidth="140.0" layoutY="135.0" pickOnBounds="true" preserveRatio="true" />
-           <ImageView fx:id="figura_entrada_salida" fitHeight="240.0" fitWidth="140.0" layoutY="135.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" pickOnBounds="true" preserveRatio="true" />
+           <!-- Agregar figura de entrada-->
+           <ImageView fx:id="figura_entrada" fitHeight="240.0" fitWidth="140.0" layoutY="135.0" pickOnBounds="true" preserveRatio="true" />
+           <ImageView fx:id="figura_salida" fitHeight="240.0" fitWidth="140.0" layoutY="135.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" pickOnBounds="true" preserveRatio="true" />
            <ImageView fx:id="figura_condiconalE" fitHeight="240.0" fitWidth="140.0" layoutY="270.0" pickOnBounds="true" preserveRatio="true" />
            <ImageView fx:id="figura_condiconal" fitHeight="240.0" fitWidth="140.0" layoutY="270.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" pickOnBounds="true" preserveRatio="true" />
            <ImageView fx:id="figura_documentoE" fitHeight="240.0" fitWidth="140.0" layoutY="405.0" pickOnBounds="true" preserveRatio="true" />
