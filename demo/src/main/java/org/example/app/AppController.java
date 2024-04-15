@@ -612,7 +612,6 @@ public class AppController {
                 timeline.play();
             }
         });
-
     }
 
     public void dibujo_rectangulo(String texto, double x, double y,Canvas canvas) {
