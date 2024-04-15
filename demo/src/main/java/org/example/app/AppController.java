@@ -192,20 +192,20 @@ public class AppController {
             Canvas canvas= new Canvas(0,0);
             dibujo_condicional(texto,x, y,canvas);
         } else if (figura_documento == sourceDiagram) {
+            Vertice p_Fentrada_direccion = new Vertice(32.5, 25); //no cambiar
+            Vertice p_Fentrada_conexion = new Vertice(65, 50); //Reajustar
+            Arista dimencion_Fentrada = new Arista(153, 50);
             texto= " Documento ";
+            Figura documento = new Figura(texto, p_Fentrada_direccion, p_Fentrada_conexion, dimencion_Fentrada);
+
             Canvas canvas= new Canvas(0,0);
-            dibujo_documento(texto,x, y, canvas);
-        } else if (figura_entrada == sourceDiagram) {
-            texto= " Entrada ";
-            //dibujo_paralelogramo();
-        } else if (figura_salida == sourceDiagram) {
-            texto= " Imprimir ";
-            //dibujo_paralelogramo();
-            dibujo_documento(texto,x, y);
+            dibujo_documento(texto,x, y, canvas,documento);
+
+
         } else if (figura_entrada == sourceDiagram) {
             Vertice p_Fentrada_direccion = new Vertice(32.5, 25); //no cambiar
             Vertice p_Fentrada_conexion = new Vertice(65, 50); //Reajustar
-            String contenido = "Entrada:";
+            String contenido = " Entrada: ";
             Arista dimencion_Fentrada = new Arista(153, 50);
             Entrada entrada = new Entrada(contenido, p_Fentrada_direccion, p_Fentrada_conexion, dimencion_Fentrada);
 
@@ -255,7 +255,7 @@ public class AppController {
 
             Vertice p_Fsalida_direccion = new Vertice(32.5, 25); //no cambiar
             Vertice p_Fsalida_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y); //Reajustar
-            String contenido = "Salida:";
+            String contenido = " Salida: ";
             Arista dimencion_Fsalida = new Arista(153, 50);
             Salida salida = new Salida(contenido, p_Fsalida_direccion, p_Fsalida_conexion, dimencion_Fsalida);
 
@@ -708,6 +708,44 @@ public class AppController {
         gc.setLineWidth(tamañoTxt);
         gc.strokeText(figura.getContenido(),vertices.get(0).getX()+figura.getContenido().length(),
                 vertices.get(0).getY()+figura.getDimenciones().getAlto()/2-10, 25*figura.getContenido().length());
+
+        canvas.setOnMousePressed(event -> {
+            // Registrar las coordenadas del mouse en relación con la esquina superior izquierda de la figura
+            previousX = event.getSceneX();
+            previousY = event.getSceneY();
+        });
+
+        canvas.setOnMouseDragged(event -> {
+            basurero.setVisible(true);
+            // Calcular el desplazamiento del mouse desde la última posición
+            double deltaX = event.getSceneX() - previousX;
+            double deltaY = event.getSceneY() - previousY;
+
+            // Calcular las nuevas coordenadas para la figura basadas en el desplazamiento del mouse
+            double newX = canvas.getLayoutX() + deltaX;
+            double newY = canvas.getLayoutY() + deltaY;
+
+            // Establecer las nuevas coordenadas de la figura
+            canvas.setLayoutX(newX);
+            canvas.setLayoutY(newY);
+
+            // Actualizar la posición anterior del cursor
+            previousX = event.getSceneX();
+            previousY = event.getSceneY();
+        });
+
+        canvas.setOnMouseReleased(event -> {
+            double releaseX = event.getSceneX();
+            double releaseY = event.getSceneY();
+            Bounds basureroBounds = basurero.localToScene(basurero.getBoundsInLocal());
+
+            // Verificar si las coordenadas del evento están dentro de los límites del Pane Basurero
+            if (basureroBounds.contains(releaseX, releaseY)) {
+                panel_Diagrama.getChildren().remove(canvas);
+            }
+            basurero.setVisible(false);
+        });
+
     }
 
     public void dibujo_condicional(String texto,double x, double y, Canvas canvas){
@@ -962,7 +1000,7 @@ public class AppController {
         });
     }
 
-    public void dibujo_documento(String texto,double x, double y, Canvas canvas) {
+    public void dibujo_documento(String texto,double x, double y, Canvas canvas, Figura figura) {
         if(Objects.equals(texto, "") || Objects.equals(texto, " ") || Objects.equals(texto, "  ") || Objects.equals(texto, "   ")){texto= " Documento ";}
         String finalTexto = texto;
 
@@ -977,7 +1015,12 @@ public class AppController {
 
         canvas = new Canvas(width, height);
         Canvas finalCanvas= canvas;
+        /*
         finalCanvas.setLayoutX(x);
+        finalCanvas.setLayoutY(y);
+         */
+        double diferencia = figura.getDimenciones().getAncho() / 2;
+        finalCanvas.setLayoutX((panel_Diagrama.getMinWidth() / 2) - diferencia);
         finalCanvas.setLayoutY(y);
         GraphicsContext gc = finalCanvas.getGraphicsContext2D();
 
@@ -1088,7 +1131,7 @@ public class AppController {
                         gc.fillText(newText, width / 2, height / 2);
 
                         panel_Diagrama.getChildren().remove(finalCanvas);
-                        dibujo_documento(newText, currentX, currentY, finalCanvas);
+                        dibujo_documento(newText, currentX, currentY, finalCanvas,figura);
                         // Deshabilitar la edición del contenido
                         textContenido.clear();
                         textContenido.setOpacity(0.0);
