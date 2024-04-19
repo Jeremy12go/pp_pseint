@@ -186,26 +186,63 @@ public class AppController {
     private void dibujarFigura(double x, double y, ImageView sourceDiagram) {
         Figura ultimaFAñadida = null;
         Canvas ultimaCAñadida = null;
-        String texto = "";
+        String contenido = "";
         if (figura_condiconal == sourceDiagram) {
-            texto= " A > B ";
-            Canvas canvas= new Canvas(0,0);
-            dibujo_condicional(texto,x, y,canvas);
+
+            Vertice p_Fcondicional_direccion = new Vertice(32.5, 25); //no cambiar
+            Vertice p_Fcondicional_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y-40);
+            Arista dimencion_Fentrada = new Arista(120, 70);
+            contenido= " A > B ";
+            ArrayList<String> contenidoValidado = new ArrayList<String>(); //Ajustar
+            Condicional condicional = new Condicional(contenido, p_Fcondicional_direccion, p_Fcondicional_conexion, dimencion_Fentrada,contenidoValidado);
+
+            Canvas canvas_Fcondicional = new Canvas(dimencion_Fentrada.getAncho(), dimencion_Fentrada.getAlto());
+
+            dibujo_condicional(contenido,x, y, canvas_Fcondicional, condicional);
+            //conector preNuevafigura
+            Figura figuraOrigen = determinarFiguraOrigen(x, y);
+            if (figuraOrigen != null) {
+                conectar(figuraOrigen, condicional,x,y);
+            } else {
+                System.out.println("No se pudo encontrar una figura de origen cercana.");
+            }
+
+            // Agregar la nueva figura al panel
+            panel_Diagrama.getChildren().add(canvas_Fcondicional);
+            ultimaFAñadida = condicional;
+            ultimaCAñadida = canvas_Fcondicional;
+            // Agregar el canvas nueva figura a la lista de conectores
+            ins.getList_orden().add(canvas_Fcondicional);
+            // Agregar la nueva figura a la lista de figuras
+            ins.getList_figuras().add(condicional);
+
+            //conector posNuevafigura
+            Figura figuraDestino = determinarFiguraDestino(condicional, x, y);
+            if (figuraDestino != null) {
+                conectar(condicional,figuraDestino,x,y);
+            } else {
+                System.out.println("No se pudo encontrar una figura destino cercana.");
+            }
+
+            //eliminar conector anterior
+            Conector preconector = obtenerConexionPrevia(figuraOrigen,figuraDestino);
+            if (preconector != null) {
+                ins.getList_conexiones().remove(preconector);
+                ins.getList_orden().remove(preconector);
+                panel_Diagrama.getChildren().remove(preconector);
+            }
+            //reposicionar canvas para la nueva figura
+
         } else if (figura_documento == sourceDiagram) {
             Vertice p_Fdocumento_direccion = new Vertice(32.5, 25); //no cambiar
-            Vertice p_Fdocumento_conexion = new Vertice(65, 50); //Reajustar
+            Vertice p_Fdocumento_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y-40);
             Arista dimencion_Fentrada = new Arista(120, 70);
-            texto= " Documento ";
-            Documento documento = new Documento(texto, p_Fdocumento_direccion, p_Fdocumento_conexion, dimencion_Fentrada);
+            contenido= " Documento ";
+            Documento documento = new Documento(contenido, p_Fdocumento_direccion, p_Fdocumento_conexion, dimencion_Fentrada);
 
             Canvas canvas_Fdocumento = new Canvas(dimencion_Fentrada.getAncho(), dimencion_Fentrada.getAlto());
 
-            //posicion de la figura en relacion al AnchorPane
-            double diferencia = dimencion_Fentrada.getAncho() / 2;
-            canvas_Fdocumento.setLayoutX((panel_Diagrama.getMinWidth() / 2) - diferencia);
-            canvas_Fdocumento.setLayoutY(y);
-
-            dibujo_documento(texto,x, y, canvas_Fdocumento, documento);
+            dibujo_documento(contenido,x, y, canvas_Fdocumento, documento);
 
             //conector preNuevafigura
             Figura figuraOrigen = determinarFiguraOrigen(x, y);
@@ -243,8 +280,8 @@ public class AppController {
 
         } else if (figura_entrada == sourceDiagram) {
             Vertice p_Fentrada_direccion = new Vertice(32.5, 25); //no cambiar
-            Vertice p_Fentrada_conexion = new Vertice(65, 50); //Reajustar
-            String contenido = " Entrada: ";
+            Vertice p_Fentrada_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y-40);
+            contenido = " Entrada: ";
             Arista dimencion_Fentrada = new Arista(153, 50);
             Entrada entrada = new Entrada(contenido, p_Fentrada_direccion, p_Fentrada_conexion, dimencion_Fentrada);
 
@@ -294,8 +331,8 @@ public class AppController {
         } else if (figura_salida == sourceDiagram){
 
             Vertice p_Fsalida_direccion = new Vertice(32.5, 25); //no cambiar
-            Vertice p_Fsalida_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y-40); //Reajustar
-            String contenido = " Salida: ";
+            Vertice p_Fsalida_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y-40);
+            contenido = " Salida: ";
             Arista dimencion_Fsalida = new Arista(153, 50);
             Salida salida = new Salida(contenido, p_Fsalida_direccion, p_Fsalida_conexion, dimencion_Fsalida);
 
@@ -342,10 +379,59 @@ public class AppController {
             }
             //reposicionar canvas para la nueva figura
 
-        } else if (figura_proceso == sourceDiagram) {
-            texto= " Proceso ";
-            Canvas canvas= new Canvas(0,0);
-            dibujo_rectangulo(texto,x,y, canvas);
+        } else if (figura_proceso == sourceDiagram) {;
+            Vertice p_Fproceso_direccion = new Vertice(32.5, 25); //no cambiar
+            Vertice p_Fproeso_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y-40);
+            contenido= " Proceso ";
+            Arista dimencion_Fproceso = new Arista(120, 40);
+            String contenidoValidado = ""; //Ajustar
+            ArrayList<String> operaciones = new ArrayList<String>(); //Ajustar
+            ArrayList<String> operandos = new ArrayList<String>(); //Ajustar
+            Proceso proceso = new Proceso(contenido, p_Fproceso_direccion, p_Fproeso_conexion, dimencion_Fproceso,contenidoValidado,operaciones,operandos);
+
+            Canvas canvas_Fproceso = new Canvas(dimencion_Fproceso.getAncho(), dimencion_Fproceso.getAlto());
+            //posicion de la figura en relacion al AnchorPane
+            double diferencia = dimencion_Fproceso.getAncho() / 2;
+            canvas_Fproceso.setLayoutX((panel_Diagrama.getMinWidth() / 2) - diferencia);
+            canvas_Fproceso.setLayoutY(y);
+
+            //dibujar y agregar canvas al panel
+            dibujo_rectangulo(contenido, x, y, canvas_Fproceso, proceso);
+
+            //conector preNuevafigura
+            Figura figuraOrigen = determinarFiguraOrigen(x, y);
+            if (figuraOrigen != null) {
+                conectar(figuraOrigen, proceso, x, y);
+            } else {
+                System.out.println("No se pudo encontrar una figura de origen cercana.");
+            }
+
+            // Agregar la nueva figura al panel
+            panel_Diagrama.getChildren().add(canvas_Fproceso);
+            System.out.printf("Canvas añadido!\n");
+            ultimaFAñadida = proceso;
+            ultimaCAñadida = canvas_Fproceso;
+            // Agregar el canvas nueva figura a la lista de conectores
+            ins.getList_orden().add(canvas_Fproceso);
+            // Agregar la nueva figura a la lista de figuras
+            ins.getList_figuras().add(proceso);
+
+            //conector posNuevafigura
+            Figura figuraDestino = determinarFiguraDestino(proceso, x, y);
+            if (figuraDestino != null) {
+                conectar(proceso,figuraDestino,x,y);
+            } else {
+                System.out.println("No se pudo encontrar una figura destino cercana.");
+            }
+
+            //eliminar conector anterior
+            Conector preconector = obtenerConexionPrevia(figuraOrigen,figuraDestino);
+            if (preconector != null) {
+                ins.getList_conexiones().remove(preconector);
+                ins.getList_orden().remove(preconector);
+                panel_Diagrama.getChildren().remove(preconector);
+            }
+            //reposicionar canvas para la nueva figura
         }
     }
 
@@ -501,9 +587,9 @@ public class AppController {
         }
 
         //canvas conector
-        Vertice origen = new Vertice((figuraOrigen.getVertice_conexion().getX()), figuraOrigen.getVertice_conexion().getY()-figuraOrigen.getDimenciones().getAlto());//editado -50
-        Vertice destino = (Vertice) figuraDestino.getVertice_conexion();
-        double diferenciaY = y - figuraDestino.getVertice_conexion().getY();
+        Vertice origen = new Vertice((figuraOrigen.getVertice_conexion().getX()), figuraOrigen.getVertice_conexion().getY()-figuraOrigen.getDimenciones().getAlto());
+        Vertice destino = new Vertice(figuraDestino.getVertice_conexion().getX(),figuraDestino.getVertice_conexion().getY());
+        double diferenciaY = y - figuraDestino.getVertice_conexion().getY()-40;
         Canvas conectorCanvas = crear_canvasConector(diferenciaY,figuraOrigen.getVertice_conexion(), figuraDestino.getVertice_conexion());
 
 
@@ -793,87 +879,85 @@ public class AppController {
 
     }
 
-    public void dibujo_condicional(String texto,double x, double y, Canvas canvas){
+    public void dibujo_condicional(String texto,double x, double y, Canvas canvas, Figura figura){
         // Crear un objeto Text para calcular el ancho del texto
         if(Objects.equals(texto, "") || Objects.equals(texto, " ") || Objects.equals(texto, "  ") || Objects.equals(texto, "   ")){texto= " A > B ";}
         String finalTexto = texto;
 
         javafx.scene.text.Text text = new javafx.scene.text.Text(finalTexto);
-        text.setFont(font);
-        double textWidth = text.getBoundsInLocal().getWidth();
-        double textHeight = text.getBoundsInLocal().getHeight();
 
-        // Calcular el tamaño del rombo basado en el texto
-        double size = Math.max(textWidth, textHeight) + 40;
+        double width = figura.getDimenciones().getAncho()/2;
+        double height = figura.getDimenciones().getAlto()/2;
+        double size = Math.max(width, height);//+40
 
-        canvas = new Canvas(size, size);
-        Canvas finalCanvas= canvas;
-        finalCanvas.setLayoutX(x);
-        finalCanvas.setLayoutY(y);
-        GraphicsContext gc = finalCanvas.getGraphicsContext2D();
+        //posicion de la figura en relacion al AnchorPane
+        double diferencia = figura.getDimenciones().getAncho() / 2;
+        canvas.setLayoutX((panel_Diagrama.getMinWidth() / 2) - diferencia + 42.5);
+        canvas.setLayoutY(y+24);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
 
         // Calcular los puntos del rombo
         double[] xPoints = {size / 2, size, size / 2, 0};
         double[] yPoints = {0, size / 2, size, size / 2};
-        gc.setFill(Color.RED);
+        gc.setFill(colorRelleno);
         gc.fillPolygon(xPoints, yPoints, 4);
-        gc.setStroke(Color.BLACK);
-        gc.setLineWidth(2);
+        gc.setStroke(colorBordes);
+        gc.setLineWidth(tamaño_Lbordes);
         gc.strokePolygon(xPoints, yPoints, 4);
 
         // Escribir el texto en el centro del rombo
         gc.setFont(font);
-        gc.setFill(Color.BLACK);
+        gc.setFill(colorTexto);
         gc.setTextAlign(TextAlignment.CENTER);
-        gc.fillText(finalTexto, size / 2, size / 2 + textHeight / 4); // Ajustar la posición vertical
-        panel_Diagrama.getChildren().add(finalCanvas);
+        gc.fillText(finalTexto, size/2 , (size / 2)+3); // Ajustar la posición vertical
+
         //MOVIMIENTO_FIGURA----------------------------------------------------
-        finalCanvas.setOnMousePressed(event -> {
+        canvas.setOnMousePressed(event -> {
             // Registrar las coordenadas del mouse en relación con la esquina superior izquierda de la figura
             previousX = event.getSceneX();
             previousY = event.getSceneY();
         });
 
-        finalCanvas.setOnMouseDragged(event -> {
+        canvas.setOnMouseDragged(event -> {
             basurero.setVisible(true);
             // Calcular el desplazamiento del mouse desde la última posición
             double deltaX = event.getSceneX() - previousX;
             double deltaY = event.getSceneY() - previousY;
 
             // Calcular las nuevas coordenadas para la figura basadas en el desplazamiento del mouse
-            double newX = finalCanvas.getLayoutX() + deltaX;
-            double newY = finalCanvas.getLayoutY() + deltaY;
+            double newX = canvas.getLayoutX() + deltaX;
+            double newY = canvas.getLayoutY() + deltaY;
 
             // Establecer las nuevas coordenadas de la figura
-            finalCanvas.setLayoutX(newX);
-            finalCanvas.setLayoutY(newY);
+            canvas.setLayoutX(newX);
+            canvas.setLayoutY(newY);
 
             // Actualizar la posición anterior del cursor
             previousX = event.getSceneX();
             previousY = event.getSceneY();
         });
 
-        finalCanvas.setOnMouseReleased(event -> {
+        canvas.setOnMouseReleased(event -> {
             double releaseX = event.getSceneX();
             double releaseY = event.getSceneY();
             Bounds basureroBounds = basurero.localToScene(basurero.getBoundsInLocal());
 
             // Verificar si las coordenadas del evento están dentro de los límites del Pane Basurero
             if (basureroBounds.contains(releaseX, releaseY)) {
-                panel_Diagrama.getChildren().remove(finalCanvas);
+                panel_Diagrama.getChildren().remove(canvas);
             }
             basurero.setVisible(false);
         });
         //ESCRITURA_FIGURA----------------------------------------------------
-        finalCanvas.setOnMouseClicked(event -> {
+        canvas.setOnMouseClicked(event -> {
             clickCount++;
             // Si se ha dado doble clic
             if (clickCount == 2) {
                 // Restablecer el contador
                 clickCount = 0;
 
-                double currentX = finalCanvas.getLayoutX();
-                double currentY = finalCanvas.getLayoutY();
+                double currentX = canvas.getLayoutX();
+                double currentY = canvas.getLayoutY();
                 // Habilitar la edición del contenido
                 textContenido.setOpacity(1.0);
                 textContenido.setDisable(false);
@@ -902,8 +986,8 @@ public class AppController {
                         gc.setTextBaseline(VPos.CENTER);
                         gc.fillText(newText, size / 2, size / 2);
 
-                        panel_Diagrama.getChildren().remove(finalCanvas);
-                        dibujo_condicional(newText, currentX, currentY,finalCanvas);
+                        panel_Diagrama.getChildren().remove(canvas);
+                        dibujo_condicional(newText, currentX, currentY,canvas,figura);
                         // Deshabilitar la edición del contenido
                         textContenido.clear();
                         textContenido.setOpacity(0.0);
@@ -919,78 +1003,78 @@ public class AppController {
         });
     }
 
-    public void dibujo_rectangulo(String texto, double x, double y,Canvas canvas) {
+    public void dibujo_rectangulo(String texto, double x, double y,Canvas canvas, Figura figura) {
         // Crear un objeto Text para calcular el ancho del texto
         if(Objects.equals(texto, "") || Objects.equals(texto, " ") || Objects.equals(texto, "  ") || Objects.equals(texto, "   ")){texto= " Proceso ";}
         String finalTexto = texto;
 
         javafx.scene.text.Text text = new javafx.scene.text.Text(finalTexto);
-        text.setFont(font);
-        double textWidth = text.getBoundsInLocal().getWidth();
-        double textHeight = text.getBoundsInLocal().getHeight();
 
-        // Calcular el tamaño del rectángulo basado en el texto
-        double size = Math.max(textWidth, textHeight) + 40;
+        double width = figura.getDimenciones().getAncho()/2;
+        double height = figura.getDimenciones().getAlto()/2;
+        double size = Math.max(width, height)+20;
 
-        canvas = new Canvas(size+(size*0.5), size);
-        Canvas finalCanvas= canvas;
-        finalCanvas.setLayoutX(x);
-        finalCanvas.setLayoutY(y);
-        GraphicsContext gc = finalCanvas.getGraphicsContext2D();
+        //posicion de la figura en relacion al AnchorPane
+        double diferencia = figura.getDimenciones().getAncho() / 2;
+        canvas.setLayoutX((panel_Diagrama.getMinWidth() / 2) - diferencia+15);
+        canvas.setLayoutY(y+24);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
 
         // Dibujar el rectángulo
-        gc.setFill(Color.BLUE);
+        gc.setFill(colorRelleno);
         gc.fillRect(0, 0, size+(size*0.5), size);
-        gc.setStroke(Color.BLACK);
-        gc.setLineWidth(2);
+        gc.setStroke(colorBordes);
+        gc.setLineWidth(tamaño_Lbordes*2);
         gc.strokeRect(0, 0, size+(size*0.5), size);
 
-        // Escribir el texto en el centro del rectángulo
+        //contenido
+        gc.setLineWidth(tamañoTxt);
         gc.setFont(font);
-        gc.setFill(Color.BLACK);
+        gc.setStroke(colorTexto);
+        gc.setFill(colorTexto);
         gc.setTextAlign(TextAlignment.CENTER);
         gc.setTextBaseline(VPos.CENTER);
-        gc.fillText(finalTexto, size / 2, size / 2 + textHeight / 4); // Ajustar la posición vertical
-        panel_Diagrama.getChildren().add(finalCanvas);
+        gc.fillText(figura.getContenido(), figura.getDimenciones().getAncho()/2, figura.getDimenciones().getAlto()/2);
+
         //MOVIMIENTO_FIGURA----------------------------------------------------
-        finalCanvas.setOnMousePressed(event -> {
+        canvas.setOnMousePressed(event -> {
             // Registrar las coordenadas del mouse en relación con la esquina superior izquierda de la figura
             previousX = event.getSceneX();
             previousY = event.getSceneY();
         });
 
-        finalCanvas.setOnMouseDragged(event -> {
+        canvas.setOnMouseDragged(event -> {
             basurero.setVisible(true);
             // Calcular el desplazamiento del mouse desde la última posición
             double deltaX = event.getSceneX() - previousX;
             double deltaY = event.getSceneY() - previousY;
 
             // Calcular las nuevas coordenadas para la figura basadas en el desplazamiento del mouse
-            double newX = finalCanvas.getLayoutX() + deltaX;
-            double newY = finalCanvas.getLayoutY() + deltaY;
+            double newX = canvas.getLayoutX() + deltaX;
+            double newY = canvas.getLayoutY() + deltaY;
 
             // Establecer las nuevas coordenadas de la figura
-            finalCanvas.setLayoutX(newX);
-            finalCanvas.setLayoutY(newY);
+            canvas.setLayoutX(newX);
+            canvas.setLayoutY(newY);
 
             // Actualizar la posición anterior del cursor
             previousX = event.getSceneX();
             previousY = event.getSceneY();
         });
 
-        finalCanvas.setOnMouseReleased(event -> {
+        canvas.setOnMouseReleased(event -> {
             double releaseX = event.getSceneX();
             double releaseY = event.getSceneY();
             Bounds basureroBounds = basurero.localToScene(basurero.getBoundsInLocal());
 
             // Verificar si las coordenadas del evento están dentro de los límites del Pane Basurero
             if (basureroBounds.contains(releaseX, releaseY)) {
-                panel_Diagrama.getChildren().remove(finalCanvas);
+                panel_Diagrama.getChildren().remove(canvas);
             }
             basurero.setVisible(false);
         });
         //ESCRITURA_FIGURA----------------------------------------------------
-        finalCanvas.setOnMouseClicked(event -> {
+        canvas.setOnMouseClicked(event -> {
             clickCount++;
 
             // Si se ha dado doble clic
@@ -998,8 +1082,8 @@ public class AppController {
                 // Restablecer el contador
                 clickCount = 0;
 
-                double currentX = finalCanvas.getLayoutX();
-                double currentY = finalCanvas.getLayoutY();
+                double currentX = canvas.getLayoutX();
+                double currentY = canvas.getLayoutY();
                 // Habilitar la edición del contenido
                 textContenido.setOpacity(1.0);
                 textContenido.setDisable(false);
@@ -1009,27 +1093,25 @@ public class AppController {
                 textContenido.setMinWidth(size+(size*0.5)); // Ajustar según tus necesidades
                 textContenido.setMinHeight(size); // Ajustar según tus necesidades
                 textContenido.setText(finalTexto);
-                // Establecer el color del texto como negro
-                textContenido.setStyle("-fx-text-fill: black;");
 
                 // Agregar evento de tecla para actualizar el contenido al presionar Enter
                 textContenido.setOnKeyPressed(event_2 -> {
                     if (event_2.getCode() == KeyCode.ENTER) {
                         String newText = textContenido.getText();
                         gc.clearRect(0, 0, size+(size*0.5), size); // Limpiar el canvas
-                        gc.setFill(Color.BLUE);
+                        gc.setFill(colorRelleno);
                         gc.fillRect(0, 0, size+(size*0.5), size); // Dibujar rectángulo relleno
-                        gc.setStroke(Color.BLACK);
+                        gc.setStroke(colorBordes);
                         gc.setLineWidth(2);
                         gc.strokeRect(0, 0, size+(size*0.5), size); // Dibujar borde del rectángulo
-                        gc.setFill(Color.BLACK);
+                        gc.setFill(colorBordes);
                         gc.setFont(font);
                         gc.setTextAlign(TextAlignment.CENTER);
                         gc.setTextBaseline(VPos.CENTER);
                         gc.fillText(newText, size+(size*0.5) / 2, size / 2);
 
-                        panel_Diagrama.getChildren().remove(finalCanvas);
-                        dibujo_rectangulo(newText, currentX, currentY, finalCanvas);
+                        panel_Diagrama.getChildren().remove(canvas);
+                        dibujo_rectangulo(newText, currentX, currentY, canvas,figura);
                         // Deshabilitar la edición del contenido
                         textContenido.clear();
                         textContenido.setOpacity(0.0);
@@ -1050,7 +1132,6 @@ public class AppController {
         String finalTexto = texto;
 
         javafx.scene.text.Text text = new javafx.scene.text.Text(finalTexto);
-        text.setFont(font);
 
         double width = figura.getDimenciones().getAncho();
         double height = figura.getDimenciones().getAlto();
@@ -1059,7 +1140,7 @@ public class AppController {
         //posicion de la figura en relacion al AnchorPane
         double diferencia = figura.getDimenciones().getAncho() / 2;
         canvas.setLayoutX((panel_Diagrama.getMinWidth() / 2) - diferencia+15);
-        canvas.setLayoutY(y);
+        canvas.setLayoutY(y+25);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         // Dibujar el cuerpo del documento (rectángulo)
@@ -1110,7 +1191,7 @@ public class AppController {
 
             // Establecer las nuevas coordenadas de la figura
             canvas.setLayoutX(newX);
-            canvas.setLayoutY(newY);
+            canvas.setLayoutY(newY+23);
 
             // Actualizar la posición anterior del cursor
             previousX = event.getSceneX();
