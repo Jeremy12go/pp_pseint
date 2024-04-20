@@ -879,55 +879,67 @@ public class AppController {
         });
         //editar contenido
         canvas.setOnMouseClicked(event -> {
-            double _diferencia = figura.getDimenciones().getAncho()/2;
-            textContenido.setOpacity(1.0);
-            textContenido.setDisable(false);
-            panel_Diagrama.getChildren().add(textContenido);
-            textContenido.getStyleClass().add("Contenido_edit");
-            textContenido.setLayoutX((panel_Diagrama.getMinWidth()/2)-_diferencia+50);
-            textContenido.setLayoutY(figura.getVertice_conexion().getY()+50);//+24
-            textContenido.setMinWidth(canvas.getWidth() / 1.5);
-            textContenido.setMinHeight(canvas.getHeight() / 2);
-            textContenido.setText(figura.getContenido());
+            clickCount++;
 
-            String pre_text = figura.getContenido();
-            figura.setContenido("");
-            limpiar_canvas(canvas);
-            dibujo_paralelogramo(canvas,figura,tipo);
+            // Si se ha dado doble clic
+            if (clickCount == 2) {
+                // Restablecer el contador
+                clickCount = 0;
+                double _diferencia = figura.getDimenciones().getAncho()/2;
+                textContenido.setOpacity(1.0);
+                textContenido.setDisable(false);
+                panel_Diagrama.getChildren().add(textContenido);
+                textContenido.getStyleClass().add("Contenido_edit");
+                textContenido.setLayoutX((panel_Diagrama.getMinWidth()/2)-_diferencia+50);
+                textContenido.setLayoutY(figura.getVertice_conexion().getY()+50);//+24
+                textContenido.setMinWidth(canvas.getWidth() / 1.5);
+                textContenido.setMinHeight(canvas.getHeight() / 2);
+                textContenido.setText(figura.getContenido());
 
-            textContenido.setOnKeyPressed(event_2 -> {
-                if (event_2.getCode() == KeyCode.ENTER) {
-                    figura.setContenido(textContenido.getText());
-                    String new_text = textContenido.getText();
-                    double pre_dimension = figura.getDimenciones().getAncho();
+                String pre_text = figura.getContenido();
+                figura.setContenido("");
+                limpiar_canvas(canvas);
+                dibujo_paralelogramo(canvas,figura,tipo);
 
-                    //recalculo de la dimensiones de la figura por contenido
-                    if(8*new_text.length()+25<=153){
-                        figura.getDimenciones().setAncho(153);
-                        canvas.setWidth(153);
-                        textContenido.setMinWidth(153);
-                    }else{
-                        figura.getDimenciones().setAncho(8*new_text.length()+25);
-                        canvas.setWidth(8*new_text.length()+25);
-                        textContenido.setMinWidth(canvas.getWidth()*0.7);
+                textContenido.setOnKeyPressed(event_2 -> {
+                    if (event_2.getCode() == KeyCode.ENTER) {
+                        figura.setContenido(textContenido.getText());
+                        String new_text = textContenido.getText();
+                        double pre_dimension = figura.getDimenciones().getAncho();
+
+                        //recalculo de la dimensiones de la figura por contenido
+                        if(8*new_text.length()+25<=153){
+                            figura.getDimenciones().setAncho(153);
+                            canvas.setWidth(153);
+                            textContenido.setMinWidth(153);
+                        }else{
+                            figura.getDimenciones().setAncho(8*new_text.length()+25);
+                            canvas.setWidth(8*new_text.length()+25);
+                            textContenido.setMinWidth(canvas.getWidth()*0.7);
+                        }
+
+                        //editar posicion en relacion al largo(mitad del panel)
+                        double _diferencia_ = figura.getDimenciones().getAncho()/2;
+                        textContenido.setLayoutX((panel_Diagrama.getWidth()/2)-_diferencia_);
+                        canvas.setLayoutX((panel_Diagrama.getWidth()/2)-_diferencia_);
+                        Vertice reajuste_v = new Vertice((panel_Diagrama.getMinWidth()/2)-_diferencia_,figura.getDimenciones().getAlto());
+                        figura.setVertice_conexion(reajuste_v);
+
+                        //redibujo
+                        limpiar_canvas(canvas);
+                        dibujo_paralelogramo(canvas,figura,tipo);
+                        textContenido.clear();
+                        textContenido.setOpacity(0.0);
+                        textContenido.setDisable(true);
+                        panel_Diagrama.getChildren().remove(textContenido);
                     }
-
-                    //editar posicion en relacion al largo(mitad del panel)
-                    double _diferencia_ = figura.getDimenciones().getAncho()/2;
-                    textContenido.setLayoutX((panel_Diagrama.getWidth()/2)-_diferencia_);
-                    canvas.setLayoutX((panel_Diagrama.getWidth()/2)-_diferencia_);
-                    Vertice reajuste_v = new Vertice((panel_Diagrama.getMinWidth()/2)-_diferencia_,figura.getDimenciones().getAlto());
-                    figura.setVertice_conexion(reajuste_v);
-
-                    //redibujo
-                    limpiar_canvas(canvas);
-                    dibujo_paralelogramo(canvas,figura,tipo);
-                    textContenido.clear();
-                    textContenido.setOpacity(0.0);
-                    textContenido.setDisable(true);
-                    panel_Diagrama.getChildren().remove(textContenido);
-                }
-            });
+                });
+            } else {
+                Timeline timeline = new Timeline(new KeyFrame(Duration.millis(300), e -> {
+                    clickCount = 0;
+                }));
+                timeline.play();
+            }
         });
     }
 
@@ -1024,8 +1036,6 @@ public class AppController {
                 textContenido.setMinWidth(size); // Ajustar según tus necesidades
                 textContenido.setMinHeight(size); // Ajustar según tus necesidades
                 textContenido.setText(finalTexto);
-                // Establecer el color del texto como negro
-                textContenido.setStyle("-fx-text-fill: black;");//revisar
 
                 // Agregar evento de tecla para actualizar el contenido al presionar Enter
                 textContenido.setOnKeyPressed(event_2 -> {
@@ -1258,7 +1268,7 @@ public class AppController {
 
             // Establecer las nuevas coordenadas de la figura
             canvas.setLayoutX(newX);
-            canvas.setLayoutY(newY+23);
+            canvas.setLayoutY(newY);
 
             // Actualizar la posición anterior del cursor
             previousX = event.getSceneX();
@@ -1330,7 +1340,6 @@ public class AppController {
                         double _diferencia_ = figura.getDimenciones().getAncho()/2;
                         Vertice reajuste_v = new Vertice((panel_Diagrama.getMinWidth()/2)-_diferencia_,figura.getDimenciones().getAlto());
                         figura.setVertice_conexion(reajuste_v);
-                        //figura.setContenido(textContenido.getText());
 
                         //redibujo
                         limpiar_canvas(canvas);
