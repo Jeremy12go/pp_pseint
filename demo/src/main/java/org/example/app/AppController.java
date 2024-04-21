@@ -98,6 +98,7 @@ public class AppController {
 
     Diagrama ins = Diagrama.getInstance();
 
+    ArrayList<Conector> conexiones = new ArrayList<Conector>();
     //MOUSE_FUNCIONES------------------------------------------------------------------------------
     @FXML
     private void onMousePressed(MouseEvent event) {
@@ -652,7 +653,6 @@ public class AppController {
             double _diferencia = dimencion_Finicio.getAncho()/2;
             textContenido.setOpacity(1.0);
             textContenido.setDisable(false);
-            panel_Diagrama.getChildren().add(textContenido);
             textContenido.getStyleClass().add("Contenido_edit");
             textContenido.setLayoutX((panel_Diagrama.getMinWidth()/2)-_diferencia+50);
             textContenido.setLayoutY(p_Finicio_cordenada.getY() + 24);
@@ -1268,7 +1268,7 @@ public class AppController {
 
             // Establecer las nuevas coordenadas de la figura
             canvas.setLayoutX(newX);
-            canvas.setLayoutY(newY);
+            canvas.setLayoutY(newY+23);
 
             // Actualizar la posición anterior del cursor
             previousX = event.getSceneX();
