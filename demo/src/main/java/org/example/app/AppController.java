@@ -19,6 +19,7 @@ import javafx.scene.paint.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 import javafx.scene.control.TabPane;
+import java.util.List;
 import java.util.Objects;
 import javafx.scene.shape.ArcType;
 import java.math.*;
@@ -108,7 +109,6 @@ public class AppController {
         originalY = sourceDiagram.getLayoutY();
         basurero.setVisible(true);
     }
-
     @FXML
     private void onMouseDragged(MouseEvent event) {
         ImageView sourceDiagram = (ImageView) event.getSource();
@@ -182,251 +182,267 @@ public class AppController {
         Figura ultimaFAñadida = null;
         Canvas ultimaCAñadida = null;
         String contenido = "";
-        if (figura_condiconal == sourceDiagram) {
 
-            Vertice p_Fcondicional_direccion = new Vertice(32.5, 25); //no cambiar
-            Vertice p_Fcondicional_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y-40);
-            Arista dimencion_Fentrada = new Arista(120, 70);
-            contenido= " A > B ";
-            ArrayList<String> contenidoValidado = new ArrayList<String>(); //Ajustar
-            Condicional condicional = new Condicional(contenido, p_Fcondicional_direccion, p_Fcondicional_conexion, dimencion_Fentrada,contenidoValidado);
+        Figura _inicial = (Figura) ins.getList_figuras().get(0);
+        Figura _final = (Figura)ins.getList_figuras().get(ins.getList_figuras().size()-1);
 
-            Canvas canvas_Fcondicional = new Canvas(dimencion_Fentrada.getAncho(), dimencion_Fentrada.getAlto());
+        //condicional que valide si las cordenadas estan dentro de lo razonable para agregar
+        if((panel_Diagrama.getWidth()/2)-150 < x && x < (panel_Diagrama.getWidth()/2)+150) {
+            if (_inicial.getVertice_conexion().getY() < y && y < _final.getVertice_conexion().getY() - 70) {
 
-            dibujo_condicional(contenido,x, y, canvas_Fcondicional, condicional);
-            //conector preNuevafigura
-            Figura figuraOrigen = determinarFiguraOrigen(x, y);
-            if (figuraOrigen != null) {
-                conectar(figuraOrigen, condicional,x,y);
-            } else {
-                System.out.println("No se pudo encontrar una figura de origen cercana.");
+                if (figura_condiconal == sourceDiagram) {
+                    Vertice p_Fcondicional_direccion = new Vertice(32.5, 25); //no cambiar
+                    Vertice p_Fcondicional_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
+                    Arista dimencion_Fentrada = new Arista(120, 70);
+                    contenido = " A > B ";
+                    ArrayList<String> contenidoValidado = new ArrayList<String>(); //Ajustar
+                    Condicional condicional = new Condicional(contenido, p_Fcondicional_direccion, p_Fcondicional_conexion, dimencion_Fentrada, contenidoValidado);
+
+                    Canvas canvas_Fcondicional = new Canvas(dimencion_Fentrada.getAncho(), dimencion_Fentrada.getAlto());
+
+                    dibujo_condicional(x, y, canvas_Fcondicional, condicional);
+                    //conector preNuevafigura
+                    Figura figuraOrigen = determinarFiguraOrigen(x, y);
+                    if (figuraOrigen != null) {
+                        conectar(figuraOrigen, condicional,x,y);
+                    } else {
+                        System.out.println("No se pudo encontrar una figura de origen cercana.");
+                    }
+
+                    // Agregar la nueva figura al panel
+                    panel_Diagrama.getChildren().add(canvas_Fcondicional);
+                    ultimaFAñadida = condicional;
+                    ultimaCAñadida = canvas_Fcondicional;
+                    // Agregar el canvas nueva figura a la lista de conectores
+                    ins.getList_orden().add(canvas_Fcondicional);
+
+                    // Agregar la nueva figura a la lista de figuras, antes de figura siguiente
+                    int indice_Fposterior = determinarFiguraDestinoIndice(figuraOrigen, x, y);
+                    ins.agregarElemento(condicional, 1, indice_Fposterior);
+
+                    //conector posNuevafigura
+                    Figura figuraDestino = determinarFiguraDestino(condicional, x, y);
+                    if (figuraDestino != null) {
+                        conectar(condicional, figuraDestino,x,y);
+                    } else {
+                        System.out.println("No se pudo encontrar una figura destino cercana.");
+                    }
+
+                    //eliminar conector anterior
+                    Conector preconector = obtenerConexionPrevia(figuraOrigen, figuraDestino);
+                    if (preconector != null) {
+                        ins.getList_conexiones().remove(preconector);
+                        ins.getList_orden().remove(preconector);
+                        panel_Diagrama.getChildren().remove(preconector);
+                    }
+                    //reposicionar canvas para la nueva figura
+
+                } else if (figura_documento == sourceDiagram) {
+                    Vertice p_Fdocumento_direccion = new Vertice(32.5, 25); //no cambiar
+                    Vertice p_Fdocumento_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
+                    Arista dimencion_Fentrada = new Arista(120, 70);
+                    contenido = " Documento ";
+                    Documento documento = new Documento(contenido, p_Fdocumento_direccion, p_Fdocumento_conexion, dimencion_Fentrada);
+
+                    Canvas canvas_Fdocumento = new Canvas(dimencion_Fentrada.getAncho(), dimencion_Fentrada.getAlto());
+
+                    dibujo_documento(x, y, canvas_Fdocumento, documento);
+
+                    //conector preNuevafigura
+                    Figura figuraOrigen = determinarFiguraOrigen(x, y);
+                    if (figuraOrigen != null) {
+                        conectar(figuraOrigen, documento,x,y);
+                    } else {
+                        System.out.println("No se pudo encontrar una figura de origen cercana.");
+                    }
+
+                    // Agregar la nueva figura al panel
+                    panel_Diagrama.getChildren().add(canvas_Fdocumento);
+                    ultimaFAñadida = documento;
+                    ultimaCAñadida = canvas_Fdocumento;
+                    // Agregar el canvas nueva figura a la lista de conectores
+                    ins.getList_orden().add(canvas_Fdocumento);
+                    // Agregar la nueva figura a la lista de figuras, antes de figura siguiente
+                    int indice_Fposterior = determinarFiguraDestinoIndice(figuraOrigen, x, y);
+                    ins.agregarElemento(documento, 1, indice_Fposterior);
+
+                    //conector posNuevafigura
+                    Figura figuraDestino = determinarFiguraDestino(documento, x, y);
+                    if (figuraDestino != null) {
+                        conectar(documento, figuraDestino,x,y);
+                    } else {
+                        System.out.println("No se pudo encontrar una figura destino cercana.");
+                    }
+
+                    //eliminar conector anterior
+                    Conector preconector = obtenerConexionPrevia(figuraOrigen, figuraDestino);
+                    if (preconector != null) {
+                        ins.getList_conexiones().remove(preconector);
+                        ins.getList_orden().remove(preconector);
+                        panel_Diagrama.getChildren().remove(preconector);
+                    }
+                    //reposicionar canvas para la nueva figura
+
+                } else if (figura_entrada == sourceDiagram) {
+                    Vertice p_Fentrada_direccion = new Vertice(32.5, 25); //no cambiar
+                    Vertice p_Fentrada_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
+                    contenido = " Entrada: ";
+                    Arista dimencion_Fentrada = new Arista(153, 50);
+                    Entrada entrada = new Entrada(contenido, p_Fentrada_direccion, p_Fentrada_conexion, dimencion_Fentrada);
+
+                    //considerar no salirse de las dimensiones del canvas
+                    Canvas canvas_Fentrada = new Canvas(dimencion_Fentrada.getAncho(), dimencion_Fentrada.getAlto());
+                    //posicion de la figura en relacion al AnchorPane
+                    Figura pre_figura = determinarFiguraOrigen(x,y);
+                    double diferencia = dimencion_Fentrada.getAncho() / 2;
+                    canvas_Fentrada.setLayoutX((panel_Diagrama.getMinWidth() / 2) - diferencia);
+                    canvas_Fentrada.setLayoutY(y);
+                    //entrada.setVertice_conexion(new Vertice((panel_Diagrama.getMinWidth() / 2),canvas_Fentrada.getLayoutY()));
+
+                    //dibujar y agregar canvas al panel
+                    dibujo_paralelogramo(canvas_Fentrada, entrada, 1);
+
+                    //conector preNuevafigura
+                    Figura figuraOrigen = determinarFiguraOrigen(x, y);
+                    if (figuraOrigen instanceof Inicio_Fin) {
+                        conectar(figuraOrigen, entrada,x,y);
+                    } else {
+                        conectar(figuraOrigen, entrada,x,y);
+                    }
+
+                    // Agregar la nueva figura al panel
+                    panel_Diagrama.getChildren().add(canvas_Fentrada);
+                    ultimaFAñadida = entrada;
+                    ultimaCAñadida = canvas_Fentrada;
+                    // Agregar el canvas nueva figura a la lista de conectores
+                    ins.getList_orden().add(entrada);
+                    // Agregar la nueva figura a la lista de figuras, antes de figura siguiente
+                    int indice_Fposterior = determinarFiguraDestinoIndice(figuraOrigen, x, y);
+                    ins.agregarElemento(entrada, 1, indice_Fposterior);
+
+                    //conector posNuevafigura
+                    Figura figuraDestino = determinarFiguraDestino(entrada, x, y);
+                    if (figuraDestino != null) {
+                        conectar(entrada, figuraDestino,x,y);
+                    } else {
+                        System.out.println("No se pudo encontrar una figura destino cercana.");
+                    }
+
+                    //eliminar conector anterior
+                    Conector preconector = obtenerConexionPrevia(figuraOrigen, figuraDestino);
+                    if (preconector != null) {
+                        ins.getList_conexiones().remove(preconector);
+                        ins.getList_orden().remove(preconector);
+                        panel_Diagrama.getChildren().remove(preconector);
+                    }
+                    //reposicionar canvas para la nueva figura
+                } else if (figura_salida == sourceDiagram) {
+
+                    Vertice p_Fsalida_direccion = new Vertice(32.5, 25); //no cambiar
+                    Vertice p_Fsalida_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
+                    contenido = " Salida: ";
+                    Arista dimencion_Fsalida = new Arista(153, 50);
+                    Salida salida = new Salida(contenido, p_Fsalida_direccion, p_Fsalida_conexion, dimencion_Fsalida);
+
+                    Canvas canvas_Fsalida = new Canvas(dimencion_Fsalida.getAncho(), dimencion_Fsalida.getAlto());
+                    //posicion de la figura en relacion al AnchorPane
+                    double diferencia = dimencion_Fsalida.getAncho() / 2;
+                    canvas_Fsalida.setLayoutX((panel_Diagrama.getMinWidth() / 2) - diferencia);
+                    canvas_Fsalida.setLayoutY(y);
+
+                    //dibujar y agregar canvas al panel
+                    dibujo_paralelogramo(canvas_Fsalida, salida, 0);
+
+                    //conector preNuevafigura
+                    Figura figuraOrigen = determinarFiguraOrigen(x, y);
+                    if (figuraOrigen != null) {
+                        conectar(figuraOrigen, salida,x,y);
+                    } else {
+                        System.out.println("No se pudo encontrar una figura de origen cercana.");
+                    }
+
+                    // Agregar la nueva figura al panel
+                    panel_Diagrama.getChildren().add(canvas_Fsalida);
+                    ultimaFAñadida = salida;
+                    ultimaCAñadida = canvas_Fsalida;
+                    // Agregar el canvas nueva figura a la lista de conectores
+                    ins.getList_orden().add(canvas_Fsalida);
+                    // Agregar la nueva figura a la lista de figuras, antes de figura siguiente
+                    int indice_Fposterior = determinarFiguraDestinoIndice(figuraOrigen, x, y);
+                    ins.agregarElemento(salida, 1, indice_Fposterior);
+
+                    //conector posNuevafigura
+                    Figura figuraDestino = determinarFiguraDestino(salida, x, y);
+                    if (figuraDestino != null) {
+                        conectar(salida, figuraDestino,x,y);
+                    } else {
+                        System.out.println("No se pudo encontrar una figura destino cercana.");
+                    }
+
+                    //eliminar conector anterior
+                    Conector preconector = obtenerConexionPrevia(figuraOrigen, figuraDestino);
+                    if (preconector != null) {
+                        ins.getList_conexiones().remove(preconector);
+                        ins.getList_orden().remove(preconector);
+                        panel_Diagrama.getChildren().remove(preconector);
+                    }
+                    //reposicionar canvas para la nueva figura
+
+                } else if (figura_proceso == sourceDiagram) {
+                    Vertice p_Fproceso_direccion = new Vertice(32.5, 25); //no cambiar
+                    Vertice p_Fproeso_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
+                    contenido = " Proceso ";
+                    Arista dimencion_Fproceso = new Arista(120, 40);
+                    String contenidoValidado = ""; //Ajustar
+                    ArrayList<String> operaciones = new ArrayList<String>(); //Ajustar
+                    ArrayList<String> operandos = new ArrayList<String>(); //Ajustar
+                    Proceso proceso = new Proceso(contenido, p_Fproceso_direccion, p_Fproeso_conexion, dimencion_Fproceso, contenidoValidado, operaciones, operandos);
+
+                    Canvas canvas_Fproceso = new Canvas(dimencion_Fproceso.getAncho(), dimencion_Fproceso.getAlto());
+                    //posicion de la figura en relacion al AnchorPane
+                    double diferencia = dimencion_Fproceso.getAncho() / 2;
+                    canvas_Fproceso.setLayoutX((panel_Diagrama.getMinWidth() / 2) - diferencia);
+                    canvas_Fproceso.setLayoutY(y);
+
+                    //dibujar y agregar canvas al panel
+                    dibujo_rectangulo(x, y, canvas_Fproceso, proceso);
+
+                    //conector preNuevafigura
+                    Figura figuraOrigen = determinarFiguraOrigen(x, y);
+                    if (figuraOrigen != null) {
+                        conectar(figuraOrigen, proceso,x,y);
+                    } else {
+                        System.out.println("No se pudo encontrar una figura de origen cercana.");
+                    }
+
+                    // Agregar la nueva figura al panel
+                    panel_Diagrama.getChildren().add(canvas_Fproceso);
+                    ultimaFAñadida = proceso;
+                    ultimaCAñadida = canvas_Fproceso;
+                    // Agregar el canvas nueva figura a la lista de conectores
+                    ins.getList_orden().add(canvas_Fproceso);
+                    // Agregar la nueva figura a la lista de figuras, antes de figura siguiente
+                    int indice_Fposterior = determinarFiguraDestinoIndice(figuraOrigen, x, y);
+                    ins.agregarElemento(proceso, 1, indice_Fposterior);
+
+                    //conector posNuevafigura
+                    Figura figuraDestino = determinarFiguraDestino(proceso, x, y);
+                    if (figuraDestino != null) {
+                        conectar(proceso, figuraDestino,x,y);
+                    } else {
+                        System.out.println("No se pudo encontrar una figura destino cercana.");
+                    }
+
+                    //eliminar conector anterior
+                    Conector preconector = obtenerConexionPrevia(figuraOrigen, figuraDestino);
+                    if (preconector != null) {
+                        ins.getList_conexiones().remove(preconector);
+                        ins.getList_orden().remove(preconector);
+                        panel_Diagrama.getChildren().remove(preconector);
+                    }
+                    //reposicionar canvas para la nueva figura
+                }
             }
-
-            // Agregar la nueva figura al panel
-            panel_Diagrama.getChildren().add(canvas_Fcondicional);
-            ultimaFAñadida = condicional;
-            ultimaCAñadida = canvas_Fcondicional;
-            // Agregar el canvas nueva figura a la lista de conectores
-            ins.getList_orden().add(canvas_Fcondicional);
-            // Agregar la nueva figura a la lista de figuras
-            ins.getList_figuras().add(condicional);
-
-            //conector posNuevafigura
-            Figura figuraDestino = determinarFiguraDestino(condicional, x, y);
-            if (figuraDestino != null) {
-                conectar(condicional,figuraDestino,x,y);
-            } else {
-                System.out.println("No se pudo encontrar una figura destino cercana.");
-            }
-
-            //eliminar conector anterior
-            Conector preconector = obtenerConexionPrevia(figuraOrigen,figuraDestino);
-            if (preconector != null) {
-                ins.getList_conexiones().remove(preconector);
-                ins.getList_orden().remove(preconector);
-                panel_Diagrama.getChildren().remove(preconector);
-            }
-            //reposicionar canvas para la nueva figura
-
-        } else if (figura_documento == sourceDiagram) {
-            Vertice p_Fdocumento_direccion = new Vertice(32.5, 25); //no cambiar
-            Vertice p_Fdocumento_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y-40);
-            Arista dimencion_Fentrada = new Arista(120, 70);
-            contenido= " Documento ";
-            Documento documento = new Documento(contenido, p_Fdocumento_direccion, p_Fdocumento_conexion, dimencion_Fentrada);
-
-            Canvas canvas_Fdocumento = new Canvas(dimencion_Fentrada.getAncho(), dimencion_Fentrada.getAlto());
-
-            dibujo_documento(x, y, canvas_Fdocumento, documento);
-
-            //conector preNuevafigura
-            Figura figuraOrigen = determinarFiguraOrigen(x, y);
-            if (figuraOrigen != null) {
-                conectar(figuraOrigen, documento,x,y);
-            } else {
-                System.out.println("No se pudo encontrar una figura de origen cercana.");
-            }
-
-            // Agregar la nueva figura al panel
-            panel_Diagrama.getChildren().add(canvas_Fdocumento);
-            ultimaFAñadida = documento;
-            ultimaCAñadida = canvas_Fdocumento;
-            // Agregar el canvas nueva figura a la lista de conectores
-            ins.getList_orden().add(canvas_Fdocumento);
-            // Agregar la nueva figura a la lista de figuras
-            ins.getList_figuras().add(documento);
-
-            //conector posNuevafigura
-            Figura figuraDestino = determinarFiguraDestino(documento, x, y);
-            if (figuraDestino != null) {
-                conectar(documento,figuraDestino,x,y);
-            } else {
-                System.out.println("No se pudo encontrar una figura destino cercana.");
-            }
-
-            //eliminar conector anterior
-            Conector preconector = obtenerConexionPrevia(figuraOrigen,figuraDestino);
-            if (preconector != null) {
-                ins.getList_conexiones().remove(preconector);
-                ins.getList_orden().remove(preconector);
-                panel_Diagrama.getChildren().remove(preconector);
-            }
-            //reposicionar canvas para la nueva figura
-
-        } else if (figura_entrada == sourceDiagram) {
-            Vertice p_Fentrada_direccion = new Vertice(32.5, 25); //no cambiar
-            Vertice p_Fentrada_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y-40);
-            contenido = " Entrada: ";
-            Arista dimencion_Fentrada = new Arista(153, 50);
-            Entrada entrada = new Entrada(contenido, p_Fentrada_direccion, p_Fentrada_conexion, dimencion_Fentrada);
-
-            //considerar no salirse de las dimensiones del canvas
-            Canvas canvas_Fentrada = new Canvas(dimencion_Fentrada.getAncho(), dimencion_Fentrada.getAlto());
-            //posicion de la figura en relacion al AnchorPane
-            double diferencia = dimencion_Fentrada.getAncho() / 2;
-            canvas_Fentrada.setLayoutX((panel_Diagrama.getMinWidth() / 2) - diferencia);
-            canvas_Fentrada.setLayoutY(y);
-
-            //dibujar y agregar canvas al panel
-            dibujo_paralelogramo(canvas_Fentrada, entrada, 1);
-
-            //conector preNuevafigura
-            Figura figuraOrigen = determinarFiguraOrigen(x, y);
-            if (figuraOrigen != null) {
-                conectar(figuraOrigen, entrada,x,y);
-            } else {
-                System.out.println("No se pudo encontrar una figura de origen cercana.");
-            }
-
-            // Agregar la nueva figura al panel
-            panel_Diagrama.getChildren().add(canvas_Fentrada);
-            ultimaFAñadida = entrada;
-            ultimaCAñadida = canvas_Fentrada;
-            // Agregar el canvas nueva figura a la lista de conectores
-            ins.getList_orden().add(entrada);
-            // Agregar la nueva figura a la lista de figuras
-            ins.getList_figuras().add(entrada);
-
-            //conector posNuevafigura
-            Figura figuraDestino = determinarFiguraDestino(entrada, x, y);
-            if (figuraDestino != null) {
-                conectar(entrada,figuraDestino,x,y);
-            } else {
-                System.out.println("No se pudo encontrar una figura destino cercana.");
-            }
-
-            //eliminar conector anterior
-            Conector preconector = obtenerConexionPrevia(figuraOrigen,figuraDestino);
-            if (preconector != null) {
-                ins.getList_conexiones().remove(preconector);
-                ins.getList_orden().remove(preconector);
-                panel_Diagrama.getChildren().remove(preconector);
-            }
-            //reposicionar canvas para la nueva figura
-        } else if (figura_salida == sourceDiagram){
-
-            Vertice p_Fsalida_direccion = new Vertice(32.5, 25); //no cambiar
-            Vertice p_Fsalida_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y-40);
-            contenido = " Salida: ";
-            Arista dimencion_Fsalida = new Arista(153, 50);
-            Salida salida = new Salida(contenido, p_Fsalida_direccion, p_Fsalida_conexion, dimencion_Fsalida);
-
-            Canvas canvas_Fsalida = new Canvas(dimencion_Fsalida.getAncho(), dimencion_Fsalida.getAlto());
-            //posicion de la figura en relacion al AnchorPane
-            double diferencia = dimencion_Fsalida.getAncho() / 2;
-            canvas_Fsalida.setLayoutX((panel_Diagrama.getMinWidth() / 2) - diferencia);
-            canvas_Fsalida.setLayoutY(y);
-
-            //dibujar y agregar canvas al panel
-            dibujo_paralelogramo(canvas_Fsalida, salida, 0);
-
-            //conector preNuevafigura
-            Figura figuraOrigen = determinarFiguraOrigen(x, y);
-            if (figuraOrigen != null) {
-                conectar(figuraOrigen, salida,x,y);
-            } else {
-                System.out.println("No se pudo encontrar una figura de origen cercana.");
-            }
-
-            // Agregar la nueva figura al panel
-            panel_Diagrama.getChildren().add(canvas_Fsalida);
-            ultimaFAñadida = salida;
-            ultimaCAñadida = canvas_Fsalida;
-            // Agregar el canvas nueva figura a la lista de conectores
-            ins.getList_orden().add(canvas_Fsalida);
-            // Agregar la nueva figura a la lista de figuras
-            ins.getList_figuras().add(salida);
-
-            //conector posNuevafigura
-            Figura figuraDestino = determinarFiguraDestino(salida, x, y);
-            if (figuraDestino != null) {
-                conectar(salida,figuraDestino,x,y);
-            } else {
-                System.out.println("No se pudo encontrar una figura destino cercana.");
-            }
-
-            //eliminar conector anterior
-            Conector preconector = obtenerConexionPrevia(figuraOrigen,figuraDestino);
-            if (preconector != null) {
-                ins.getList_conexiones().remove(preconector);
-                ins.getList_orden().remove(preconector);
-                panel_Diagrama.getChildren().remove(preconector);
-            }
-            //reposicionar canvas para la nueva figura
-
-        } else if (figura_proceso == sourceDiagram) {;
-            Vertice p_Fproceso_direccion = new Vertice(32.5, 25); //no cambiar
-            Vertice p_Fproeso_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y-40);
-            contenido= " Proceso ";
-            Arista dimencion_Fproceso = new Arista(120, 40);
-            String contenidoValidado = ""; //Ajustar
-            ArrayList<String> operaciones = new ArrayList<String>(); //Ajustar
-            ArrayList<String> operandos = new ArrayList<String>(); //Ajustar
-            Proceso proceso = new Proceso(contenido, p_Fproceso_direccion, p_Fproeso_conexion, dimencion_Fproceso,contenidoValidado,operaciones,operandos);
-
-            Canvas canvas_Fproceso = new Canvas(dimencion_Fproceso.getAncho(), dimencion_Fproceso.getAlto());
-            //posicion de la figura en relacion al AnchorPane
-            double diferencia = dimencion_Fproceso.getAncho() / 2;
-            canvas_Fproceso.setLayoutX((panel_Diagrama.getMinWidth() / 2) - diferencia);
-            canvas_Fproceso.setLayoutY(y);
-
-            //dibujar y agregar canvas al panel
-            dibujo_rectangulo(contenido, x, y, canvas_Fproceso, proceso);
-
-            //conector preNuevafigura
-            Figura figuraOrigen = determinarFiguraOrigen(x, y);
-            if (figuraOrigen != null) {
-                conectar(figuraOrigen, proceso, x, y);
-            } else {
-                System.out.println("No se pudo encontrar una figura de origen cercana.");
-            }
-
-            // Agregar la nueva figura al panel
-            panel_Diagrama.getChildren().add(canvas_Fproceso);
-            System.out.printf("Canvas añadido!\n");
-            ultimaFAñadida = proceso;
-            ultimaCAñadida = canvas_Fproceso;
-            // Agregar el canvas nueva figura a la lista de conectores
-            ins.getList_orden().add(canvas_Fproceso);
-            // Agregar la nueva figura a la lista de figuras
-            ins.getList_figuras().add(proceso);
-
-            //conector posNuevafigura
-            Figura figuraDestino = determinarFiguraDestino(proceso, x, y);
-            if (figuraDestino != null) {
-                conectar(proceso,figuraDestino,x,y);
-            } else {
-                System.out.println("No se pudo encontrar una figura destino cercana.");
-            }
-
-            //eliminar conector anterior
-            Conector preconector = obtenerConexionPrevia(figuraOrigen,figuraDestino);
-            if (preconector != null) {
-                ins.getList_conexiones().remove(preconector);
-                ins.getList_orden().remove(preconector);
-                panel_Diagrama.getChildren().remove(preconector);
-            }
-            //reposicionar canvas para la nueva figura
         }
     }
 
@@ -528,6 +544,36 @@ public class AppController {
         return figuraOrigen;
     }
 
+    public int determinarFiguraDestinoIndice(Figura figuraOrigen, double x, double y) {
+        List<Figura> listaFiguras = ins.getList_figuras(); // Obtener la lista de figuras
+
+        if (listaFiguras.isEmpty()) {
+            // Si la lista está vacía, no hay figuras, devolver -1
+            return -1;
+        }
+
+        int indiceFiguraDestino = -1; // Inicializar el índice de la figura destino como -1
+        double distanciaMinima = Double.MAX_VALUE;
+
+        for (int i = 0; i < listaFiguras.size(); i++) {
+            Figura figura = listaFiguras.get(i);
+
+            // Excluir la figura de origen de la búsqueda
+            if (figura != figuraOrigen) {
+                // Calcular la distancia entre el punto (x, y) y el punto de conexión de la figura
+                double distancia = calcularDistancia(x, y, figura.getVertice_conexion().getX(), figura.getVertice_conexion().getY());
+
+                // Si la distancia es menor que la distancia mínima actual, actualizar el índice y la distancia mínima
+                if (distancia < distanciaMinima) {
+                    indiceFiguraDestino = i;
+                    distanciaMinima = distancia;
+                }
+            }
+        }
+
+        return indiceFiguraDestino;
+    }
+
     public Figura determinarFiguraDestino(Figura figuraOrigen, double x, double y) {
         Figura figuraDestino = null;
         double distanciaMinima = Double.MAX_VALUE;
@@ -603,6 +649,82 @@ public class AppController {
         // Agregar el conector a la lista de conectores
         Conector conector = new Conector(figuraOrigen.getVertice_conexion(), figuraDestino.getVertice_conexion());
         ins.getList_conexiones().add(conector);
+    }
+
+    public void conectar_1(Figura figuraOrigen, Figura figuraDestino, int tipo) {
+        Conector conectorExistente = obtenerConexionPrevia(figuraOrigen, figuraDestino);
+        double variacion = 100;
+
+        //si la figura es origen no es la figura de inicio se debe mover
+        if(tipo == 0){
+            System.out.printf("figura:"+figuraOrigen.getContenido()+"\n");
+            Canvas canvasOrigen = obtenerCanvasDesdeFigura(figuraOrigen);
+            canvasOrigen.setLayoutY(canvasOrigen.getLayoutY()+variacion);
+        }
+        Canvas canvasDestino = obtenerCanvasDesdeFigura(figuraDestino);
+        canvasDestino.setLayoutY(canvasDestino.getLayoutY()+variacion);
+        // Si ya existe un conector entre las figuras, no crear uno nuevo
+        if (conectorExistente != null) {
+            return;
+        }
+
+        //canvas conector
+        Vertice origen = new Vertice((figuraOrigen.getVertice_conexion().getX()), figuraOrigen.getVertice_conexion().getY()-figuraOrigen.getDimenciones().getAlto());
+        Vertice destino = new Vertice(figuraDestino.getVertice_conexion().getX(),figuraDestino.getVertice_conexion().getY());
+        double diferenciaY = figuraDestino.getVertice_conexion().getY()-40;
+        Canvas conectorCanvas = crear_canvasConector(diferenciaY,figuraOrigen.getVertice_conexion(), figuraDestino.getVertice_conexion());
+
+
+        //posicionamiento del canvas
+        double layoutX = (panel_Diagrama.getMinWidth() / 2) - 20;
+        double layoutY = diferenciaY+15; // Ajustar la posición Y del conector
+        conectorCanvas.setLayoutX(layoutX);
+        conectorCanvas.setLayoutY(layoutY);
+
+        // Agregar el nuevo canvas conector a la lista visual
+        panel_Diagrama.getChildren().add(conectorCanvas);
+
+        // Agregar el canvas conector a la lista de conectores
+        ins.getList_orden().add(conectorCanvas);
+
+        // Agregar el conector a la lista de conectores
+        Conector conector = new Conector(figuraOrigen.getVertice_conexion(), figuraDestino.getVertice_conexion());
+        ins.getList_conexiones().add(conector);
+    }
+
+    private Figura obtenerFiguraDesdeCanvas(Canvas canvas) {
+        ArrayList<Canvas> canvasList = ins.getList_orden();
+        ArrayList<Figura> figuraList = ins.getList_figuras();
+
+        int index = canvasList.indexOf(canvas);
+        if (index != -1 && index < figuraList.size()) {
+            return figuraList.get(index);
+        }
+        return null;
+    }
+
+    private Canvas obtenerCanvasDesdeFigura(Figura figura) {
+        System.out.printf("largoListF:"+ins.getList_figuras().size());
+        ArrayList<Canvas> list_orden = ins.getList_orden();
+        ArrayList<Figura> list_figuras = ins.getList_figuras();
+        ArrayList<Conector> list_conexiones = ins.getList_conexiones();
+        int i = 0;
+        int indexFigura = 0;
+        for(Figura fig : list_figuras){
+            if(figura == fig){
+                indexFigura = i;
+            }
+            i++;
+        }
+
+        // El índice del Canvas en la lista de orden que corresponde a la figura
+        int indexCanvas = indexFigura * 2;
+        System.out.printf("indice:"+indexCanvas+"\n");
+        // Verificamos si el índice esta en la lista
+        if (indexCanvas >= list_orden.size() || indexCanvas < 0) {
+            return null;
+        }
+        return list_orden.get(indexCanvas);
     }
 
     //FIGURAS-----------------------------------------------------------------------------------------
@@ -706,7 +828,7 @@ public class AppController {
         contenido="Fin Algoritmo";
         Arista dimencion_Ffin = new Arista(8*contenido.length()+25, 50);
         Inicio_Fin figura_fin = new Inicio_Fin(contenido, p_Ffin_direccion, p_Ffin_conexion, dimencion_Ffin);
-        diferencia+=250;//distancia entre las figuras iniciales
+        diferencia+=350;//distancia entre las figuras iniciales
         Canvas canvas_Ffin = new Canvas(dimencion_Ffin.getAncho(), dimencion_Ffin.getAlto());
         canvas_Ffin.setLayoutX((panel_Diagrama.getMinWidth()/2)-70);
         canvas_Ffin.setLayoutY(p_Finicio_cordenada.getY()+diferencia);
@@ -787,10 +909,6 @@ public class AppController {
     }
     //FIGURAS_INTERACTIVAS----------------------------------------------------------------------------------------------
     public void dibujo_paralelogramo(Canvas canvas, Figura figura, int tipo){
-        TextField textContenido = new TextField();
-        textContenido.setOpacity(0.0);
-        textContenido.setDisable(true);
-
         // Calcular los otros vértices
         ArrayList<Vertice> vertices = calcular_vertices(figura);
 
@@ -877,70 +995,80 @@ public class AppController {
             }
             basurero.setVisible(false);
         });
+
         //editar contenido
         canvas.setOnMouseClicked(event -> {
-            double _diferencia = figura.getDimenciones().getAncho()/2;
-            textContenido.setOpacity(1.0);
-            textContenido.setDisable(false);
-            panel_Diagrama.getChildren().add(textContenido);
-            textContenido.getStyleClass().add("Contenido_edit");
-            textContenido.setLayoutX((panel_Diagrama.getMinWidth()/2)-_diferencia+50);
-            textContenido.setLayoutY(figura.getVertice_conexion().getY()+50);//+24
-            textContenido.setMinWidth(canvas.getWidth() / 1.5);
-            textContenido.setMinHeight(canvas.getHeight() / 2);
-            textContenido.setText(figura.getContenido());
+            clickCount++;
+            // Si se ha dado doble clic
+            if (clickCount == 2) {
+                // Restablecer el contador
+                clickCount = 0;
+                edición_paralelogramo(canvas,figura,tipo);
+            } else {
+                Timeline timeline = new Timeline(new KeyFrame(Duration.millis(300), e -> {
+                    clickCount = 0;
+                }));
+                timeline.play();
+            }
+        });
 
-            String pre_text = figura.getContenido();
-            figura.setContenido("");
-            limpiar_canvas(canvas);
-            dibujo_paralelogramo(canvas,figura,tipo);
+    }
 
-            textContenido.setOnKeyPressed(event_2 -> {
-                if (event_2.getCode() == KeyCode.ENTER) {
-                    figura.setContenido(textContenido.getText());
-                    String new_text = textContenido.getText();
-                    double pre_dimension = figura.getDimenciones().getAncho();
+    public void edición_paralelogramo(Canvas canvas, Figura figura, int tipo){
+        TextField textContenido = new TextField();
 
-                    //recalculo de la dimensiones de la figura por contenido
-                    if(8*new_text.length()+25<=153){
-                        figura.getDimenciones().setAncho(153);
-                        canvas.setWidth(153);
-                        textContenido.setMinWidth(153);
-                    }else{
-                        figura.getDimenciones().setAncho(8*new_text.length()+25);
-                        canvas.setWidth(8*new_text.length()+25);
-                        textContenido.setMinWidth(canvas.getWidth()*0.7);
-                    }
+        double _diferencia = figura.getDimenciones().getAncho()/2;
+        textContenido.setOpacity(1.0);
+        textContenido.setDisable(false);
+        panel_Diagrama.getChildren().add(textContenido);
+        textContenido.getStyleClass().add("Contenido_edit");
+        textContenido.setLayoutX((panel_Diagrama.getMinWidth()/2)-_diferencia+60);
+        textContenido.setLayoutY(canvas.getLayoutY()+25);//+24
+        textContenido.setMinWidth(canvas.getWidth() / 1.5);
+        textContenido.setMinHeight(canvas.getHeight() / 2);
+        textContenido.setText(figura.getContenido());
 
-                    //editar posicion en relacion al largo(mitad del panel)
-                    double _diferencia_ = figura.getDimenciones().getAncho()/2;
-                    textContenido.setLayoutX((panel_Diagrama.getWidth()/2)-_diferencia_);
-                    canvas.setLayoutX((panel_Diagrama.getWidth()/2)-_diferencia_);
-                    Vertice reajuste_v = new Vertice((panel_Diagrama.getMinWidth()/2)-_diferencia_,figura.getDimenciones().getAlto());
-                    figura.setVertice_conexion(reajuste_v);
+        String pre_text = figura.getContenido();
+        figura.setContenido("");
+        limpiar_canvas(canvas);
+        dibujo_paralelogramo(canvas,figura,tipo);
 
-                    //redibujo
-                    limpiar_canvas(canvas);
-                    dibujo_paralelogramo(canvas,figura,tipo);
-                    textContenido.clear();
-                    textContenido.setOpacity(0.0);
-                    textContenido.setDisable(true);
-                    panel_Diagrama.getChildren().remove(textContenido);
+        textContenido.setOnKeyPressed(event_2 -> {
+            if (event_2.getCode() == KeyCode.ENTER) {
+                figura.setContenido(textContenido.getText());
+                String new_text = textContenido.getText();
+                double pre_dimension = figura.getDimenciones().getAncho();
+
+                //recalculo de la dimensiones de la figura por contenido
+                if(8*new_text.length()+25<=153){
+                    figura.getDimenciones().setAncho(153);
+                    canvas.setWidth(153);
+                    textContenido.setMinWidth(153);
+                }else{
+                    figura.getDimenciones().setAncho(8*new_text.length()+25);
+                    canvas.setWidth(8*new_text.length()+25);
+                    textContenido.setMinWidth(canvas.getWidth()*0.7);
                 }
-            });
+
+                //editar posicion en relacion al largo(mitad del panel)
+                double _diferencia_ = figura.getDimenciones().getAncho()/2;
+                textContenido.setLayoutX((panel_Diagrama.getWidth()/2)-_diferencia_);
+                canvas.setLayoutX((panel_Diagrama.getWidth()/2)-_diferencia_);
+                Vertice reajuste_v = new Vertice((panel_Diagrama.getMinWidth()/2)-_diferencia_,figura.getDimenciones().getAlto());
+                figura.setVertice_conexion(reajuste_v);
+
+                //redibujo
+                limpiar_canvas(canvas);
+                dibujo_paralelogramo(canvas,figura,tipo);
+                textContenido.clear();
+                panel_Diagrama.getChildren().remove(textContenido);
+            }
         });
     }
 
-    public void dibujo_condicional(String texto,double x, double y, Canvas canvas, Figura figura){
-        TextField textContenido = new TextField();
-        textContenido.setOpacity(0.0);
-        textContenido.setDisable(true);
-
-        // Crear un objeto Text para calcular el ancho del texto
-        if(Objects.equals(texto, "") || Objects.equals(texto, " ") || Objects.equals(texto, "  ") || Objects.equals(texto, "   ")){texto= " A > B ";}
-        String finalTexto = texto;
-
-        javafx.scene.text.Text text = new javafx.scene.text.Text(finalTexto);
+    public void dibujo_condicional(double x, double y, Canvas canvas, Figura figura){
+        String finalTexto = figura.getContenido();
+        javafx.scene.text.Text text = new javafx.scene.text.Text(figura.getContenido());
 
         double width = figura.getDimenciones().getAncho()/2;
         double height = figura.getDimenciones().getAlto()/2;
@@ -1011,47 +1139,7 @@ public class AppController {
             if (clickCount == 2) {
                 // Restablecer el contador
                 clickCount = 0;
-
-                double currentX = canvas.getLayoutX();
-                double currentY = canvas.getLayoutY();
-                // Habilitar la edición del contenido
-                textContenido.setOpacity(1.0);
-                textContenido.setDisable(false);
-                panel_Diagrama.getChildren().add(textContenido);
-                textContenido.getStyleClass().add("Contenido_edit");
-                textContenido.setLayoutX(currentX); // Ajustar según tus necesidades
-                textContenido.setLayoutY(currentY); // Ajustar según tus necesidades
-                textContenido.setMinWidth(size); // Ajustar según tus necesidades
-                textContenido.setMinHeight(size); // Ajustar según tus necesidades
-                textContenido.setText(finalTexto);
-                // Establecer el color del texto como negro
-                textContenido.setStyle("-fx-text-fill: black;");//revisar
-
-                // Agregar evento de tecla para actualizar el contenido al presionar Enter
-                textContenido.setOnKeyPressed(event_2 -> {
-                    if (event_2.getCode() == KeyCode.ENTER) {
-                        String newText = textContenido.getText();
-                        gc.clearRect(0, 0, size, size); // Limpiar el canvas
-                        gc.setFill(Color.RED);
-                        gc.fillPolygon(xPoints, yPoints, 4);
-                        gc.setStroke(Color.BLACK);
-                        gc.setLineWidth(2);
-                        gc.strokePolygon(xPoints, yPoints, 4);
-                        gc.setFill(Color.BLACK);
-                        gc.setFont(font);
-                        gc.setTextAlign(TextAlignment.CENTER);
-                        gc.setTextBaseline(VPos.CENTER);
-                        gc.fillText(newText, size / 2, size / 2);
-
-                        panel_Diagrama.getChildren().remove(canvas);
-                        dibujo_condicional(newText, currentX, currentY,canvas,figura);
-                        // Deshabilitar la edición del contenido
-                        textContenido.clear();
-                        textContenido.setOpacity(0.0);
-                        textContenido.setDisable(true);
-                        panel_Diagrama.getChildren().remove(textContenido);
-                    }
-                });
+                edición_condicional(canvas, figura);
             } else {
                 Timeline timeline = new Timeline(new KeyFrame(Duration.millis(300), e -> {
                     clickCount = 0;
@@ -1061,17 +1149,71 @@ public class AppController {
         });
     }
 
-    public void dibujo_rectangulo(String texto, double x, double y,Canvas canvas, Figura figura) {
-
+    public void edición_condicional(Canvas canvas, Figura figura){
         TextField textContenido = new TextField();
         textContenido.setOpacity(0.0);
         textContenido.setDisable(true);
 
-        // Crear un objeto Text para calcular el ancho del texto
-        if(Objects.equals(texto, "") || Objects.equals(texto, " ") || Objects.equals(texto, "  ") || Objects.equals(texto, "   ")){texto= " Proceso ";}
-        String finalTexto = texto;
+        double size = Math.max(figura.getDimenciones().getAncho()/2, figura.getDimenciones().getAlto()/2);//+40
+        double currentX = canvas.getLayoutX();
+        double currentY = canvas.getLayoutY();
 
-        javafx.scene.text.Text text = new javafx.scene.text.Text(finalTexto);
+        // Habilitar la edición del contenido
+        textContenido.setOpacity(1.0);
+        textContenido.setDisable(false);
+        panel_Diagrama.getChildren().add(textContenido);
+        textContenido.getStyleClass().add("Contenido_edit");
+        textContenido.setLayoutX(currentX+10); // Ajustar según tus necesidades
+        textContenido.setLayoutY(currentY+15); // Ajustar según tus necesidades
+        textContenido.setMinWidth(size); // Ajustar según tus necesidades
+        textContenido.setMinHeight(size); // Ajustar según tus necesidades
+        textContenido.setText(figura.getContenido());
+
+        String pre_text = figura.getContenido();
+        figura.setContenido("");
+        limpiar_canvas(canvas);
+        dibujo_condicional(currentX, currentY-25, canvas,figura);
+
+        // Agregar evento de tecla para actualizar el contenido al presionar Enter
+        textContenido.setOnKeyPressed(event_2 -> {
+            if (event_2.getCode() == KeyCode.ENTER) {
+                figura.setContenido(textContenido.getText());
+                String new_text = textContenido.getText();
+                double pre_dimension = figura.getDimenciones().getAncho();
+
+                pre_dimension = figura.getDimenciones().getAncho();
+
+                //recalculo de la dimensiones de la figura por contenido
+                if(8*new_text.length()+25<=120){
+                    figura.getDimenciones().setAncho(120);
+                    canvas.setWidth(120);
+                    canvas.setHeight(120);
+                    textContenido.setMinWidth(120);
+                }else{
+                    figura.getDimenciones().setAncho(6*new_text.length()+25);
+                    canvas.setWidth(6*new_text.length()+25);
+                    canvas.setHeight(6*new_text.length());
+                    textContenido.setMinWidth(canvas.getWidth()*0.7);
+                }
+
+                //editar posicion en relacion al largo(mitad del panel)
+                double _diferencia_ = figura.getDimenciones().getAncho()/2;
+                Vertice reajuste_v = new Vertice((panel_Diagrama.getMinWidth()/2)-_diferencia_,figura.getDimenciones().getAlto());
+                figura.setVertice_conexion(reajuste_v);
+                //figura.setContenido(textContenido.getText());
+
+                //redibujo
+                limpiar_canvas(canvas);
+                dibujo_condicional(currentX, currentY-25, canvas, figura);
+                textContenido.clear();
+                panel_Diagrama.getChildren().remove(textContenido);
+            }
+        });
+    }
+
+    public void dibujo_rectangulo(double x, double y,Canvas canvas, Figura figura) {
+        String finalTexto = figura.getContenido();
+        javafx.scene.text.Text text = new javafx.scene.text.Text(figura.getContenido());
 
         double width = figura.getDimenciones().getAncho()/2;
         double height = figura.getDimenciones().getAlto()/2;
@@ -1080,7 +1222,7 @@ public class AppController {
         //posicion de la figura en relacion al AnchorPane
         double diferencia = figura.getDimenciones().getAncho() / 2;
         canvas.setLayoutX((panel_Diagrama.getMinWidth() / 2) - diferencia+15);
-        canvas.setLayoutY(y+24);
+        canvas.setLayoutY(y+25);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         // Dibujar el rectángulo
@@ -1144,45 +1286,7 @@ public class AppController {
             if (clickCount == 2) {
                 // Restablecer el contador
                 clickCount = 0;
-
-                double currentX = canvas.getLayoutX();
-                double currentY = canvas.getLayoutY();
-                // Habilitar la edición del contenido
-                textContenido.setOpacity(1.0);
-                textContenido.setDisable(false);
-                panel_Diagrama.getChildren().add(textContenido);
-                textContenido.getStyleClass().add("Contenido_edit");
-                textContenido.setLayoutX(currentX); // Ajustar según tus necesidades
-                textContenido.setLayoutY(currentY); // Ajustar según tus necesidades
-                textContenido.setMinWidth(size+(size*0.5)); // Ajustar según tus necesidades
-                textContenido.setMinHeight(size); // Ajustar según tus necesidades
-                textContenido.setText(finalTexto);
-
-                // Agregar evento de tecla para actualizar el contenido al presionar Enter
-                textContenido.setOnKeyPressed(event_2 -> {
-                    if (event_2.getCode() == KeyCode.ENTER) {
-                        String newText = textContenido.getText();
-                        gc.clearRect(0, 0, size+(size*0.5), size); // Limpiar el canvas
-                        gc.setFill(colorRelleno);
-                        gc.fillRect(0, 0, size+(size*0.5), size); // Dibujar rectángulo relleno
-                        gc.setStroke(colorBordes);
-                        gc.setLineWidth(2);
-                        gc.strokeRect(0, 0, size+(size*0.5), size); // Dibujar borde del rectángulo
-                        gc.setFill(colorBordes);
-                        gc.setFont(font);
-                        gc.setTextAlign(TextAlignment.CENTER);
-                        gc.setTextBaseline(VPos.CENTER);
-                        gc.fillText(newText, size+(size*0.5) / 2, size / 2);
-
-                        panel_Diagrama.getChildren().remove(canvas);
-                        dibujo_rectangulo(newText, currentX, currentY, canvas,figura);
-                        // Deshabilitar la edición del contenido
-                        textContenido.clear();
-                        textContenido.setOpacity(0.0);
-                        textContenido.setDisable(true);
-                        panel_Diagrama.getChildren().remove(textContenido);
-                    }
-                });
+                edición_rectangulo(canvas,figura);
             } else {
                 Timeline timeline = new Timeline(new KeyFrame(Duration.millis(300), e -> {
                     clickCount = 0;
@@ -1192,11 +1296,68 @@ public class AppController {
         });
     }
 
-    public void dibujo_documento(double x, double y, Canvas canvas, Figura figura) {
+    public void edición_rectangulo(Canvas canvas, Figura figura){
         TextField textContenido = new TextField();
         textContenido.setOpacity(0.0);
         textContenido.setDisable(true);
 
+        double currentX = canvas.getLayoutX();
+        double currentY = canvas.getLayoutY();
+        double size = Math.max(figura.getDimenciones().getAncho()/2, figura.getDimenciones().getAlto()/2)+20;
+
+        // Habilitar la edición del contenido
+        textContenido.setOpacity(1.0);
+        textContenido.setDisable(false);
+        panel_Diagrama.getChildren().add(textContenido);
+        textContenido.getStyleClass().add("Contenido_edit");
+        textContenido.setLayoutX(currentX); // Ajustar según tus necesidades
+        textContenido.setLayoutY(currentY+10); // Ajustar según tus necesidades
+        textContenido.setMinWidth(size+(size*0.5)); // Ajustar según tus necesidades
+        textContenido.setMinHeight(size); // Ajustar según tus necesidades
+        textContenido.setText(figura.getContenido());
+
+        String pre_text = figura.getContenido();
+        figura.setContenido("");
+        limpiar_canvas(canvas);
+        dibujo_rectangulo(currentX, currentY-25, canvas,figura);
+
+        // Agregar evento de tecla para actualizar el contenido al presionar Enter
+        textContenido.setOnKeyPressed(event_2 -> {
+            if (event_2.getCode() == KeyCode.ENTER) {
+
+                figura.setContenido(textContenido.getText());
+                String new_text = textContenido.getText();
+                double pre_dimension = figura.getDimenciones().getAncho();
+
+                pre_dimension = figura.getDimenciones().getAncho();
+
+                //recalculo de la dimensiones de la figura por contenido
+                if(8*new_text.length()+25<=120){
+                    figura.getDimenciones().setAncho(120);
+                    canvas.setWidth(120);
+                    textContenido.setMinWidth(120);
+                }else{
+                    figura.getDimenciones().setAncho(6*new_text.length()+25);
+                    canvas.setWidth(6*new_text.length()+25);
+                    textContenido.setMinWidth(canvas.getWidth()*0.6);
+                }
+
+                //editar posicion en relacion al largo(mitad del panel)
+                double _diferencia_ = figura.getDimenciones().getAncho()/2;
+                Vertice reajuste_v = new Vertice((panel_Diagrama.getMinWidth()/2)-_diferencia_,figura.getDimenciones().getAlto());
+                figura.setVertice_conexion(reajuste_v);
+                //figura.setContenido(textContenido.getText());
+
+                //redibujo
+                limpiar_canvas(canvas);
+                dibujo_rectangulo(currentX, currentY-25, canvas, figura);
+                textContenido.clear();
+                panel_Diagrama.getChildren().remove(textContenido);
+            }
+        });
+    }
+
+    public void dibujo_documento(double x, double y, Canvas canvas, Figura figura) {
         String finalTexto = figura.getContenido();
         javafx.scene.text.Text text = new javafx.scene.text.Text(figura.getContenido());
 
@@ -1258,7 +1419,7 @@ public class AppController {
 
             // Establecer las nuevas coordenadas de la figura
             canvas.setLayoutX(newX);
-            canvas.setLayoutY(newY+23);
+            canvas.setLayoutY(newY);
 
             // Actualizar la posición anterior del cursor
             previousX = event.getSceneX();
@@ -1285,65 +1446,72 @@ public class AppController {
             if (clickCount == 2) {
                 // Restablecer el contador
                 clickCount = 0;
-
-                double currentX = canvas.getLayoutX();
-                double currentY = canvas.getLayoutY();
-
-                // Tu código para habilitar la edición del contenido
-                textContenido.setOpacity(1.0);
-                textContenido.setDisable(false);
-                panel_Diagrama.getChildren().add(textContenido);
-                textContenido.getStyleClass().add("Contenido_edit");
-                textContenido.setLayoutX(currentX+22.5); // Ajustar según tus necesidades
-                textContenido.setLayoutY(currentY+4.5); // Ajustar según tus necesidades
-                textContenido.setMinWidth(width-100); // Ajustar según tus necesidades
-                textContenido.setMinHeight(height-20); // Ajustar según tus necesidades
-                textContenido.setText(figura.getContenido());
-
-                String pre_text = figura.getContenido();
-                figura.setContenido("");
-                limpiar_canvas(canvas);
-                dibujo_documento(currentX, currentY-25, canvas,figura);
-
-                // Agregar evento de tecla para actualizar el contenido al presionar Enter
-                textContenido.setOnKeyPressed(event_2 -> {
-                    if (event_2.getCode() == KeyCode.ENTER) {
-
-                        figura.setContenido(textContenido.getText());
-                        String new_text = textContenido.getText();
-                        double pre_dimension = figura.getDimenciones().getAncho();
-
-                        pre_dimension = figura.getDimenciones().getAncho();
-
-                        //recalculo de la dimensiones de la figura por contenido
-                        if(8*new_text.length()+25<=120){
-                            figura.getDimenciones().setAncho(120);
-                            canvas.setWidth(120);
-                            textContenido.setMinWidth(120);
-                        }else{
-                            figura.getDimenciones().setAncho(6*new_text.length()+25);
-                            canvas.setWidth(6*new_text.length()+25);
-                            textContenido.setMinWidth(canvas.getWidth()*0.7);
-                        }
-
-                        //editar posicion en relacion al largo(mitad del panel)
-                        double _diferencia_ = figura.getDimenciones().getAncho()/2;
-                        Vertice reajuste_v = new Vertice((panel_Diagrama.getMinWidth()/2)-_diferencia_,figura.getDimenciones().getAlto());
-                        figura.setVertice_conexion(reajuste_v);
-                        //figura.setContenido(textContenido.getText());
-
-                        //redibujo
-                        limpiar_canvas(canvas);
-                        dibujo_documento(currentX, currentY-25, canvas, figura);
-                        textContenido.clear();
-                        panel_Diagrama.getChildren().remove(textContenido);
-                    }
-                });
+                edición_rectangulo(canvas,figura);
             } else {
                 Timeline timeline = new Timeline(new KeyFrame(Duration.millis(300), e -> {
                     clickCount = 0;
                 }));
                 timeline.play();
+            }
+        });
+    }
+
+    public void edición_Documento(Canvas canvas, Figura figura){
+        TextField textContenido = new TextField();
+        textContenido.setOpacity(0.0);
+        textContenido.setDisable(true);
+
+        double currentX = canvas.getLayoutX();
+        double currentY = canvas.getLayoutY();
+
+        // Tu código para habilitar la edición del contenido
+        textContenido.setOpacity(1.0);
+        textContenido.setDisable(false);
+        panel_Diagrama.getChildren().add(textContenido);
+        textContenido.getStyleClass().add("Contenido_edit");
+        textContenido.setLayoutX(currentX+22.5); // Ajustar según tus necesidades
+        textContenido.setLayoutY(currentY+4.5); // Ajustar según tus necesidades
+        textContenido.setMinWidth(figura.getDimenciones().getAncho()-100); // Ajustar según tus necesidades
+        textContenido.setMinHeight(figura.getDimenciones().getAlto()-20); // Ajustar según tus necesidades
+        textContenido.setText(figura.getContenido());
+
+        String pre_text = figura.getContenido();
+        figura.setContenido("");
+        limpiar_canvas(canvas);
+        dibujo_documento(currentX, currentY-25, canvas,figura);
+
+        // Agregar evento de tecla para actualizar el contenido al presionar Enter
+        textContenido.setOnKeyPressed(event_2 -> {
+            if (event_2.getCode() == KeyCode.ENTER) {
+
+                figura.setContenido(textContenido.getText());
+                String new_text = textContenido.getText();
+                double pre_dimension = figura.getDimenciones().getAncho();
+
+                pre_dimension = figura.getDimenciones().getAncho();
+
+                //recalculo de la dimensiones de la figura por contenido
+                if(8*new_text.length()+25<=120){
+                    figura.getDimenciones().setAncho(120);
+                    canvas.setWidth(120);
+                    textContenido.setMinWidth(120);
+                }else{
+                    figura.getDimenciones().setAncho(6*new_text.length()+25);
+                    canvas.setWidth(6*new_text.length()+25);
+                    textContenido.setMinWidth(canvas.getWidth()*0.7);
+                }
+
+                //editar posicion en relacion al largo(mitad del panel)
+                double _diferencia_ = figura.getDimenciones().getAncho()/2;
+                Vertice reajuste_v = new Vertice((panel_Diagrama.getMinWidth()/2)-_diferencia_,figura.getDimenciones().getAlto());
+                figura.setVertice_conexion(reajuste_v);
+                //figura.setContenido(textContenido.getText());
+
+                //redibujo
+                limpiar_canvas(canvas);
+                dibujo_documento(currentX, currentY-25, canvas, figura);
+                textContenido.clear();
+                panel_Diagrama.getChildren().remove(textContenido);
             }
         });
     }
