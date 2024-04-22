@@ -1441,8 +1441,6 @@ public class AppController {
         // Declarar una variable para contar los clics
         canvas.setOnMouseClicked(event -> {
             clickCount++;
-
-            // Si se ha dado doble clic
             if (clickCount == 2) {
                 // Restablecer el contador
                 clickCount = 0;
