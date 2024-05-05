@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -8,51 +10,65 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.app.AppController">
-   <children>
-      <!-- Pane Top -->
-      <Pane prefHeight="60.0" prefWidth="900.0">
-         <children>
-            <TabPane fx:id="panel_ventanas" prefHeight="30.0" prefWidth="900.0" tabClosingPolicy="ALL_TABS">
-               <Tab text="Pestaña 1" />
-               <Tab text="Pestaña 2" />
-            </TabPane>
-         </children>
-      </Pane>
-      <!-- Pane Central/Diagrama -->
-      <Pane layoutX="140.0" layoutY="30.0" prefHeight="570.0" prefWidth="760.0" BorderPane.alignment="CENTER">
-         <children>
-            <ScrollPane fx:id="panel_contenedor" fitToHeight="true" prefHeight="570.0" prefWidth="760.0">
-               <content>
-                  <AnchorPane fx:id="panel_Diagrama" minHeight="0.0" minWidth="0.0" prefHeight="567.0" prefWidth="740.0" />
-               </content>
-            </ScrollPane>
-         </children>
-      </Pane>
-      <!-- Pane Lateral/Figuras -->
-       <Pane prefHeight="570.0" prefWidth="145.0" BorderPane.alignment="CENTER">
-           <children>
-               <Pane prefHeight="540.0" prefWidth="140.0">
-               </Pane>
-               <Pane fx:id="panel_menu" prefHeight="540.0" prefWidth="140.0" />
-           </children>
-           <ImageView fx:id="figura_procesoE" fitHeight="240.0" fitWidth="140.0" layoutY="30.0" pickOnBounds="true" preserveRatio="true" /> <!-- 135 -->
-           <ImageView fx:id="figura_proceso" fitHeight="240.0" fitWidth="140.0" layoutY="30.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" pickOnBounds="true" preserveRatio="true" />
-           <ImageView fx:id="figura_entradaE" fitHeight="240.0" fitWidth="140.0" layoutY="140.0" pickOnBounds="true" preserveRatio="true" />
-           <ImageView fx:id="figura_entrada" fitHeight="240.0" fitWidth="140.0" layoutY="140.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" pickOnBounds="true" preserveRatio="true" />
-           <ImageView fx:id="figura_salidaE" fitHeight="240.0" fitWidth="140.0" layoutY="250.0" pickOnBounds="true" preserveRatio="true" />
-           <ImageView fx:id="figura_salida" fitHeight="240.0" fitWidth="140.0" layoutY="250.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" pickOnBounds="true" preserveRatio="true" />
-           <ImageView fx:id="figura_condiconalE" fitHeight="240.0" fitWidth="140.0" layoutY="360.0" pickOnBounds="true" preserveRatio="true" />
-           <ImageView fx:id="figura_condiconal" fitHeight="240.0" fitWidth="140.0" layoutY="360.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" pickOnBounds="true" preserveRatio="true" />
-           <ImageView fx:id="figura_documentoE" fitHeight="240.0" fitWidth="140.0" layoutY="470.0" pickOnBounds="true" preserveRatio="true" />
-           <ImageView fx:id="figura_documento" fitHeight="240.0" fitWidth="140.0" layoutY="470.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" pickOnBounds="true" preserveRatio="true" />
-       </Pane>
-       <!-- Pane Borrar -->
-       <Pane fx:id="basurero" prefHeight="50.0" prefWidth="900.0" style="-fx-background-color: #f2f2f2; -fx-border-color: #666666; -fx-border-width: 1px;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-           <ImageView fx:id="trash" fitHeight="50.0" fitWidth="50.0" layoutX="429.0" layoutY="-1.0" />
-           <cursor>
-               <Cursor fx:constant="DEFAULT" />
-           </cursor>
-       </Pane>
-   </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.app.AppController">
+    <children>
+        <!-- Pane Top -->
+        <Pane prefHeight="60.0" prefWidth="900.0">
+            <children>
+                <TabPane fx:id="panel_ventanas" prefHeight="30.0" prefWidth="900.0" tabClosingPolicy="UNAVAILABLE">
+                    <Tab text="Diagrama de flujo">
+                        <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="900.0">
+                                <!-- Pane para el Diagrama -->
+                                <Pane layoutX="140.0" layoutY="30.0" prefHeight="570.0" prefWidth="760.0" BorderPane.alignment="CENTER">
+                                    <children>
+                                        <ScrollPane fx:id="panel_contenedor" fitToHeight="true" prefHeight="570.0" prefWidth="760.0">
+                                            <content>
+                                                <AnchorPane fx:id="panel_Diagrama" minHeight="0.0" minWidth="0.0" prefHeight="567.0" prefWidth="740.0">
+
+                                                </AnchorPane>
+                                            </content>
+                                        </ScrollPane>
+                                    </children>
+                                </Pane>
+                                <!-- Pane para las Figuras -->
+                                <Pane prefHeight="570.0" prefWidth="145.0" BorderPane.alignment="CENTER">
+                                    <children>
+                                        <Pane prefHeight="540.0" prefWidth="140.0">
+                                        </Pane>
+                                        <Pane fx:id="panel_menu" prefHeight="540.0" prefWidth="140.0" />
+                                    </children>
+                                    <ImageView fx:id="figura_procesoE" fitHeight="240.0" fitWidth="140.0" layoutY="30.0" pickOnBounds="true" preserveRatio="true" /> <!-- 135 -->
+                                    <ImageView fx:id="figura_proceso" fitHeight="240.0" fitWidth="140.0" layoutY="30.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" pickOnBounds="true" preserveRatio="true" />
+                                    <ImageView fx:id="figura_entradaE" fitHeight="240.0" fitWidth="140.0" layoutY="140.0" pickOnBounds="true" preserveRatio="true" />
+                                    <ImageView fx:id="figura_entrada" fitHeight="240.0" fitWidth="140.0" layoutY="140.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" pickOnBounds="true" preserveRatio="true" />
+                                    <ImageView fx:id="figura_salidaE" fitHeight="240.0" fitWidth="140.0" layoutY="250.0" pickOnBounds="true" preserveRatio="true" />
+                                    <ImageView fx:id="figura_salida" fitHeight="240.0" fitWidth="140.0" layoutY="250.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" pickOnBounds="true" preserveRatio="true" />
+                                    <ImageView fx:id="figura_condiconalE" fitHeight="240.0" fitWidth="140.0" layoutY="360.0" pickOnBounds="true" preserveRatio="true" />
+                                    <ImageView fx:id="figura_condiconal" fitHeight="240.0" fitWidth="140.0" layoutY="360.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" pickOnBounds="true" preserveRatio="true" />
+                                    <ImageView fx:id="figura_documentoE" fitHeight="240.0" fitWidth="140.0" layoutY="470.0" pickOnBounds="true" preserveRatio="true" />
+                                    <ImageView fx:id="figura_documento" fitHeight="240.0" fitWidth="140.0" layoutY="470.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" pickOnBounds="true" preserveRatio="true" />
+                                </Pane>
+                                <!-- Pane para el Basurero -->
+                                <Pane fx:id="basurero" prefHeight="50.0" prefWidth="900.0" style="-fx-background-color: #f2f2f2; -fx-border-color: #666666; -fx-border-width: 1px;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                                    <ImageView fx:id="trash" fitHeight="50.0" fitWidth="50.0" layoutX="429.0" layoutY="-1.0" />
+                                    <cursor>
+                                        <Cursor fx:constant="DEFAULT" />
+                                    </cursor>
+                                </Pane>
+                            </AnchorPane>
+                        </content>
+                    </Tab>
+                    <Tab text="Pseudocódigo">
+                        <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="900.0">
+                                <!-- Texto para el Pseudocódigo -->
+                                <Label text="Aquí va el pseudocódigo del diagrama de flujo" AnchorPane.leftAnchor="350.0" AnchorPane.topAnchor="250.0" />
+                            </AnchorPane>
+                        </content>
+                    </Tab>
+                </TabPane>
+            </children>
+        </Pane>
+    </children>
 </AnchorPane>

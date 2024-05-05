@@ -22,7 +22,7 @@ public class App extends Application {
 
         //Dimensiones panel contenedor inicial
         double initialWidth = 740;
-        double initialHeight = 540;
+        double initialHeight = 654;
         appController.ajustar_Panes(initialWidth, initialHeight);
 
         Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("Icono_PP_white.png")));
