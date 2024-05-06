@@ -59,11 +59,13 @@
                             </AnchorPane>
                         </content>
                     </Tab>
-                    <Tab fx:id="pseudocode" text="Pseudocódigo" >
+                    <Tab fx:id="pseudocodeTab" text="Pseudocódigo" >
                         <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="900.0">
                                 <!-- Texto para el Pseudocódigo -->
                                 <Label text="Aquí va el pseudocódigo del diagrama de flujo" AnchorPane.leftAnchor="350.0" AnchorPane.topAnchor="250.0" />
+                                <TabPane fx:id="tabPane" prefHeight="30.0" prefWidth="900.0" tabClosingPolicy="UNAVAILABLE">
+                                </TabPane>
                             </AnchorPane>
                         </content>
                     </Tab>
