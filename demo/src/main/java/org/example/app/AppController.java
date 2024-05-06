@@ -8,16 +8,13 @@ import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import java.io.IOException;
 import java.util.ArrayList;
-import javafx.scene.control.TabPane;
 import java.util.Objects;
 import javafx.scene.shape.ArcType;
 import java.math.*;
@@ -35,9 +32,9 @@ public class AppController {
     @FXML
     TabPane panel_ventanas;
     @FXML
-    Pane panel_menu;
+    Tab pseudocode;
     @FXML
-    Button btn_entrada;
+    Pane panel_menu;
     @FXML
     Pane basurero;
     @FXML
@@ -910,6 +907,21 @@ public class AppController {
         gc.setFill(colorTexto);
         gc.setTextAlign(TextAlignment.CENTER);
         gc.fillText(finalTexto, size/2 , (size / 2)+3); // Ajustar la posición vertical
+
+        double startX = x - size / 2; // Coordenada X del extremo superior izquierdo del rombo
+        double startY = y - size / 2; // Coordenada Y del extremo superior izquierdo del rombo
+        double edgeLength = 50.0; // Longitud de las aristas
+
+        // Calcular los puntos de las aristas
+        double rightEdgeX = startX + size; // Extremo derecho del rombo
+        double leftEdgeX = startX; // Extremo izquierdo del rombo
+        double midY = startY; // Punto medio vertical del rombo
+
+        // Dibujar arista derecha
+        gc.strokeLine(rightEdgeX, midY, rightEdgeX + edgeLength, midY);
+
+        // Dibujar arista izquierda
+        gc.strokeLine(leftEdgeX, midY, leftEdgeX - edgeLength, midY);
 
         //MOVIMIENTO_FIGURA----------------------------------------------------
         canvas.setOnMousePressed(event -> {

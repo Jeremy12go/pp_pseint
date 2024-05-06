@@ -59,7 +59,7 @@
                             </AnchorPane>
                         </content>
                     </Tab>
-                    <Tab text="Pseudocódigo">
+                    <Tab fx:id="pseudocode" text="Pseudocódigo" >
                         <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="900.0">
                                 <!-- Texto para el Pseudocódigo -->
