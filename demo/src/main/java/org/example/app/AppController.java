@@ -287,18 +287,18 @@ public class AppController {
             Vertice p_Fentrada_direccion = new Vertice(32.5, 25); //no cambiar
             Vertice p_Fentrada_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y-40);
             contenido = " Entrada: ";
-            Arista dimencion_Fentrada = new Arista(153, 50);
-            Entrada entrada = new Entrada(contenido, p_Fentrada_direccion, p_Fentrada_conexion, dimencion_Fentrada);
+            Arista dimencion_F = new Arista(153, 50);
+            Entrada entrada = new Entrada(contenido, p_Fentrada_direccion, p_Fentrada_conexion, dimencion_F);
 
             //considerar no salirse de las dimensiones del canvas
-            Canvas canvas_Fentrada = new Canvas(dimencion_Fentrada.getAncho(), dimencion_Fentrada.getAlto());
+            Canvas canvas_Paralelogramo = new Canvas(dimencion_F.getAncho(), dimencion_F.getAlto());
             //posicion de la figura en relacion al AnchorPane
-            double diferencia = dimencion_Fentrada.getAncho() / 2;
-            canvas_Fentrada.setLayoutX((panel_Diagrama.getMinWidth() / 2) - diferencia);
-            canvas_Fentrada.setLayoutY(y);
+            double diferencia = dimencion_F.getAncho() / 2;
+            canvas_Paralelogramo.setLayoutX((panel_Diagrama.getMinWidth() / 2) - diferencia);
+            canvas_Paralelogramo.setLayoutY(y);
 
             //dibujar y agregar canvas al panel
-            dibujo_paralelogramo(canvas_Fentrada, entrada, 1);
+            dibujo_paralelogramo(canvas_Paralelogramo, entrada, 1);
 
             //conector preNuevafigura
             Figura figuraOrigen = determinarFiguraOrigen(x, y);
@@ -309,9 +309,9 @@ public class AppController {
             }
 
             // Agregar la nueva figura al panel
-            panel_Diagrama.getChildren().add(canvas_Fentrada);
+            panel_Diagrama.getChildren().add(canvas_Paralelogramo);
             ultimaFAñadida = entrada;
-            ultimaCAñadida = canvas_Fentrada;
+            ultimaCAñadida = canvas_Paralelogramo;
             // Agregar el canvas nueva figura a la lista de conectores
             ins.getList_orden().add(entrada);
             // Agregar la nueva figura a la lista de figuras
@@ -338,17 +338,17 @@ public class AppController {
             Vertice p_Fsalida_direccion = new Vertice(32.5, 25); //no cambiar
             Vertice p_Fsalida_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y-40);
             contenido = " Salida: ";
-            Arista dimencion_Fsalida = new Arista(153, 50);
-            Salida salida = new Salida(contenido, p_Fsalida_direccion, p_Fsalida_conexion, dimencion_Fsalida);
+            Arista dimencion_F = new Arista(153, 50);
+            Salida salida = new Salida(contenido, p_Fsalida_direccion, p_Fsalida_conexion, dimencion_F);
 
-            Canvas canvas_Fsalida = new Canvas(dimencion_Fsalida.getAncho(), dimencion_Fsalida.getAlto());
+            Canvas canvas_Paralelogramo= new Canvas(dimencion_F.getAncho(), dimencion_F.getAlto());
             //posicion de la figura en relacion al AnchorPane
-            double diferencia = dimencion_Fsalida.getAncho() / 2;
-            canvas_Fsalida.setLayoutX((panel_Diagrama.getMinWidth() / 2) - diferencia);
-            canvas_Fsalida.setLayoutY(y);
+            double diferencia = dimencion_F.getAncho() / 2;
+            canvas_Paralelogramo.setLayoutX((panel_Diagrama.getMinWidth() / 2) - diferencia);
+            canvas_Paralelogramo.setLayoutY(y);
 
             //dibujar y agregar canvas al panel
-            dibujo_paralelogramo(canvas_Fsalida, salida, 0);
+            dibujo_paralelogramo(canvas_Paralelogramo, salida, 0);
 
             //conector preNuevafigura
             Figura figuraOrigen = determinarFiguraOrigen(x, y);
@@ -359,11 +359,11 @@ public class AppController {
             }
 
             // Agregar la nueva figura al panel
-            panel_Diagrama.getChildren().add(canvas_Fsalida);
+            panel_Diagrama.getChildren().add(canvas_Paralelogramo);
             ultimaFAñadida = salida;
-            ultimaCAñadida = canvas_Fsalida;
+            ultimaCAñadida = canvas_Paralelogramo;
             // Agregar el canvas nueva figura a la lista de conectores
-            ins.getList_orden().add(canvas_Fsalida);
+            ins.getList_orden().add(canvas_Paralelogramo);
             // Agregar la nueva figura a la lista de figuras
             ins.getList_figuras().add(salida);
 
@@ -624,13 +624,10 @@ public class AppController {
     Font font = Font.font("Arial", FontWeight.BOLD, 11);
     double tamañoTxt = 1;
     double tamaño_Lbordes = 2;
-    double tamaño_Lfechas = 3.5;
-    double tamaño_Lconexiones = 0;
     //colores
     Color colorBordes = Color.web("#fc7c0c");
     Color colorRelleno = Color.web("#242c3c");
     Color colorTexto = Color.web("#ffffff");
-    Color colorFlecha = Color.web("#ffffff");
 
     public void figurasInicio_fin(){
 
@@ -845,6 +842,7 @@ public class AppController {
         gc.setTextBaseline(VPos.CENTER);
         gc.fillText(figura.getContenido(), (figura.getDimenciones().getAncho()/ 2)+15, figura.getDimenciones().getAlto()-15);
 
+        //MOVIMIENTO_FIGURA----------------------------------------------------
         canvas.setOnMousePressed(event -> {
             // Registrar las coordenadas del mouse en relación con la esquina superior izquierda de la figura
             previousX = event.getSceneX();
@@ -880,6 +878,60 @@ public class AppController {
                 panel_Diagrama.getChildren().remove(canvas);
             }
             basurero.setVisible(false);
+        });
+
+        //ESCRITURA_FIGURA----------------------------------------------------
+        canvas.setOnMouseClicked(event -> {
+            clickCount++;
+            // Si se ha dado doble clic
+            if (clickCount == 2) {
+                // Restablecer el contador
+                clickCount = 0;
+
+                double currentX = canvas.getLayoutX();
+                double currentY = canvas.getLayoutY();
+                // Habilitar la edición del contenido
+                textContenido.setOpacity(1.0);
+                textContenido.setDisable(false);
+                textContenido.getStyleClass().add("Contenido_edit");
+                textContenido.setLayoutX(currentX); // Ajustar según tus necesidades
+                textContenido.setLayoutY(currentY); // Ajustar según tus necesidades
+                textContenido.setMinWidth(canvas.getWidth()); // Ajustar según tus necesidades
+                textContenido.setMinHeight(canvas.getHeight()); // Ajustar según tus necesidades
+                textContenido.setText(figura.contenido);
+                // Establecer el color del texto como negro
+
+                // Agregar evento de tecla para actualizar el contenido al presionar Enter
+                textContenido.setOnKeyPressed(event_2 -> {
+                    if (event_2.getCode() == KeyCode.ENTER) {
+                        String newText = textContenido.getText();
+                        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight()); // Limpiar el canvas
+                        gc.setFill(Color.RED);
+                        gc.fillPolygon(xPoints, yPoints, 4);
+                        gc.setStroke(Color.BLACK);
+                        gc.setLineWidth(2);
+                        gc.strokePolygon(xPoints, yPoints, 4);
+                        gc.setFill(Color.BLACK);
+                        gc.setFont(font);
+                        gc.setTextAlign(TextAlignment.CENTER);
+                        gc.setTextBaseline(VPos.CENTER);
+                        gc.fillText(newText, canvas.getWidth() /2, canvas.getHeight()/2);
+
+                        panel_Diagrama.getChildren().remove(canvas);
+                        dibujo_condicional(newText, currentX, currentY,canvas,figura);
+                        dibujo_paralelogramo(canvas, figura, tipo);
+                        // Deshabilitar la edición del contenido
+                        textContenido.clear();
+                        textContenido.setOpacity(0.0);
+                        textContenido.setDisable(true);
+                    }
+                });
+            } else {
+                Timeline timeline = new Timeline(new KeyFrame(Duration.millis(300), e -> {
+                    clickCount = 0;
+                }));
+                timeline.play();
+            }
         });
 
     }
@@ -987,8 +1039,6 @@ public class AppController {
                 textContenido.setMinWidth(size); // Ajustar según tus necesidades
                 textContenido.setMinHeight(size); // Ajustar según tus necesidades
                 textContenido.setText(finalTexto);
-                // Establecer el color del texto como negro
-                textContenido.setStyle("-fx-text-fill: black;");
 
                 // Agregar evento de tecla para actualizar el contenido al presionar Enter
                 textContenido.setOnKeyPressed(event_2 -> {
