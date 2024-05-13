@@ -403,7 +403,7 @@ public class AppController {
             }
             //reposicionar canvas para la nueva figura
 
-        } else if (figura_proceso == sourceDiagram) {;
+        } else if (figura_proceso == sourceDiagram) {
             Vertice p_Fproceso_direccion = new Vertice(32.5, 25); //no cambiar
             Vertice p_Fproeso_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y-40);
             contenido= " Proceso ";
@@ -456,6 +456,10 @@ public class AppController {
                 panel_Diagrama.getChildren().remove(preconector);
             }
             //reposicionar canvas para la nueva figura
+        }else if(figura_proceso == sourceDiagram){
+
+        }else if(figura_proceso == sourceDiagram) {
+
         }
     }
 
@@ -1336,6 +1340,345 @@ public class AppController {
             }
         });
     }
+
+    public void dibujo_mientras(String texto,double x, double y, Canvas canvas, Figura figura){
+        // Crear un objeto Text para calcular el ancho del texto
+        if(Objects.equals(texto, "") || Objects.equals(texto, " ") || Objects.equals(texto, "  ") || Objects.equals(texto, "   ")){texto= " Mientras ";}
+        String finalTexto = texto;
+
+        javafx.scene.text.Text text = new javafx.scene.text.Text(finalTexto);
+
+        double width = figura.getDimenciones().getAncho()/2;
+        double height = figura.getDimenciones().getAlto()/2;
+        double size = Math.max(width, height);//+40
+
+        //posicion de la figura en relacion al AnchorPane
+        double diferencia = figura.getDimenciones().getAncho() / 2;
+        canvas.setLayoutX((panel_Diagrama.getMinWidth() / 2) - diferencia + 42.5);
+        canvas.setLayoutY(y+24);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+
+        // Calcular los puntos del rombo
+        double[] xPoints = {size / 2, size, size / 2, 0};
+        double[] yPoints = {0, size / 2, size, size / 2};
+        gc.setFill(colorRelleno);
+        gc.fillPolygon(xPoints, yPoints, 4);
+        gc.setStroke(colorBordes);
+        gc.setLineWidth(tamaño_Lbordes);
+        gc.strokePolygon(xPoints, yPoints, 4);
+
+        // Escribir el texto en el centro del rombo
+        gc.setFont(font);
+        gc.setFill(colorTexto);
+        gc.setTextAlign(TextAlignment.CENTER);
+        gc.fillText(finalTexto, size/2 , (size / 2)+3); // Ajustar la posición vertical
+
+        double startX = x - size / 2; // Coordenada X del extremo superior izquierdo del rombo
+        double startY = y - size / 2; // Coordenada Y del extremo superior izquierdo del rombo
+        double edgeLength = 50.0; // Longitud de las aristas
+
+        // Calcular los puntos de las aristas
+        double rightEdgeX = startX + size; // Extremo derecho del rombo
+        double leftEdgeX = startX; // Extremo izquierdo del rombo
+        double midY = startY; // Punto medio vertical del rombo
+
+        // Calcular el punto de inicio de la flecha en el borde izquierdo de la figura
+        double startArrowX = startX;
+        double startArrowY = startY + size / 2;
+
+        // Calcular el punto final de la flecha en la parte superior
+        double endArrowX = startX + size / 2;
+        double endArrowY = startY;
+
+        // Dibujar la línea principal de la flecha
+        gc.strokeLine(startArrowX, startArrowY, endArrowX, endArrowY);
+
+        // Calcular las coordenadas de la punta de la flecha
+        double arrowHeadSize = 10; // Tamaño de la punta de la flecha
+        double arrowAngle = Math.atan2(endArrowY - startArrowY, endArrowX - startArrowX);
+        double arrowHeadX1 = endArrowX - arrowHeadSize * Math.cos(arrowAngle - Math.PI / 6);
+        double arrowHeadY1 = endArrowY - arrowHeadSize * Math.sin(arrowAngle - Math.PI / 6);
+        double arrowHeadX2 = endArrowX - arrowHeadSize * Math.cos(arrowAngle + Math.PI / 6);
+        double arrowHeadY2 = endArrowY - arrowHeadSize * Math.sin(arrowAngle + Math.PI / 6);
+
+        // Dibujar la punta de la flecha
+        gc.strokeLine(endArrowX, endArrowY, arrowHeadX1, arrowHeadY1);
+        gc.strokeLine(endArrowX, endArrowY, arrowHeadX2, arrowHeadY2);
+
+        // Calcular el punto de inicio de la flecha en el borde derecho de la figura
+        double startArrowRightX = startX + size;
+        double startArrowRightY = startY + size / 2;
+
+// Calcular el punto final de la flecha en la parte inferior
+        double endArrowBottomX = startX + size / 2;
+        double endArrowBottomY = startY + size;
+
+// Dibujar la línea principal de la flecha
+        gc.strokeLine(startArrowRightX, startArrowRightY, endArrowBottomX, endArrowBottomY);
+
+    // Calcular las coordenadas de la punta de la flecha
+        arrowHeadSize = 10; // Tamaño de la punta de la flecha
+        arrowAngle = Math.atan2(endArrowBottomY - startArrowRightY, endArrowBottomX - startArrowRightX);
+        arrowHeadX1 = endArrowBottomX - arrowHeadSize * Math.cos(arrowAngle - Math.PI / 6);
+        arrowHeadY1 = endArrowBottomY - arrowHeadSize * Math.sin(arrowAngle - Math.PI / 6);
+        arrowHeadX2 = endArrowBottomX - arrowHeadSize * Math.cos(arrowAngle + Math.PI / 6);
+        arrowHeadY2 = endArrowBottomY - arrowHeadSize * Math.sin(arrowAngle + Math.PI / 6);
+
+// Dibujar la punta de la flecha
+        gc.strokeLine(endArrowBottomX, endArrowBottomY, arrowHeadX1, arrowHeadY1);
+        gc.strokeLine(endArrowBottomX, endArrowBottomY, arrowHeadX2, arrowHeadY2);
+
+        //MOVIMIENTO_FIGURA----------------------------------------------------
+        canvas.setOnMousePressed(event -> {
+            // Registrar las coordenadas del mouse en relación con la esquina superior izquierda de la figura
+            previousX = event.getSceneX();
+            previousY = event.getSceneY();
+        });
+
+        canvas.setOnMouseDragged(event -> {
+            basurero.setVisible(true);
+            // Calcular el desplazamiento del mouse desde la última posición
+            double deltaX = event.getSceneX() - previousX;
+            double deltaY = event.getSceneY() - previousY;
+
+            // Calcular las nuevas coordenadas para la figura basadas en el desplazamiento del mouse
+            double newX = canvas.getLayoutX() + deltaX;
+            double newY = canvas.getLayoutY() + deltaY;
+
+            // Establecer las nuevas coordenadas de la figura
+            canvas.setLayoutX(newX);
+            canvas.setLayoutY(newY);
+
+            // Actualizar la posición anterior del cursor
+            previousX = event.getSceneX();
+            previousY = event.getSceneY();
+        });
+
+        canvas.setOnMouseReleased(event -> {
+            double releaseX = event.getSceneX();
+            double releaseY = event.getSceneY();
+            Bounds basureroBounds = basurero.localToScene(basurero.getBoundsInLocal());
+
+            // Verificar si las coordenadas del evento están dentro de los límites del Pane Basurero
+            if (basureroBounds.contains(releaseX, releaseY)) {
+                panel_Diagrama.getChildren().remove(canvas);
+            }
+            basurero.setVisible(false);
+        });
+        //ESCRITURA_FIGURA----------------------------------------------------
+        canvas.setOnMouseClicked(event -> {
+            clickCount++;
+            // Si se ha dado doble clic
+            if (clickCount == 2) {
+                // Restablecer el contador
+                clickCount = 0;
+
+                double currentX = canvas.getLayoutX();
+                double currentY = canvas.getLayoutY();
+                // Habilitar la edición del contenido
+                textContenido.setOpacity(1.0);
+                textContenido.setDisable(false);
+                textContenido.getStyleClass().add("Contenido_edit");
+                textContenido.setLayoutX(currentX); // Ajustar según tus necesidades
+                textContenido.setLayoutY(currentY); // Ajustar según tus necesidades
+                textContenido.setMinWidth(size); // Ajustar según tus necesidades
+                textContenido.setMinHeight(size); // Ajustar según tus necesidades
+                textContenido.setText(finalTexto);
+
+                // Agregar evento de tecla para actualizar el contenido al presionar Enter
+                textContenido.setOnKeyPressed(event_2 -> {
+                    if (event_2.getCode() == KeyCode.ENTER) {
+                        String newText = textContenido.getText();
+                        gc.clearRect(0, 0, size, size); // Limpiar el canvas
+                        gc.setFill(Color.RED);
+                        gc.fillPolygon(xPoints, yPoints, 4);
+                        gc.setStroke(Color.BLACK);
+                        gc.setLineWidth(2);
+                        gc.strokePolygon(xPoints, yPoints, 4);
+                        gc.setFill(Color.BLACK);
+                        gc.setFont(font);
+                        gc.setTextAlign(TextAlignment.CENTER);
+                        gc.setTextBaseline(VPos.CENTER);
+                        gc.fillText(newText, size / 2, size / 2);
+
+                        panel_Diagrama.getChildren().remove(canvas);
+                        dibujo_hacerMientras(newText, currentX, currentY,canvas,figura);
+                        // Deshabilitar la edición del contenido
+                        textContenido.clear();
+                        textContenido.setOpacity(0.0);
+                        textContenido.setDisable(true);
+                    }
+                });
+            } else {
+                Timeline timeline = new Timeline(new KeyFrame(Duration.millis(300), e -> {
+                    clickCount = 0;
+                }));
+                timeline.play();
+            }
+        });
+    }
+
+    public void dibujo_hacerMientras(String texto,double x, double y, Canvas canvas, Figura figura){
+        // Crear un objeto Text para calcular el ancho del texto
+        if(Objects.equals(texto, "") || Objects.equals(texto, " ") || Objects.equals(texto, "  ") || Objects.equals(texto, "   ")){texto= " Hacer Mientras ";}
+        String finalTexto = texto;
+
+        javafx.scene.text.Text text = new javafx.scene.text.Text(finalTexto);
+
+        double width = figura.getDimenciones().getAncho()/2;
+        double height = figura.getDimenciones().getAlto()/2;
+        double size = Math.max(width, height);//+40
+
+        //posicion de la figura en relacion al AnchorPane
+        double diferencia = figura.getDimenciones().getAncho() / 2;
+        canvas.setLayoutX((panel_Diagrama.getMinWidth() / 2) - diferencia + 42.5);
+        canvas.setLayoutY(y+24);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+
+        // Calcular los puntos del rombo
+        double[] xPoints = {size / 2, size, size / 2, 0};
+        double[] yPoints = {0, size / 2, size, size / 2};
+        gc.setFill(colorRelleno);
+        gc.fillPolygon(xPoints, yPoints, 4);
+        gc.setStroke(colorBordes);
+        gc.setLineWidth(tamaño_Lbordes);
+        gc.strokePolygon(xPoints, yPoints, 4);
+
+        // Escribir el texto en el centro del rombo
+        gc.setFont(font);
+        gc.setFill(colorTexto);
+        gc.setTextAlign(TextAlignment.CENTER);
+        gc.fillText(finalTexto, size/2 , (size / 2)+3); // Ajustar la posición vertical
+
+        double startX = x - size / 2; // Coordenada X del extremo superior izquierdo del rombo
+        double startY = y - size / 2; // Coordenada Y del extremo superior izquierdo del rombo
+        double edgeLength = 50.0; // Longitud de las aristas
+
+        // Calcular los puntos de las aristas
+        double rightEdgeX = startX + size; // Extremo derecho del rombo
+        double leftEdgeX = startX; // Extremo izquierdo del rombo
+        double midY = startY; // Punto medio vertical del rombo
+
+        // Dibujar arista derecha
+        gc.strokeLine(rightEdgeX, midY, rightEdgeX + edgeLength, midY);
+
+        // Dibujar arista izquierda
+        gc.strokeLine(leftEdgeX, midY, leftEdgeX - edgeLength, midY);
+
+        // Calcular el punto de inicio de la flecha en el borde derecho de la figura
+        double startArrowRightX = startX + size;
+        double startArrowRightY = startY + size / 2;
+
+        // Calcular el punto final de la flecha en la parte inferior
+        double endArrowBottomX = startX + size / 2;
+        double endArrowBottomY = startY + size;
+
+
+        // Dibujar la línea principal de la flecha
+        gc.strokeLine(startArrowRightX, startArrowRightY, endArrowBottomX, endArrowBottomY);
+
+        // Calcular las coordenadas de la punta de la flecha
+        double arrowHeadSize = 10; // Tamaño de la punta de la flecha
+        double arrowAngle = Math.atan2(endArrowBottomY - startArrowRightY, endArrowBottomX - startArrowRightX);
+        double arrowHeadX1 = endArrowBottomX - arrowHeadSize * Math.cos(arrowAngle - Math.PI / 6);
+        double arrowHeadY1 = endArrowBottomY - arrowHeadSize * Math.sin(arrowAngle - Math.PI / 6);
+        double arrowHeadX2 = endArrowBottomX - arrowHeadSize * Math.cos(arrowAngle + Math.PI / 6);
+        double arrowHeadY2 = endArrowBottomY - arrowHeadSize * Math.sin(arrowAngle + Math.PI / 6);
+
+    // Dibujar la punta de la flecha
+        gc.strokeLine(endArrowBottomX, endArrowBottomY, arrowHeadX1, arrowHeadY1);
+        gc.strokeLine(endArrowBottomX, endArrowBottomY, arrowHeadX2, arrowHeadY2);
+
+        //MOVIMIENTO_FIGURA----------------------------------------------------
+        canvas.setOnMousePressed(event -> {
+            // Registrar las coordenadas del mouse en relación con la esquina superior izquierda de la figura
+            previousX = event.getSceneX();
+            previousY = event.getSceneY();
+        });
+
+        canvas.setOnMouseDragged(event -> {
+            basurero.setVisible(true);
+            // Calcular el desplazamiento del mouse desde la última posición
+            double deltaX = event.getSceneX() - previousX;
+            double deltaY = event.getSceneY() - previousY;
+
+            // Calcular las nuevas coordenadas para la figura basadas en el desplazamiento del mouse
+            double newX = canvas.getLayoutX() + deltaX;
+            double newY = canvas.getLayoutY() + deltaY;
+
+            // Establecer las nuevas coordenadas de la figura
+            canvas.setLayoutX(newX);
+            canvas.setLayoutY(newY);
+
+            // Actualizar la posición anterior del cursor
+            previousX = event.getSceneX();
+            previousY = event.getSceneY();
+        });
+
+        canvas.setOnMouseReleased(event -> {
+            double releaseX = event.getSceneX();
+            double releaseY = event.getSceneY();
+            Bounds basureroBounds = basurero.localToScene(basurero.getBoundsInLocal());
+
+            // Verificar si las coordenadas del evento están dentro de los límites del Pane Basurero
+            if (basureroBounds.contains(releaseX, releaseY)) {
+                panel_Diagrama.getChildren().remove(canvas);
+            }
+            basurero.setVisible(false);
+        });
+        //ESCRITURA_FIGURA----------------------------------------------------
+        canvas.setOnMouseClicked(event -> {
+            clickCount++;
+            // Si se ha dado doble clic
+            if (clickCount == 2) {
+                // Restablecer el contador
+                clickCount = 0;
+
+                double currentX = canvas.getLayoutX();
+                double currentY = canvas.getLayoutY();
+                // Habilitar la edición del contenido
+                textContenido.setOpacity(1.0);
+                textContenido.setDisable(false);
+                textContenido.getStyleClass().add("Contenido_edit");
+                textContenido.setLayoutX(currentX); // Ajustar según tus necesidades
+                textContenido.setLayoutY(currentY); // Ajustar según tus necesidades
+                textContenido.setMinWidth(size); // Ajustar según tus necesidades
+                textContenido.setMinHeight(size); // Ajustar según tus necesidades
+                textContenido.setText(finalTexto);
+
+                // Agregar evento de tecla para actualizar el contenido al presionar Enter
+                textContenido.setOnKeyPressed(event_2 -> {
+                    if (event_2.getCode() == KeyCode.ENTER) {
+                        String newText = textContenido.getText();
+                        gc.clearRect(0, 0, size, size); // Limpiar el canvas
+                        gc.setFill(Color.RED);
+                        gc.fillPolygon(xPoints, yPoints, 4);
+                        gc.setStroke(Color.BLACK);
+                        gc.setLineWidth(2);
+                        gc.strokePolygon(xPoints, yPoints, 4);
+                        gc.setFill(Color.BLACK);
+                        gc.setFont(font);
+                        gc.setTextAlign(TextAlignment.CENTER);
+                        gc.setTextBaseline(VPos.CENTER);
+                        gc.fillText(newText, size / 2, size / 2);
+
+                        panel_Diagrama.getChildren().remove(canvas);
+                        dibujo_hacerMientras(newText, currentX, currentY,canvas,figura);
+                        // Deshabilitar la edición del contenido
+                        textContenido.clear();
+                        textContenido.setOpacity(0.0);
+                        textContenido.setDisable(true);
+                    }
+                });
+            } else {
+                Timeline timeline = new Timeline(new KeyFrame(Duration.millis(300), e -> {
+                    clickCount = 0;
+                }));
+                timeline.play();
+            }
+        });
+    }
+
     // Método para centrar el Pane basurero y el ícono del basurero
     private void centrarPane() {
         double basureroX = (panel_Diagrama.getWidth() - basurero.getWidth()) / 2;
