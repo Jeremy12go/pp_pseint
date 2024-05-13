@@ -37,7 +37,7 @@ public class AppController {
     @FXML
     Tab pseudocodeTab;
     @FXML
-    private TabPane tabPane;
+    Label pseudocode;
     @FXML
     Pane panel_menu;
     @FXML
@@ -87,6 +87,8 @@ public class AppController {
         fondoCuadriculado(740,1500);
         figurasInicio_fin();
 
+        Pseudocode.initializePseudocodeTab(pseudocodeTab, pseudocode);
+
         Image image1 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("figura_proceso.png")));
         figura_proceso.setImage(image1);
         figura_procesoE.setImage(image1);
@@ -109,57 +111,7 @@ public class AppController {
         textContenido.setDisable(true);
         panel_Diagrama.getChildren().add(textContenido);
 
-        // Crear un AnchorPane para el contenido del Tab
-        AnchorPane contentPane = new AnchorPane();
 
-        // Crear un Label con el pseudocódigo
-        Label pseudoCodeLabel = new Label();
-        pseudoCodeLabel.setText("Inicio Titulo\n" +
-                "\tEntrada (Variable) a= X\n" +
-                "\tEntrada (Variable) b= Y\n" +
-                "\tSalida (Imprimir) a\n" +
-                "\tSalida (Imprimir) b\n" +
-                "\tDocumento texto\n" +
-                "\tSalida (Imprimir) texto\n" +
-                "\tProceso??\n" +
-                "\tCondicional\n" +
-                "\t\n" +
-                "\tCondicional \n" +
-                "\tSi a>b\n" +
-                "\t\tSalida texto\n" +
-                "\t\tSalida a\n" +
-                "\tSino\n" +
-                "\t\tSalida texto\n" +
-                "\t\tSalida b\n" +
-                "\t\n" +
-                "Fin");
-
-        // Ajustar las propiedades del Label
-        pseudoCodeLabel.setWrapText(true);
-
-        // Agregar el Label al AnchorPane
-        contentPane.getChildren().add(pseudoCodeLabel);
-
-        // Establecer el contenido del Tab
-        pseudocodeTab.setContent(contentPane);
-
-        // Agregar el Tab al TabPane
-        tabPane.getTabs().add(pseudocodeTab);
-
-        // Ocultar el TabPane inicialmente
-        tabPane.setVisible(false);
-
-        // Escuchar los cambios en la selección del Tab
-        tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
-            @Override
-            public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
-                // Verificar si el nuevo Tab seleccionado es el pseudocodeTab
-                if (newValue == pseudocodeTab) {
-                    // Mostrar el TabPane
-                    tabPane.setVisible(true);
-                }
-            }
-        });
 
     }
 

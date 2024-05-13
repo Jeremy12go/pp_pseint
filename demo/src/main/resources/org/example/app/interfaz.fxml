@@ -11,6 +11,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 
+<?import javafx.geometry.Insets?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.app.AppController">
     <children>
         <!-- Pane Top -->
@@ -64,10 +65,10 @@
                     <Tab fx:id="pseudocodeTab" text="Pseudocódigo">
                         <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="900.0">
-                                <!-- Texto para el Pseudocódigo -->
-                                <Label text="Aquí va el pseudocódigo del diagrama de flujo" AnchorPane.leftAnchor="350.0" AnchorPane.topAnchor="250.0" />
-                                <TabPane fx:id="tabPane" prefHeight="30.0" prefWidth="900.0" tabClosingPolicy="UNAVAILABLE">
-                                </TabPane>
+                                <Label fx:id="pseudocode" text="Aquí va el pseudocódigo del diagrama de flujo"
+                                       AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0">
+
+                                </Label>
                             </AnchorPane>
                         </content>
                     </Tab>
