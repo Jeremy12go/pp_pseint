@@ -51,6 +51,8 @@ public class AppController {
     @FXML
     private double originalY;
     @FXML
+    private ImageView figura_procesoE;
+    @FXML
     private ImageView figura_proceso;
     @FXML
     private ImageView figura_entradaE;
@@ -61,15 +63,25 @@ public class AppController {
     @FXML
     private ImageView figura_salida;
     @FXML
+    private ImageView figura_condiconalE;
+    @FXML
     private ImageView figura_condiconal;
+    @FXML
+    private ImageView figura_documentoE;
     @FXML
     private ImageView figura_documento;
     @FXML
-    private ImageView figura_procesoE;
+    private ImageView figura_mientrasE;
     @FXML
-    private ImageView figura_condiconalE;
+    private ImageView figura_mientras;
     @FXML
-    private ImageView figura_documentoE;
+    private ImageView figura_hacer_mientrasE;
+    @FXML
+    private ImageView figura_hacer_mientras;
+    @FXML
+    private ImageView figura_paraE;
+    @FXML
+    private ImageView figura_para;
     @FXML
     private ImageView trash;
 
@@ -104,13 +116,21 @@ public class AppController {
         Image image4 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("figura_documento.png")));
         figura_documento.setImage(image4);
         figura_documentoE.setImage(image4);
+        Image image7 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("figura_mientras.png")));
+        figura_mientras.setImage(image7);
+        figura_mientrasE.setImage(image7);
+        Image image8 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("figura_hacer_mientras.png")));
+        figura_hacer_mientras.setImage(image8);
+        figura_hacer_mientrasE.setImage(image8);
+        Image image9 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("figura_para.png")));
+        figura_paraE.setImage(image9);
+        figura_para.setImage(image9);
         Image image5 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("trash.png")));
         trash.setImage(image5);
 
         textContenido.setOpacity(0.0);
         textContenido.setDisable(true);
         panel_Diagrama.getChildren().add(textContenido);
-
 
 
     }
@@ -203,8 +223,8 @@ public class AppController {
         Canvas ultimaCAñadida = null;
         String contenido = "";
         if (figura_condiconal == sourceDiagram) {
-            Vertice p_Fcondicional_direccion = new Vertice(32.5, 25); // no cambiar
-            Vertice p_Fcondicional_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
+            Vertice p_Fcondicional_direccion = new Vertice(32.5, 25); //no cambiar
+            Vertice p_Fcondicional_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y-40);
             Arista dimencion_Fentrada = new Arista(120, 70);
             contenido = "A > B";
             ArrayList<String> contenidoValidado = new ArrayList<>(); // Ajustar
@@ -218,7 +238,6 @@ public class AppController {
 
 
             Canvas canvas_Fcondicional = new Canvas(dimencion_Fentrada.getAncho(), dimencion_Fentrada.getAlto());
-
             dibujo_condicional(contenido, x, y, canvas_Fcondicional, condicional);
 
             // Conector preNuevafigura
@@ -233,29 +252,27 @@ public class AppController {
             panel_Diagrama.getChildren().add(canvas_Fcondicional);
             ultimaFAñadida = condicional;
             ultimaCAñadida = canvas_Fcondicional;
-
-            // Agregar el canvas de la nueva figura a la lista de conectores
+            // Agregar el canvas nueva figura a la lista de conectores
             ins.getList_orden().add(canvas_Fcondicional);
             // Agregar la nueva figura a la lista de figuras
             ins.getList_figuras().add(condicional);
 
-            // Conector posNuevafigura
+            //conector posNuevafigura
             Figura figuraDestino = determinarFiguraDestino(condicional, x, y);
             if (figuraDestino != null) {
-                conectar(condicional, figuraDestino, x, y);
+                conectar(condicional,figuraDestino,x,y);
             } else {
                 System.out.println("No se pudo encontrar una figura destino cercana.");
             }
 
-            // Eliminar conector anterior
-            Conector preconector = obtenerConexionPrevia(figuraOrigen, figuraDestino);
+            //eliminar conector anterior
+            Conector preconector = obtenerConexionPrevia(figuraOrigen,figuraDestino);
             if (preconector != null) {
                 ins.getList_conexiones().remove(preconector);
                 ins.getList_orden().remove(preconector);
                 panel_Diagrama.getChildren().remove(preconector);
             }
-            // Reposicionar canvas para la nueva figura
-
+            //reposicionar canvas para la nueva figura
 
         } else if (figura_documento == sourceDiagram) {
             Vertice p_Fdocumento_direccion = new Vertice(32.5, 25); //no cambiar
@@ -456,9 +473,95 @@ public class AppController {
                 panel_Diagrama.getChildren().remove(preconector);
             }
             //reposicionar canvas para la nueva figura
-        }else if(figura_proceso == sourceDiagram){
+        }else if (figura_hacer_mientras == sourceDiagram) {
+            Vertice p_Fcondicional_direccion = new Vertice(32.5, 25); //no cambiar
+            Vertice p_Fcondicional_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y-40);
+            Arista dimencion_Fentrada = new Arista(120, 70);
+            contenido= " Hacer Mientras ";
+            ArrayList<String> contenidoValidado = new ArrayList<String>(); //Ajustar
+            Condicional condicional = new Condicional(contenido, p_Fcondicional_direccion, p_Fcondicional_conexion, dimencion_Fentrada,contenidoValidado);
 
-        }else if(figura_proceso == sourceDiagram) {
+            Canvas canvas_Fcondicional = new Canvas(dimencion_Fentrada.getAncho(), dimencion_Fentrada.getAlto());
+
+            dibujo_condicional(contenido,x, y, canvas_Fcondicional, condicional);
+            //conector preNuevafigura
+            Figura figuraOrigen = determinarFiguraOrigen(x, y);
+            if (figuraOrigen != null) {
+                conectar(figuraOrigen, condicional,x,y);
+            } else {
+                System.out.println("No se pudo encontrar una figura de origen cercana.");
+            }
+
+            // Agregar la nueva figura al panel
+            panel_Diagrama.getChildren().add(canvas_Fcondicional);
+            ultimaFAñadida = condicional;
+            ultimaCAñadida = canvas_Fcondicional;
+            // Agregar el canvas nueva figura a la lista de conectores
+            ins.getList_orden().add(canvas_Fcondicional);
+            // Agregar la nueva figura a la lista de figuras
+            ins.getList_figuras().add(condicional);
+
+            //conector posNuevafigura
+            Figura figuraDestino = determinarFiguraDestino(condicional, x, y);
+            if (figuraDestino != null) {
+                conectar(condicional,figuraDestino,x,y);
+            } else {
+                System.out.println("No se pudo encontrar una figura destino cercana.");
+            }
+
+            //eliminar conector anterior
+            Conector preconector = obtenerConexionPrevia(figuraOrigen,figuraDestino);
+            if (preconector != null) {
+                ins.getList_conexiones().remove(preconector);
+                ins.getList_orden().remove(preconector);
+                panel_Diagrama.getChildren().remove(preconector);
+            }
+            //reposicionar canvas para la nueva figura
+
+        }if (figura_mientras == sourceDiagram) {
+            Vertice p_Fcondicional_direccion = new Vertice(32.5, 25); //no cambiar
+            Vertice p_Fcondicional_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y-40);
+            Arista dimencion_Fentrada = new Arista(120, 70);
+            contenido= " Mientras ";
+            ArrayList<String> contenidoValidado = new ArrayList<String>(); //Ajustar
+            Condicional condicional = new Condicional(contenido, p_Fcondicional_direccion, p_Fcondicional_conexion, dimencion_Fentrada,contenidoValidado);
+
+            Canvas canvas_Fcondicional = new Canvas(dimencion_Fentrada.getAncho(), dimencion_Fentrada.getAlto());
+
+            dibujo_condicional(contenido,x, y, canvas_Fcondicional, condicional);
+            //conector preNuevafigura
+            Figura figuraOrigen = determinarFiguraOrigen(x, y);
+            if (figuraOrigen != null) {
+                conectar(figuraOrigen, condicional,x,y);
+            } else {
+                System.out.println("No se pudo encontrar una figura de origen cercana.");
+            }
+
+            // Agregar la nueva figura al panel
+            panel_Diagrama.getChildren().add(canvas_Fcondicional);
+            ultimaFAñadida = condicional;
+            ultimaCAñadida = canvas_Fcondicional;
+            // Agregar el canvas nueva figura a la lista de conectores
+            ins.getList_orden().add(canvas_Fcondicional);
+            // Agregar la nueva figura a la lista de figuras
+            ins.getList_figuras().add(condicional);
+
+            //conector posNuevafigura
+            Figura figuraDestino = determinarFiguraDestino(condicional, x, y);
+            if (figuraDestino != null) {
+                conectar(condicional,figuraDestino,x,y);
+            } else {
+                System.out.println("No se pudo encontrar una figura destino cercana.");
+            }
+
+            //eliminar conector anterior
+            Conector preconector = obtenerConexionPrevia(figuraOrigen,figuraDestino);
+            if (preconector != null) {
+                ins.getList_conexiones().remove(preconector);
+                ins.getList_orden().remove(preconector);
+                panel_Diagrama.getChildren().remove(preconector);
+            }
+            //reposicionar canvas para la nueva figura
 
         }
     }
@@ -652,10 +755,11 @@ public class AppController {
     Color colorRelleno = Color.web("#242c3c");
     Color colorTexto = Color.web("#ffffff");
 
-    public void figurasInicio_fin() {
+    public void figurasInicio_fin(){
+
         double cx = 32.5;
         double cy = 25;
-        // Parámetros figura Inicio
+        //Parametros figura Inicio
         Vertice p_Finicio_cordenada = new Vertice(cx,cy); //no cambiar
         Vertice p_Finicio_conexion = new Vertice(0,0); //Reajustar
         String contenido = "Algoritmo titulo";
@@ -676,6 +780,8 @@ public class AppController {
 
         // Parámetros figura Fin
         Vertice p_Ffin_direccion = new Vertice(cx,cy);
+
+        //distancia entre las figuras iniciales
         Vertice p_Ffin_conexion = new Vertice(cx,cy);
         contenido="Fin Algoritmo";
         Arista dimencion_Ffin = new Arista(8*contenido.length()+25, 50);
@@ -943,10 +1049,6 @@ public class AppController {
         double startX = x - size / 2; // Coordenada X del extremo superior izquierdo del rombo
         double startY = y - size / 2; // Coordenada Y del extremo superior izquierdo del rombo
 
-
-
-
-
         // Dibujar rectángulos para las acciones
         double rectWidth = 80;
         double rectHeight = 40;
@@ -997,7 +1099,7 @@ public class AppController {
         panel_Diagrama.getChildren().add(canvasNo);
 
 
-        // MOVIMIENTO_FIGURA----------------------------------------------------
+        //MOVIMIENTO_FIGURA----------------------------------------------------
         canvas.setOnMousePressed(event -> {
             // Registrar las coordenadas del mouse en relación con la esquina superior izquierda de la figura
             previousX = event.getSceneX();
@@ -1034,8 +1136,7 @@ public class AppController {
             }
             basurero.setVisible(false);
         });
-
-        // ESCRITURA_FIGURA----------------------------------------------------
+        //ESCRITURA_FIGURA----------------------------------------------------
         canvas.setOnMouseClicked(event -> {
             clickCount++;
             // Si se ha dado doble clic
@@ -1087,7 +1188,6 @@ public class AppController {
             }
         });
     }
-
 
     public void dibujo_rectangulo(String texto, double x, double y, Canvas canvas, Figura figura) {
         // Verificar y inicializar las dimensiones de la figura si es necesario
@@ -1245,8 +1345,6 @@ public class AppController {
         gc.setTextAlign(TextAlignment.CENTER);
         gc.setTextBaseline(VPos.CENTER);
         gc.fillText(finalTexto, width / 2, (height / 2)-20);
-
-
 
         //MOVIMIENTO_FIGURA----------------------------------------------------
         canvas.setOnMousePressed(event -> {
