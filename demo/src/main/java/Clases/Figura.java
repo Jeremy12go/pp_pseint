@@ -12,6 +12,10 @@ public class Figura {
         this.vertice_conexion = vertice_conexion;
         this.dimenciones = dimenciones;
     }
+
+    public Figura(){
+
+    }
     public void asignar_conexion(Vertice vertice_conexion){
         this.vertice_conexion=vertice_conexion;
     }
@@ -49,5 +53,9 @@ public class Figura {
 
     public Arista getDimenciones() {
         return dimenciones;
+    }
+
+    public Arista setDimenciones(Arista dimenciones) {
+       return this.dimenciones = dimenciones;
     }
 }
