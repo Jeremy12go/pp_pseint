@@ -50,6 +50,8 @@ public class AppController {
     @FXML
     private double originalY;
     @FXML
+    private ImageView figura_procesoE;
+    @FXML
     private ImageView figura_proceso;
     @FXML
     private ImageView figura_entradaE;
@@ -60,15 +62,25 @@ public class AppController {
     @FXML
     private ImageView figura_salida;
     @FXML
+    private ImageView figura_condiconalE;
+    @FXML
     private ImageView figura_condiconal;
+    @FXML
+    private ImageView figura_documentoE;
     @FXML
     private ImageView figura_documento;
     @FXML
-    private ImageView figura_procesoE;
+    private ImageView figura_mientrasE;
     @FXML
-    private ImageView figura_condiconalE;
+    private ImageView figura_mientras;
     @FXML
-    private ImageView figura_documentoE;
+    private ImageView figura_hacer_mientrasE;
+    @FXML
+    private ImageView figura_hacer_mientras;
+    @FXML
+    private ImageView figura_paraE;
+    @FXML
+    private ImageView figura_para;
     @FXML
     private ImageView trash;
 
@@ -94,13 +106,21 @@ public class AppController {
         Image image4 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("figura_documento.png")));
         figura_documento.setImage(image4);
         figura_documentoE.setImage(image4);
+        Image image7 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("figura_mientras.png")));
+        figura_mientras.setImage(image7);
+        figura_mientrasE.setImage(image7);
+        Image image8 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("figura_hacer_mientras.png")));
+        figura_hacer_mientras.setImage(image8);
+        figura_hacer_mientrasE.setImage(image8);
+        Image image9 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("figura_para.png")));
+        figura_paraE.setImage(image9);
+        figura_para.setImage(image9);
         Image image5 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("trash.png")));
         trash.setImage(image5);
 
         textContenido.setOpacity(0.0);
         textContenido.setDisable(true);
         panel_Diagrama.getChildren().add(textContenido);
-
 
 
     }
@@ -193,7 +213,6 @@ public class AppController {
         Canvas ultimaCAñadida = null;
         String contenido = "";
         if (figura_condiconal == sourceDiagram) {
-
             Vertice p_Fcondicional_direccion = new Vertice(32.5, 25); //no cambiar
             Vertice p_Fcondicional_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y-40);
             Arista dimencion_Fentrada = new Arista(120, 70);
@@ -437,9 +456,95 @@ public class AppController {
                 panel_Diagrama.getChildren().remove(preconector);
             }
             //reposicionar canvas para la nueva figura
-        }else if(figura_proceso == sourceDiagram){
+        }else if (figura_hacer_mientras == sourceDiagram) {
+            Vertice p_Fcondicional_direccion = new Vertice(32.5, 25); //no cambiar
+            Vertice p_Fcondicional_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y-40);
+            Arista dimencion_Fentrada = new Arista(120, 70);
+            contenido= " Hacer Mientras ";
+            ArrayList<String> contenidoValidado = new ArrayList<String>(); //Ajustar
+            Condicional condicional = new Condicional(contenido, p_Fcondicional_direccion, p_Fcondicional_conexion, dimencion_Fentrada,contenidoValidado);
 
-        }else if(figura_proceso == sourceDiagram) {
+            Canvas canvas_Fcondicional = new Canvas(dimencion_Fentrada.getAncho(), dimencion_Fentrada.getAlto());
+
+            dibujo_condicional(contenido,x, y, canvas_Fcondicional, condicional);
+            //conector preNuevafigura
+            Figura figuraOrigen = determinarFiguraOrigen(x, y);
+            if (figuraOrigen != null) {
+                conectar(figuraOrigen, condicional,x,y);
+            } else {
+                System.out.println("No se pudo encontrar una figura de origen cercana.");
+            }
+
+            // Agregar la nueva figura al panel
+            panel_Diagrama.getChildren().add(canvas_Fcondicional);
+            ultimaFAñadida = condicional;
+            ultimaCAñadida = canvas_Fcondicional;
+            // Agregar el canvas nueva figura a la lista de conectores
+            ins.getList_orden().add(canvas_Fcondicional);
+            // Agregar la nueva figura a la lista de figuras
+            ins.getList_figuras().add(condicional);
+
+            //conector posNuevafigura
+            Figura figuraDestino = determinarFiguraDestino(condicional, x, y);
+            if (figuraDestino != null) {
+                conectar(condicional,figuraDestino,x,y);
+            } else {
+                System.out.println("No se pudo encontrar una figura destino cercana.");
+            }
+
+            //eliminar conector anterior
+            Conector preconector = obtenerConexionPrevia(figuraOrigen,figuraDestino);
+            if (preconector != null) {
+                ins.getList_conexiones().remove(preconector);
+                ins.getList_orden().remove(preconector);
+                panel_Diagrama.getChildren().remove(preconector);
+            }
+            //reposicionar canvas para la nueva figura
+
+        }if (figura_mientras == sourceDiagram) {
+            Vertice p_Fcondicional_direccion = new Vertice(32.5, 25); //no cambiar
+            Vertice p_Fcondicional_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y-40);
+            Arista dimencion_Fentrada = new Arista(120, 70);
+            contenido= " Mientras ";
+            ArrayList<String> contenidoValidado = new ArrayList<String>(); //Ajustar
+            Condicional condicional = new Condicional(contenido, p_Fcondicional_direccion, p_Fcondicional_conexion, dimencion_Fentrada,contenidoValidado);
+
+            Canvas canvas_Fcondicional = new Canvas(dimencion_Fentrada.getAncho(), dimencion_Fentrada.getAlto());
+
+            dibujo_condicional(contenido,x, y, canvas_Fcondicional, condicional);
+            //conector preNuevafigura
+            Figura figuraOrigen = determinarFiguraOrigen(x, y);
+            if (figuraOrigen != null) {
+                conectar(figuraOrigen, condicional,x,y);
+            } else {
+                System.out.println("No se pudo encontrar una figura de origen cercana.");
+            }
+
+            // Agregar la nueva figura al panel
+            panel_Diagrama.getChildren().add(canvas_Fcondicional);
+            ultimaFAñadida = condicional;
+            ultimaCAñadida = canvas_Fcondicional;
+            // Agregar el canvas nueva figura a la lista de conectores
+            ins.getList_orden().add(canvas_Fcondicional);
+            // Agregar la nueva figura a la lista de figuras
+            ins.getList_figuras().add(condicional);
+
+            //conector posNuevafigura
+            Figura figuraDestino = determinarFiguraDestino(condicional, x, y);
+            if (figuraDestino != null) {
+                conectar(condicional,figuraDestino,x,y);
+            } else {
+                System.out.println("No se pudo encontrar una figura destino cercana.");
+            }
+
+            //eliminar conector anterior
+            Conector preconector = obtenerConexionPrevia(figuraOrigen,figuraDestino);
+            if (preconector != null) {
+                ins.getList_conexiones().remove(preconector);
+                ins.getList_orden().remove(preconector);
+                panel_Diagrama.getChildren().remove(preconector);
+            }
+            //reposicionar canvas para la nueva figura
 
         }
     }
