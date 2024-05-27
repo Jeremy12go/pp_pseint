@@ -22,6 +22,7 @@
                         <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="900.0">
                                 <Button onAction="#borrarTodo" text="Borrar Todo" layoutX="450"/>
+                                <Button onAction="#guardarApseudocode" text="A Pseudocódigo" layoutX="550"/>
                                 <!-- Pane para el Diagrama -->
                                 <Pane layoutX="140.0" layoutY="30.0" prefHeight="570.0" prefWidth="760.0" BorderPane.alignment="CENTER">
                                     <children>
