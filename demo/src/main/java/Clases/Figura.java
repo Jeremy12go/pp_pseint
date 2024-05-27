@@ -13,6 +13,7 @@ public class Figura {
         this.dimenciones = dimenciones;
     }
 
+
     public Figura(){
 
     }
@@ -58,4 +59,5 @@ public class Figura {
     public Arista setDimenciones(Arista dimenciones) {
        return this.dimenciones = dimenciones;
     }
+
 }
