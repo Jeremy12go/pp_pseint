@@ -12,7 +12,7 @@ public class Diagrama<T> implements Serializable {
 
     public ArrayList<Canvas> list_orden = new ArrayList<Canvas>();
 
-    private static Diagrama ins;
+    static Diagrama ins;
 
     public Diagrama(String titulo, ArrayList<Figura> list_elementos, ArrayList<Conector> list_conexiones, ArrayList<Canvas> list_orden) {
         this.titulo = titulo;
