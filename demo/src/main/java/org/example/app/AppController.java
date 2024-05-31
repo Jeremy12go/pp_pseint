@@ -1158,8 +1158,6 @@ public class AppController {
         gc.setTextBaseline(VPos.CENTER);
         gc.fillText(finalTexto, width / 2, (height / 2)-20);
 
-
-
         //MOVIMIENTO_FIGURA----------------------------------------------------
         canvas.setOnMousePressed(event -> {
             previousX = event.getSceneX();
