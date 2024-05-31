@@ -518,9 +518,7 @@ public class AppController {
                     // Obtener la posición Y ajustada para la nueva figura
                     System.out.println("UF:"+ VG.getUltimaFiguraAñadida().getContenido());
 
-                    // Sumar 50 unidades a la posición Y de la figura anterior
-                    //figuraOrigen -> cambio
-                    double nuevaPosY = VG.getUltimoCanvasConexion().getLayoutY()+50;
+                    double nuevaPosY = VG.getUltimoCanvasConexion().getLayoutY()+25;
                     System.out.println("UConexionY:"+ VG.getUltimoCanvasConexion().getLayoutY()+"  total:"+nuevaPosY);
                     condicional.setVertice_conexion(new Vertice((panel_Diagrama.getMinWidth() / 2), nuevaPosY));
 
@@ -817,6 +815,9 @@ public class AppController {
         boolean condicion = false;
         Figura pre_figura = null;
         Canvas pre_canvas = null;
+        ArrayList<Canvas> arr_List_figuras = ins.getList_figuras();
+        int largo = arr_List_figuras.size();
+        //cambiar el tipo de recorrido, trabajar como arreglo
         for ( Object obj : ins.getList_orden()) {
             if (obj instanceof Canvas) {
                 Figura figura_InList = obtenerFiguraDesdeCanvas((Canvas) obj);
@@ -827,65 +828,34 @@ public class AppController {
                     pre_canvas = obtenerCanvasDesdeFigura(figura_InList);
                 }
                 if (condicion && figura_InList != figura){
-                    if(figura_InList != null){
-                        /*
-                        //asignar nueva posicion a la figura
-                        double nuevaPosY = pre_figura.getVertice_conexion().getY() + 100;
-                        System.out.println("Coordenada_NuevaPosicion:"+nuevaPosY);
-                        figura_InList.setVertice_conexion(new Vertice((panel_Diagrama.getMinWidth() / 2), nuevaPosY));
-                        System.out.printf("Prefigura:"+pre_figura.getContenido()+"\n");
-                        System.out.printf("figura:"+figura_InList.getContenido()+"\n");
-                        */
-                        //mover el canvas en relacion a la figura previa
-                        double cordenadas = pre_figura.getVertice_conexion().getY()+pre_figura.getDimenciones().getAlto()+106.5;
-                        System.out.println("ConexionY_pF:"+pre_figura.getVertice_conexion().getY()+"  --  Dimension_pF:"+pre_figura.getDimenciones().getAlto()+"  --  Constante: 106.5"+"  --  total:"+cordenadas);
-                        ((Canvas) obj).setLayoutY(cordenadas);
-                    }
+                    //if(figura_InList != null){
+
+                        try {
+                            //agregar condicional que solo se mueven si la siguiente figura no es fin algoritmo
+
+
+                            /*
+                            //asignar nueva posicion a la figura
+                            double nuevaPosY = pre_figura.getVertice_conexion().getY() + 100;
+                            System.out.println("Coordenada_NuevaPosicion:"+nuevaPosY);
+                            figura_InList.setVertice_conexion(new Vertice((panel_Diagrama.getMinWidth() / 2), nuevaPosY));
+                            System.out.printf("Prefigura:"+pre_figura.getContenido()+"\n");
+                            System.out.printf("figura:"+figura_InList.getContenido()+"\n");
+                            */
+                            //mover el canvas en relacion a la figura previa
+                            double cordenadas = pre_figura.getVertice_conexion().getY()+pre_figura.getDimenciones().getAlto()+106.5;
+                            System.out.println("ConexionY_pF:"+pre_figura.getVertice_conexion().getY()+"  --  Dimension_pF:"+pre_figura.getDimenciones().getAlto()+"  --  Constante: 106.5"+"  --  total:"+cordenadas);
+                            ((Canvas) obj).setLayoutY(cordenadas);
+                        }catch (NullPointerException e){
+
+                        }
+
+                    //}
                 }
                 pre_figura = figura_InList;
                 pre_canvas = (Canvas) obj;
             }
         }
-    }
-
-    public void moverfiguras_1(Figura figura, double x, double y){
-        //recorrer figuras
-        boolean condicion = false;
-        double cantidad_C = ins.getList_conexiones().size();
-        Figura pre_figura = (Figura) ins.getList_figuras().get(0);
-        for ( Object obj : ins.getList_figuras()) {
-            if (obj instanceof Figura) {
-                if(figura == (Figura) obj){
-                    condicion = true;
-                }
-                if (condicion && obj != figura){
-                    //modificar datos de la figura
-                    double nuevaPosY = pre_figura.getVertice_conexion().getY() + 50;
-                    ((Figura) obj).setVertice_conexion(new Vertice((panel_Diagrama.getMinWidth() / 2), nuevaPosY));
-                    System.out.printf("Prefigura:"+pre_figura.getContenido()+"\n");
-                    System.out.printf("figura:"+((Figura) obj).getContenido()+"\n");
-
-
-                    //todo: ver si mover canvas figura actual arregla el error de desplazamiento de la ultima figura
-                    //modificar el canvas de la figura
-                    Canvas canvas_f = obtenerCanvasDesdeFigura((Figura) obj);
-                    canvas_f.setLayoutY(canvas_f.getLayoutY() + 50);
-
-                    //Canvas canvas_pf = obtenerCanvasDesdeFigura(pre_figura);
-                    //canvas_pf.setLayoutY(canvas_pf.getLayoutY() + 50);
-
-                    //todo: tener en cuenta la posibilidad de no eliminarlas, para no alterar el orden y solo mever los canvas
-                    //modificar el canvas de la conexiín
-                    Canvas c_obj = obtenerCanvasDesdeFigura(pre_figura);
-                    Canvas c_conector = obtenerCanvasConexion(c_obj);
-
-                    //c_conector.setLayoutY(c_conector.getLayoutY() + 150);
-
-                }
-                pre_figura = (Figura) obj;
-            }
-        }
-        cantidad_C = ins.getList_conexiones().size();
     }
 
     public void prueba(){
@@ -978,25 +948,6 @@ public class AppController {
         return f_conector;
     }
 
-    public Figura determinarFiguraOrigen(double x, double y) {
-        int penultimoindice = ins.getList_figuras().size()-1;
-        Figura figuraOrigen = (Figura) ins.getList_figuras().get(penultimoindice);
-        for (Object obj : ins.getList_figuras()) {
-
-            if (obj instanceof Figura) {
-                Figura figura = (Figura) obj;
-
-                double posicion = ((Figura) obj).getVertice_conexion().getY();
-                System.out.println("posicion:"+posicion+" < y:"+y+" < posicion+50:"+(posicion+50)+"\n");
-                if (posicion < y && y < posicion+50) {
-                    figuraOrigen = figura;
-                    System.out.println("Figura Origen:"+figuraOrigen.getContenido()+"\n");
-                }
-            }
-        }
-        return figuraOrigen;
-    }
-
     public int determinarIndiceFigura_InList_figuras(Figura figuraOrigen, double x, double y) {
         List<Figura> listaFiguras = ins.getList_figuras(); // Obtener la lista de figuras
 
@@ -1040,133 +991,21 @@ public class AppController {
         return indiceCanvasDestino;
     }
 
-    public Figura determinarFiguraDestino(Figura figuraOrigen, double x, double y) {
-        Figura figuraDestino = null;
-        double distanciaMinima = Double.MAX_VALUE;
-
-        for (Object obj : ins.getList_figuras()) {
-            if (obj instanceof Figura) { // Comprueba si el objeto es una instancia de Figura
-                Figura figura = (Figura) obj; // Convierte el objeto a tipo Figura
-                // Excluir la figura de origen de la búsqueda
-                if (figura != figuraOrigen) {
-                    // Calcular la distancia entre el punto (x, y) y el punto de conexión de la figura
-                    double distancia = calcularDistancia(x, y, figura.getVertice_conexion().getX(), figura.getVertice_conexion().getY());
-                    // Si la distancia es menor que la distancia mínima actual, actualizar la figura destino y la distancia mínima
-                    if (distancia < distanciaMinima) {
-                        figuraDestino = figura;
-                        distanciaMinima = distancia;
-                    }
-                }
-            }
-        }
-        return figuraDestino;
-    }
-
-    public Conector obtenerConexionPrevia(Figura figuraOrigen, Figura figuraDestino) {
-        for (Object obj : ins.getList_conexiones()) {
-            if(obj instanceof Conector){
-                Conector conector = (Conector) obj;
-                if (conectorConectaFiguras(conector, figuraOrigen, figuraDestino)) {
-                    return conector;
-                }
-            }
-        }
-        return null;
-    }
-
-    public boolean conectorConectaFiguras(Conector conector, Figura figuraOrigen, Figura figuraDestino) {
-        // Comprobar si el conector conecta las figuras origen y destino
-        return (conector.getVertice_inicial().equals(figuraOrigen.getVertice_conexion()) && conector.getVertice_final().equals(figuraDestino.getVertice_conexion())) ||
-                (conector.getVertice_inicial().equals(figuraDestino.getVertice_conexion()) && conector.getVertice_final().equals(figuraOrigen.getVertice_conexion()));
-    }
-
     public double calcularDistancia(double x1, double y1, double x2, double y2) {
         return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
     }
 
-    public void conectar_original(Figura figuraOrigen, Figura figuraDestino, double x, double y) {
-
-        Conector conectorExistente = obtenerConexionPrevia(figuraOrigen, figuraDestino);
-
-        // Si ya existe un conector entre las figuras, no crear uno nuevo
-        if (conectorExistente != null) {
-            return;
-        }
-
-        //canvas conector
-        Vertice origen = new Vertice((figuraOrigen.getVertice_conexion().getX()), figuraOrigen.getVertice_conexion().getY()-figuraOrigen.getDimenciones().getAlto());
-        Vertice destino = new Vertice(figuraDestino.getVertice_conexion().getX(),figuraDestino.getVertice_conexion().getY());
-        double diferenciaY = y - figuraDestino.getVertice_conexion().getY()-40;
-        Canvas conectorCanvas = crear_canvasConector(diferenciaY,figuraOrigen.getVertice_conexion(), figuraDestino.getVertice_conexion());
-
-
-        //posicionamiento del canvas
-        double layoutX = (panel_Diagrama.getMinWidth() / 2) - 20;
-        double layoutY = y - diferenciaY+15; // Ajustar la posición Y del conector
-        conectorCanvas.setLayoutX(layoutX);
-        conectorCanvas.setLayoutY(layoutY);
-
-        // Agregar el nuevo canvas conector a la lista visual
-        panel_Diagrama.getChildren().add(conectorCanvas);
-
-        // Agregar el canvas conector a la lista de conectores
-        ins.getList_orden().add(conectorCanvas);
-
-        // Agregar el conector a la lista de conectores
-        Conector conector = new Conector(figuraOrigen.getVertice_conexion(), figuraDestino.getVertice_conexion());
-        ins.getList_conexiones().add(conector);
-    }
-
-    public void conectar_prueba_2(Figura figuraOrigen, Figura figuraDestino, double x, double y) {
-        //todo:eliminar parametros x,y
-
-        Conector conectorExistente = obtenerConexionPrevia(figuraOrigen, figuraDestino);
-
-        // Si ya existe un conector entre las figuras, no crear uno nuevo
-        if (conectorExistente != null) {
-            return;
-        }
-
-        //canvas conector
-        Vertice origen = new Vertice((figuraOrigen.getVertice_conexion().getX()), figuraOrigen.getVertice_conexion().getY() - figuraOrigen.getDimenciones().getAlto());
-        Vertice destino = new Vertice(figuraDestino.getVertice_conexion().getX(), figuraDestino.getVertice_conexion().getY());
-        double diferenciaY = 50; // Ajuste para que la conexión esté a 50 unidades de la figura anterior
-        System.out.printf("OrigenC:("+figuraOrigen.getVertice_conexion().getX()+", "+figuraOrigen.getVertice_conexion().getY()+")\n");
-        System.out.printf("DestinoC:("+figuraDestino.getVertice_conexion().getX()+", "+figuraDestino.getVertice_conexion().getY()+")\n");
-        Canvas conectorCanvas = crear_canvasConector(diferenciaY, figuraOrigen.getVertice_conexion(), figuraDestino.getVertice_conexion());
-
-        //posicionamiento del canvas
-        double layoutX = (panel_Diagrama.getMinWidth() / 2) - 20;
-        double layoutY = figuraOrigen.getVertice_conexion().getY() + 40; // Ajustar la posición Y del conector
-        System.out.printf("alto de la figura:"+figuraDestino.getDimenciones().getAlto()+"\n");
-        conectorCanvas.setLayoutX(layoutX);
-        conectorCanvas.setLayoutY(layoutY);
-
-        // Agregar el nuevo canvas conector a la lista visual
-        panel_Diagrama.getChildren().add(conectorCanvas);
-
-        // Agregar el canvas conector a la lista de conectores
-        ins.getList_orden().add(conectorCanvas);
-
-        // Agregar el conector a la lista de conectores
-        Conector conector = new Conector(figuraOrigen.getVertice_conexion(), figuraDestino.getVertice_conexion());
-        ins.getList_conexiones().add(conector);
-    }
-
     public Canvas conectar(Figura figuraOrigen, Figura figuraDestino, double x, double y) {
-
-        Conector conectorExistente = obtenerConexionPrevia(figuraOrigen, figuraDestino);
-
         //canvas conector
         Vertice origen = new Vertice((figuraOrigen.getVertice_conexion().getX()), figuraOrigen.getVertice_conexion().getY()-figuraOrigen.getDimenciones().getAlto());
         Vertice destino = new Vertice(figuraDestino.getVertice_conexion().getX(),figuraDestino.getVertice_conexion().getY());
 
-        double diferenciaY = destino.getY()-origen.getY();
+        double diferenciaY = 65;
         Canvas conectorCanvas = crear_canvasConector(diferenciaY,figuraOrigen.getVertice_conexion(), figuraDestino.getVertice_conexion());
 
         //posicionamiento del canvas
         double layoutX = (panel_Diagrama.getMinWidth() / 2) - 20;
-        double layoutY = destino.getY()+figuraDestino.getDimenciones().getAlto()+20; // Ajustar la posición Y del conector
+        double layoutY = destino.getY()+figuraDestino.getDimenciones().getAlto()+40; //20 Ajustar la posición Y del conector
 
         conectorCanvas.setLayoutX(layoutX);
         conectorCanvas.setLayoutY(layoutY);
@@ -1183,21 +1022,6 @@ public class AppController {
         Conector conector = new Conector(figuraOrigen.getVertice_conexion(), figuraDestino.getVertice_conexion());
         ins.getList_conexiones().add(conector);
         return conectorCanvas;
-    }
-
-    private Canvas obtenerCanvasConexion(Canvas figura){
-        boolean condicion = false;
-        for(Object obj : ins.getList_orden()) {
-            if (obj instanceof Canvas) {
-                if(obj == figura){
-                    condicion = true;
-                }
-                if(condicion && obj != figura){
-                        return (Canvas) obj;
-                }
-            }
-        }
-        return null;
     }
 
     private Figura obtenerFiguraDesdeCanvas(Canvas canvas) {
@@ -1333,7 +1157,7 @@ public class AppController {
         contenido="Fin Algoritmo";
         Arista dimencion_Ffin = new Arista(8*contenido.length()+25, 50);
         Inicio_Fin figura_fin = new Inicio_Fin(contenido, p_Ffin_direccion, p_Ffin_conexion, dimencion_Ffin);
-        diferencia+=50;//distancia entre las figuras iniciales
+        diferencia=100;//distancia entre las figuras iniciales
         Canvas canvas_Ffin = new Canvas(dimencion_Ffin.getAncho(), dimencion_Ffin.getAlto());
         canvas_Ffin.setLayoutX((panel_Diagrama.getMinWidth()/2)-70);
         canvas_Ffin.setLayoutY(p_Finicio_cordenada.getY()+diferencia);
