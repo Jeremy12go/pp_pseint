@@ -236,361 +236,272 @@ public class AppController {
     private void dibujarFigura(double x, double y, ImageView sourceDiagram) {
         String contenido = "";
         Figura _inicial = (Figura) ins.getList_figuras().get(0);
-        Canvas _final = obtenerCanvasDesdeFigura((Figura) ins.getList_figuras().get(ins.getList_figuras().size()-1));
+        Canvas _final = obtenerCanvasDesdeFigura((Figura) ins.getList_figuras().get(ins.getList_figuras().size() - 1));
 
         //condicional que valide si las cordenadas estan dentro de lo razonable para agregar
-        if((panel_Diagrama.getWidth()/2)-150 < x && x < (panel_Diagrama.getWidth()/2)+150) {
+        if ((panel_Diagrama.getWidth() / 2) - 150 < x && x < (panel_Diagrama.getWidth() / 2) + 150) {
             //if (_inicial.getVertice_conexion().getY() < y && y < _final.getLayoutY()+80) {
 
-                if (figura_condiconal == sourceDiagram) {
-                    Vertice p_Fcondicional_direccion = new Vertice(32.5, 25); //no cambiar
-                    Vertice p_Fcondicional_conexion = new Vertice(0,0);
-                    Arista dimencion_Fentrada = new Arista(120, 70);
-                    contenido = " A > B ";
-                    ArrayList<String> contenidoValidado = new ArrayList<String>(); //Ajustar
-                    Condicional condicional = new Condicional(contenido, p_Fcondicional_direccion, p_Fcondicional_conexion, dimencion_Fentrada, contenidoValidado);
-                    Canvas canvas_Fcondicional = new Canvas(dimencion_Fentrada.getAncho(), dimencion_Fentrada.getAlto());
+            if (figura_condiconal == sourceDiagram) {
+                Vertice p_Fcondicional_direccion = new Vertice(32.5, 25); //no cambiar
+                Vertice p_Fcondicional_conexion = new Vertice(0, 0);
+                Arista dimencion_Fentrada = new Arista(120, 70);
+                contenido = " A > B ";
+                ArrayList<String> contenidoValidado = new ArrayList<String>(); //Ajustar
+                Condicional condicional = new Condicional(contenido, p_Fcondicional_direccion, p_Fcondicional_conexion, dimencion_Fentrada, contenidoValidado);
+                Canvas canvas_Fcondicional = new Canvas(dimencion_Fentrada.getAncho(), dimencion_Fentrada.getAlto());
 
-                    // Obtener la posición Y ajustada para la nueva figura
-                    System.out.println("UF:"+ VG.getUltimaFiguraAñadida().getContenido());
+                // Obtener la posición Y ajustada para la nueva figura
+                double nuevaPosY = VG.getUltimoCanvasConexion().getLayoutY() + 25;
+                condicional.setVertice_conexion(new Vertice((panel_Diagrama.getMinWidth() / 2), nuevaPosY));
 
-                    double nuevaPosY = VG.getUltimoCanvasConexion().getLayoutY()+25;
-                    System.out.println("UConexionY:"+ VG.getUltimoCanvasConexion().getLayoutY()+"  total:"+nuevaPosY);
-                    condicional.setVertice_conexion(new Vertice((panel_Diagrama.getMinWidth() / 2), nuevaPosY));
+                dibujo_condicional(x, nuevaPosY, canvas_Fcondicional, condicional);
 
-                    dibujo_condicional(x, nuevaPosY, canvas_Fcondicional, condicional);
+                // Agregar la nueva figura a la lista de figuras, antes de figura siguiente
+                int indice_Fposterior = determinarIndiceFigura_InList_figuras(VG.getUltimaFiguraAñadida(), x, y);
+                ins.agregarElemento(condicional, 1, indice_Fposterior);
 
-                    // Agregar la nueva figura a la lista de figuras, antes de figura siguiente
-                    int indice_Fposterior = determinarIndiceFigura_InList_figuras(VG.getUltimaFiguraAñadida(), x, y);
-                    ins.agregarElemento(condicional, 1, indice_Fposterior);
+                // Agregar la nueva figura a la lista de canvas, antes de canvas conexión-figura
+                int indice_Cposterior = determinarIndiceCanvas_InList_orden(canvas_Fcondicional) - 1;
+                ins.agregarElemento(canvas_Fcondicional, 1, indice_Cposterior);
+                VG.cambiarUltimoCanvasConexion(conectar(VG.getUltimaFiguraAñadida(), condicional));
 
-                    // Agregar la nueva figura a la lista de canvas, antes de canvas conexión-figura
-                    int indice_Cposterior = determinarIndiceCanvas_InList_orden(canvas_Fcondicional);
-                    ins.agregarElemento(canvas_Fcondicional,1,indice_Cposterior);
+                // Agregar la nueva figura al panel
+                panel_Diagrama.getChildren().add(canvas_Fcondicional);
+                VG.cambiarUltimaFiguraAñadida(condicional);
+                VG.cambiarUltimoCanvasFigura(canvas_Fcondicional);
 
-                    VG.cambiarUltimoCanvasConexion(conectar(VG.getUltimaFiguraAñadida(), condicional, x, nuevaPosY));
-                    System.out.println("PosicionUC:"+VG.getUltimoCanvasConexion().getLayoutY());
-                    // Agregar la nueva figura al panel
-                    panel_Diagrama.getChildren().add(canvas_Fcondicional);
-                    VG.cambiarUltimaFiguraAñadida(condicional);
-                    VG.cambiarUltimoCanvasFigura(canvas_Fcondicional);
+                //funcion que mueve las figuras por debajo de la nueva figura
+                moverfiguras(condicional);
 
+            } else if (figura_documento == sourceDiagram) {
+                Vertice p_Fdocumento_direccion = new Vertice(32.5, 25); //no cambiar
+                Vertice p_Fdocumento_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
+                Arista dimencion_Fentrada = new Arista(120, 70);
+                contenido = " Documento ";
+                Documento documento = new Documento(contenido, p_Fdocumento_direccion, p_Fdocumento_conexion, dimencion_Fentrada);
+                Canvas canvas_Fdocumento = new Canvas(dimencion_Fentrada.getAncho(), dimencion_Fentrada.getAlto());
 
-                    //funcion que mueve las figuras por debajo de la nueva figura
-                    //moverfiguras(condicional,x,y);
-                    //prueba();
+                // Obtener la posición Y ajustada para la nueva figura
+                double nuevaPosY = VG.getUltimoCanvasConexion().getLayoutY() + 16;
+                documento.setVertice_conexion(new Vertice((panel_Diagrama.getMinWidth() / 2), nuevaPosY));
 
-                    //todo: eliminar conector anterior no esta funcionando
-                    //conector posNuevafigura
-                    /*
-                    Figura figuraDestino = determinarFiguraDestino(condicional, x, y);
-                    Canvas c_figuraOrigen = obtenerCanvasDesdeFigura(figuraDestino);
-                    Conector preconector = obtenerConexionPrevia(figuraDestino, figuraOrigen);
-                    Canvas c_conector = obtenerCanvasConexion(c_figuraOrigen);
+                dibujo_documento(nuevaPosY, canvas_Fdocumento, documento);
 
+                // Agregar la nueva figura a la lista de figuras, antes de figura siguiente
+                int indice_Fposterior = determinarIndiceFigura_InList_figuras(VG.getUltimaFiguraAñadida(), x, y);
+                ins.agregarElemento(documento, 1, indice_Fposterior);
 
-                    if (preconector != null) {
-                        System.out.printf("Entro!!\n");
-                        ins.getList_conexiones().remove(preconector);
-                        ins.getList_orden().remove(c_conector);
-                        panel_Diagrama.getChildren().remove(c_figuraOrigen);
-                    }*/
+                // Agregar la nueva figura a la lista de canvas, antes de canvas conexión-figura
+                int indice_Cposterior = determinarIndiceCanvas_InList_orden(canvas_Fdocumento) - 1;
+                ins.agregarElemento(canvas_Fdocumento, 1, indice_Cposterior);
+                VG.cambiarUltimoCanvasConexion(conectar(VG.getUltimaFiguraAñadida(), documento));
 
-                }
-                /*else if (figura_documento == sourceDiagram) {
-                    Vertice p_Fdocumento_direccion = new Vertice(32.5, 25); //no cambiar
-                    Vertice p_Fdocumento_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
-                    Arista dimencion_Fentrada = new Arista(120, 70);
-                    contenido = " Documento ";
-                    Documento documento = new Documento(contenido, p_Fdocumento_direccion, p_Fdocumento_conexion, dimencion_Fentrada);
+                // Agregar la nueva figura al panel
+                panel_Diagrama.getChildren().add(canvas_Fdocumento);
+                VG.cambiarUltimaFiguraAñadida(documento);
+                VG.cambiarUltimoCanvasFigura(canvas_Fdocumento);
 
-                    Canvas canvas_Fdocumento = new Canvas(dimencion_Fentrada.getAncho(), dimencion_Fentrada.getAlto());
+                //funcion que mueve las figuras por debajo de la nueva figura
+                moverfiguras(documento);
 
-                    dibujo_documento(x, y, canvas_Fdocumento, documento);
+            } else if (figura_entrada == sourceDiagram) {
+                Vertice p_Fentrada_direccion = new Vertice(32.5, 25); //no cambiar
+                Vertice p_Fentrada_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
+                contenido = " Entrada: ";
+                Arista dimencion_Fentrada = new Arista(153, 50);
+                Entrada entrada = new Entrada(contenido, p_Fentrada_direccion, p_Fentrada_conexion, dimencion_Fentrada);
+                Canvas canvas_Fentrada = new Canvas(dimencion_Fentrada.getAncho(), dimencion_Fentrada.getAlto());
 
-                    //conector preNuevafigura
-                    Figura figuraOrigen = determinarFiguraOrigen(x, y);
-                    if (figuraOrigen != null) {
-                        conectar(figuraOrigen, documento,x,y);
-                    } else {
-                        System.out.println("No se pudo encontrar una figura de origen cercana.");
-                    }
+                // Obtener la posición Y ajustada para la nueva figura
+                double nuevaPosY = VG.getUltimoCanvasConexion().getLayoutY();
+                entrada.setVertice_conexion(new Vertice((panel_Diagrama.getMinWidth() / 2), nuevaPosY));
 
-                    // Agregar la nueva figura al panel
-                    panel_Diagrama.getChildren().add(canvas_Fdocumento);
-                    ultimaFAñadida = documento;
-                    ultimoCanvasFigura = canvas_Fdocumento;
-                    // Agregar el canvas nueva figura a la lista de conectores
-                    ins.getList_orden().add(canvas_Fdocumento);
-                    // Agregar la nueva figura a la lista de figuras, antes de figura siguiente
-                    int indice_Fposterior = determinarIndiceFigura_InList_figuras(figuraOrigen, x, y);
-                    ins.agregarElemento(documento, 1, indice_Fposterior);
+                dibujo_paralelogramo(canvas_Fentrada, entrada, 1);
 
-                    //conector posNuevafigura
-                    Figura figuraDestino = determinarFiguraDestino(documento, x, y);
-                    if (figuraDestino != null) {
-                        conectar(documento, figuraDestino,x,y);
-                    } else {
-                        System.out.println("No se pudo encontrar una figura destino cercana.");
-                    }
+                // Agregar la nueva figura a la lista de figuras, antes de figura siguiente
+                int indice_Fposterior = determinarIndiceFigura_InList_figuras(VG.getUltimaFiguraAñadida(), x, y);
+                ins.agregarElemento(entrada, 1, indice_Fposterior);
 
-                    //eliminar conector anterior
-                    Conector preconector = obtenerConexionPrevia(figuraOrigen, figuraDestino);
-                    if (preconector != null) {
-                        ins.getList_conexiones().remove(preconector);
-                        ins.getList_orden().remove(preconector);
-                        panel_Diagrama.getChildren().remove(preconector);
-                    }
-                    //reposicionar canvas para la nueva figura
+                // Agregar la nueva figura a la lista de canvas, antes de canvas conexión-figura
+                int indice_Cposterior = determinarIndiceCanvas_InList_orden(canvas_Fentrada) - 1;
+                ins.agregarElemento(canvas_Fentrada, 1, indice_Cposterior);
+                VG.cambiarUltimoCanvasConexion(conectar(VG.getUltimaFiguraAñadida(), entrada));
 
-                } else if (figura_entrada == sourceDiagram) {
-                    Vertice p_Fentrada_direccion = new Vertice(32.5, 25); //no cambiar
-                    Vertice p_Fentrada_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
-                    contenido = " Entrada: ";
-                    Arista dimencion_Fentrada = new Arista(153, 50);
-                    Entrada entrada = new Entrada(contenido, p_Fentrada_direccion, p_Fentrada_conexion, dimencion_Fentrada);
+                // Agregar la nueva figura al panel
+                panel_Diagrama.getChildren().add(canvas_Fentrada);
+                VG.cambiarUltimaFiguraAñadida(entrada);
+                VG.cambiarUltimoCanvasFigura(canvas_Fentrada);
 
-                    //considerar no salirse de las dimensiones del canvas
-                    Canvas canvas_Fentrada = new Canvas(dimencion_Fentrada.getAncho(), dimencion_Fentrada.getAlto());
-                    //posicion de la figura en relacion al AnchorPane
-                    Figura pre_figura = determinarFiguraOrigen(x,y);
-                    double diferencia = dimencion_Fentrada.getAncho() / 2;
-                    canvas_Fentrada.setLayoutX((panel_Diagrama.getMinWidth() / 2) - diferencia);
-                    canvas_Fentrada.setLayoutY(y);
-                    //entrada.setVertice_conexion(new Vertice((panel_Diagrama.getMinWidth() / 2),canvas_Fentrada.getLayoutY()));
+                //funcion que mueve las figuras por debajo de la nueva figura
+                moverfiguras(entrada);
 
-                    //dibujar y agregar canvas al panel
-                    dibujo_paralelogramo(canvas_Fentrada, entrada, 1);
+            } else if (figura_salida == sourceDiagram) {
 
-                    //conector preNuevafigura
-                    Figura figuraOrigen = determinarFiguraOrigen(x, y);
-                    if (figuraOrigen instanceof Inicio_Fin) {
-                        conectar(figuraOrigen, entrada,x,y);
-                    } else {
-                        conectar(figuraOrigen, entrada,x,y);
-                    }
+                Vertice p_Fsalida_direccion = new Vertice(32.5, 25); //no cambiar
+                Vertice p_Fsalida_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
+                contenido = " Salida: ";
+                Arista dimencion_Fsalida = new Arista(153, 50);
+                Salida salida = new Salida(contenido, p_Fsalida_direccion, p_Fsalida_conexion, dimencion_Fsalida);
+                Canvas canvas_Fsalida = new Canvas(dimencion_Fsalida.getAncho(), dimencion_Fsalida.getAlto());
 
-                    // Agregar la nueva figura al panel
-                    panel_Diagrama.getChildren().add(canvas_Fentrada);
-                    ultimaFAñadida = entrada;
-                    ultimoCanvasFigura = canvas_Fentrada;
-                    // Agregar el canvas nueva figura a la lista de conectores
-                    ins.getList_orden().add(entrada);
-                    // Agregar la nueva figura a la lista de figuras, antes de figura siguiente
-                    int indice_Fposterior = determinarIndiceFigura_InList_figuras(figuraOrigen, x, y);
-                    ins.agregarElemento(entrada, 1, indice_Fposterior);
+                // Obtener la posición Y ajustada para la nueva figura
+                double nuevaPosY = VG.getUltimoCanvasConexion().getLayoutY();
+                salida.setVertice_conexion(new Vertice((panel_Diagrama.getMinWidth() / 2), nuevaPosY));
 
-                    //conector posNuevafigura
-                    Figura figuraDestino = determinarFiguraDestino(entrada, x, y);
-                    if (figuraDestino != null) {
-                        conectar(entrada, figuraDestino,x,y);
-                    } else {
-                        System.out.println("No se pudo encontrar una figura destino cercana.");
-                    }
+                dibujo_paralelogramo(canvas_Fsalida, salida, 0);
 
-                    //eliminar conector anterior
-                    Conector preconector = obtenerConexionPrevia(figuraOrigen, figuraDestino);
-                    if (preconector != null) {
-                        ins.getList_conexiones().remove(preconector);
-                        ins.getList_orden().remove(preconector);
-                        panel_Diagrama.getChildren().remove(preconector);
-                    }
-                    //reposicionar canvas para la nueva figura
-                } else if (figura_salida == sourceDiagram) {
+                // Agregar la nueva figura a la lista de figuras, antes de figura siguiente
+                int indice_Fposterior = determinarIndiceFigura_InList_figuras(VG.getUltimaFiguraAñadida(), x, y);
+                ins.agregarElemento(salida, 1, indice_Fposterior);
 
-                    Vertice p_Fsalida_direccion = new Vertice(32.5, 25); //no cambiar
-                    Vertice p_Fsalida_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
-                    contenido = " Salida: ";
-                    Arista dimencion_Fsalida = new Arista(153, 50);
-                    Salida salida = new Salida(contenido, p_Fsalida_direccion, p_Fsalida_conexion, dimencion_Fsalida);
+                // Agregar la nueva figura a la lista de canvas, antes de canvas conexión-figura
+                int indice_Cposterior = determinarIndiceCanvas_InList_orden(canvas_Fsalida) - 1;
+                ins.agregarElemento(canvas_Fsalida, 1, indice_Cposterior);
+                VG.cambiarUltimoCanvasConexion(conectar(VG.getUltimaFiguraAñadida(), salida));
 
-                    Canvas canvas_Fsalida = new Canvas(dimencion_Fsalida.getAncho(), dimencion_Fsalida.getAlto());
-                    //posicion de la figura en relacion al AnchorPane
-                    double diferencia = dimencion_Fsalida.getAncho() / 2;
-                    canvas_Fsalida.setLayoutX((panel_Diagrama.getMinWidth() / 2) - diferencia);
-                    canvas_Fsalida.setLayoutY(y);
+                // Agregar la nueva figura al panel
+                panel_Diagrama.getChildren().add(canvas_Fsalida);
+                VG.cambiarUltimaFiguraAñadida(salida);
+                VG.cambiarUltimoCanvasFigura(canvas_Fsalida);
 
-                    //dibujar y agregar canvas al panel
-                    dibujo_paralelogramo(canvas_Fsalida, salida, 0);
+                //funcion que mueve las figuras por debajo de la nueva figura
+                moverfiguras(salida);
 
-                    //conector preNuevafigura
-                    Figura figuraOrigen = determinarFiguraOrigen(x, y);
-                    if (figuraOrigen != null) {
-                        conectar(figuraOrigen, salida,x,y);
-                    } else {
-                        System.out.println("No se pudo encontrar una figura de origen cercana.");
-                    }
+            } else if (figura_proceso == sourceDiagram) {
+                Vertice p_Fproceso_direccion = new Vertice(32.5, 25); //no cambiar
+                Vertice p_Fproeso_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
+                contenido = " Proceso ";
+                Arista dimencion_Fproceso = new Arista(120, 40);
+                String contenidoValidado = ""; //Ajustar
+                ArrayList<String> operaciones = new ArrayList<String>(); //Ajustar
+                ArrayList<String> operandos = new ArrayList<String>(); //Ajustar
+                Proceso proceso = new Proceso(contenido, p_Fproceso_direccion, p_Fproeso_conexion, dimencion_Fproceso, contenidoValidado, operaciones, operandos);
+                Canvas canvas_Fproceso = new Canvas(dimencion_Fproceso.getAncho(), dimencion_Fproceso.getAlto());
 
-                    // Agregar la nueva figura al panel
-                    panel_Diagrama.getChildren().add(canvas_Fsalida);
-                    ultimaFAñadida = salida;
-                    ultimoCanvasFigura = canvas_Fsalida;
-                    // Agregar el canvas nueva figura a la lista de conectores
-                    ins.getList_orden().add(canvas_Fsalida);
-                    // Agregar la nueva figura a la lista de figuras, antes de figura siguiente
-                    int indice_Fposterior = determinarIndiceFigura_InList_figuras(figuraOrigen, x, y);
-                    ins.agregarElemento(salida, 1, indice_Fposterior);
+                // Obtener la posición Y ajustada para la nueva figura
+                double nuevaPosY = VG.getUltimoCanvasConexion().getLayoutY() + 25;
+                proceso.setVertice_conexion(new Vertice((panel_Diagrama.getMinWidth() / 2), nuevaPosY));
 
-                    //conector posNuevafigura
-                    Figura figuraDestino = determinarFiguraDestino(salida, x, y);
-                    if (figuraDestino != null) {
-                        conectar(salida, figuraDestino,x,y);
-                    } else {
-                        System.out.println("No se pudo encontrar una figura destino cercana.");
-                    }
+                dibujo_rectangulo(canvas_Fproceso, proceso);
 
-                    //eliminar conector anterior
-                    Conector preconector = obtenerConexionPrevia(figuraOrigen, figuraDestino);
-                    if (preconector != null) {
-                        ins.getList_conexiones().remove(preconector);
-                        ins.getList_orden().remove(preconector);
-                        panel_Diagrama.getChildren().remove(preconector);
-                    }
-                    //reposicionar canvas para la nueva figura
+                // Agregar la nueva figura a la lista de figuras, antes de figura siguiente
+                int indice_Fposterior = determinarIndiceFigura_InList_figuras(VG.getUltimaFiguraAñadida(), x, y);
+                ins.agregarElemento(proceso, 1, indice_Fposterior);
 
-                } else if (figura_proceso == sourceDiagram) {
-                    Vertice p_Fproceso_direccion = new Vertice(32.5, 25); //no cambiar
-                    Vertice p_Fproeso_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
-                    contenido = " Proceso ";
-                    Arista dimencion_Fproceso = new Arista(120, 40);
-                    String contenidoValidado = ""; //Ajustar
-                    ArrayList<String> operaciones = new ArrayList<String>(); //Ajustar
-                    ArrayList<String> operandos = new ArrayList<String>(); //Ajustar
-                    Proceso proceso = new Proceso(contenido, p_Fproceso_direccion, p_Fproeso_conexion, dimencion_Fproceso, contenidoValidado, operaciones, operandos);
+                // Agregar la nueva figura a la lista de canvas, antes de canvas conexión-figura
+                int indice_Cposterior = determinarIndiceCanvas_InList_orden(canvas_Fproceso) - 1;
+                ins.agregarElemento(canvas_Fproceso, 1, indice_Cposterior);
+                VG.cambiarUltimoCanvasConexion(conectar(VG.getUltimaFiguraAñadida(), proceso));
 
-                    Canvas canvas_Fproceso = new Canvas(dimencion_Fproceso.getAncho(), dimencion_Fproceso.getAlto());
-                    //posicion de la figura en relacion al AnchorPane
-                    double diferencia = dimencion_Fproceso.getAncho() / 2;
-                    canvas_Fproceso.setLayoutX((panel_Diagrama.getMinWidth() / 2) - diferencia);
-                    canvas_Fproceso.setLayoutY(y);
+                // Agregar la nueva figura al panel
+                panel_Diagrama.getChildren().add(canvas_Fproceso);
+                VG.cambiarUltimaFiguraAñadida(proceso);
+                VG.cambiarUltimoCanvasFigura(canvas_Fproceso);
 
-                    //dibujar y agregar canvas al panel
-                    dibujo_rectangulo(x, y, canvas_Fproceso, proceso);
+                //funcion que mueve las figuras por debajo de la nueva figura
+                moverfiguras(proceso);
 
-                    //conector preNuevafigura
-                    Figura figuraOrigen = determinarFiguraOrigen(x, y);
-                    if (figuraOrigen != null) {
-                        conectar(figuraOrigen, proceso,x,y);
-                    } else {
-                        System.out.println("No se pudo encontrar una figura de origen cercana.");
-                    }
+            } else if (figura_hacer_mientras == sourceDiagram) {
+                Vertice p_Fcondicional_direccion = new Vertice(32.5, 25);
+                Vertice p_Fcondicional_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
+                Arista dimencion_Fentrada = new Arista(120, 70);
+                contenido = " Hacer Mientras ";
+                ArrayList<String> contenidoValidado = new ArrayList<>();
+                Hacer_Mientras hacer_mientras = new Hacer_Mientras(contenido, p_Fcondicional_direccion, p_Fcondicional_conexion, dimencion_Fentrada, contenidoValidado);
+                Canvas canvas_Fhacer_mientras = new Canvas(dimencion_Fentrada.getAncho(), dimencion_Fentrada.getAlto());
 
-                    // Agregar la nueva figura al panel
-                    panel_Diagrama.getChildren().add(canvas_Fproceso);
-                    ultimaFAñadida = proceso;
-                    ultimoCanvasFigura = canvas_Fproceso;
-                    // Agregar el canvas nueva figura a la lista de conectores
-                    ins.getList_orden().add(canvas_Fproceso);
-                    // Agregar la nueva figura a la lista de figuras, antes de figura siguiente
-                    int indice_Fposterior = determinarIndiceFigura_InList_figuras(figuraOrigen, x, y);
-                    ins.agregarElemento(proceso, 1, indice_Fposterior);
+                dibujo_hacerMientras(contenido, x, y, canvas_Fhacer_mientras, hacer_mientras);
 
-                    //conector posNuevafigura
-                    Figura figuraDestino = determinarFiguraDestino(proceso, x, y);
-                    if (figuraDestino != null) {
-                        conectar(proceso, figuraDestino,x,y);
-                    } else {
-                        System.out.println("No se pudo encontrar una figura destino cercana.");
-                    }
+                // Agregar la nueva figura a la lista de figuras, antes de figura siguiente
+                int indice_Fposterior = determinarIndiceFigura_InList_figuras(VG.getUltimaFiguraAñadida(), x, y);
+                ins.agregarElemento(hacer_mientras, 1, indice_Fposterior);
 
-                    //eliminar conector anterior
-                    Conector preconector = obtenerConexionPrevia(figuraOrigen, figuraDestino);
-                    if (preconector != null) {
-                        ins.getList_conexiones().remove(preconector);
-                        ins.getList_orden().remove(preconector);
-                        panel_Diagrama.getChildren().remove(preconector);
-                    }
-                    //reposicionar canvas para la nueva figura
-                }else if (figura_hacer_mientras == sourceDiagram) {
-                    Vertice p_Fcondicional_direccion = new Vertice(32.5, 25);
-                    Vertice p_Fcondicional_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
-                    Arista dimencion_Fentrada = new Arista(120, 70);
-                    contenido = " Hacer Mientras ";
-                    ArrayList<String> contenidoValidado = new ArrayList<>();
-                    Hacer_Mientras hacer_mientras = new Hacer_Mientras(contenido, p_Fcondicional_direccion, p_Fcondicional_conexion, dimencion_Fentrada, contenidoValidado);
+                // Agregar la nueva figura a la lista de canvas, antes de canvas conexión-figura
+                int indice_Cposterior = determinarIndiceCanvas_InList_orden(canvas_Fhacer_mientras) - 1;
+                ins.agregarElemento(canvas_Fhacer_mientras, 1, indice_Cposterior);
+                VG.cambiarUltimoCanvasConexion(conectar(VG.getUltimaFiguraAñadida(), hacer_mientras));
 
-                    Canvas canvas_Fhacer_mientras = new Canvas(dimencion_Fentrada.getAncho(), dimencion_Fentrada.getAlto());
-                    dibujo_hacerMientras(contenido, x, y, canvas_Fhacer_mientras, hacer_mientras);
+                // Agregar la nueva figura al panel
+                panel_Diagrama.getChildren().add(canvas_Fhacer_mientras);
+                VG.cambiarUltimaFiguraAñadida(hacer_mientras);
+                VG.cambiarUltimoCanvasFigura(canvas_Fhacer_mientras);
 
-                    panel_Diagrama.getChildren().add(canvas_Fhacer_mientras);
-                    ultimaFAñadida = hacer_mientras;
-                    ultimaCAñadida = canvas_Fhacer_mientras;
-                    ins.getList_orden().add(canvas_Fhacer_mientras);
-                    ins.getList_figuras().add(hacer_mientras);
+                //funcion que mueve las figuras por debajo de la nueva figura
+                moverfiguras(hacer_mientras);
 
-                    canvas_Fhacer_mientras.setUserData(hacer_mientras);
-                    // Resto del código para conectar y ajustar la figura...
-                } else if (figura_mientras == sourceDiagram) {
-                    Vertice p_Fcondicional_direccion = new Vertice(32.5, 25);
-                    Vertice p_Fcondicional_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
-                    Arista dimencion_Fentrada = new Arista(120, 70);
-                    contenido = " Mientras ";
-                    ArrayList<String> contenidoValidado = new ArrayList<>();
-                    Mientras mientras = new Mientras(contenido, p_Fcondicional_direccion, p_Fcondicional_conexion, dimencion_Fentrada, contenidoValidado);
+            } else if (figura_mientras == sourceDiagram) {
+                Vertice p_Fcondicional_direccion = new Vertice(32.5, 25);
+                Vertice p_Fcondicional_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
+                Arista dimencion_Fentrada = new Arista(120, 70);
+                contenido = " Mientras ";
+                ArrayList<String> contenidoValidado = new ArrayList<>();
+                Mientras mientras = new Mientras(contenido, p_Fcondicional_direccion, p_Fcondicional_conexion, dimencion_Fentrada, contenidoValidado);
+                Canvas canvas_Fmientras = new Canvas(dimencion_Fentrada.getAncho(), dimencion_Fentrada.getAlto());
 
-                    Canvas canvas_Fmientras = new Canvas(dimencion_Fentrada.getAncho(), dimencion_Fentrada.getAlto());
-                    dibujo_mientras(contenido, x, y, canvas_Fmientras, mientras);
+                dibujo_mientras(contenido, x, y, canvas_Fmientras, mientras);
 
-                    panel_Diagrama.getChildren().add(canvas_Fmientras);
-                    ultimaFAñadida = mientras;
-                    ultimaCAñadida = canvas_Fmientras;
-                    ins.getList_orden().add(canvas_Fmientras);
-                    ins.getList_figuras().add(mientras);
+                dibujo_hacerMientras(contenido, x, y, canvas_Fmientras, mientras);
 
-                    canvas_Fmientras.setUserData(mientras);
-                    // Resto del código para conectar y ajustar la figura...
-                }  else if (figura_para== sourceDiagram) {
+                // Agregar la nueva figura a la lista de figuras, antes de figura siguiente
+                int indice_Fposterior = determinarIndiceFigura_InList_figuras(VG.getUltimaFiguraAñadida(), x, y);
+                ins.agregarElemento(mientras, 1, indice_Fposterior);
+
+                // Agregar la nueva figura a la lista de canvas, antes de canvas conexión-figura
+                int indice_Cposterior = determinarIndiceCanvas_InList_orden(canvas_Fmientras) - 1;
+                ins.agregarElemento(canvas_Fmientras, 1, indice_Cposterior);
+                VG.cambiarUltimoCanvasConexion(conectar(VG.getUltimaFiguraAñadida(), mientras));
+
+                // Agregar la nueva figura al panel
+                panel_Diagrama.getChildren().add(canvas_Fmientras);
+                VG.cambiarUltimaFiguraAñadida(mientras);
+                VG.cambiarUltimoCanvasFigura(canvas_Fmientras);
+
+                //funcion que mueve las figuras por debajo de la nueva figura
+                moverfiguras(mientras);
+
+            } else if (figura_para == sourceDiagram) {
                 //Figura Para
-                }
-                */
             }
-        //}
+        }
     }
 
-    public void moverfiguras(Figura figura, double x, double y){
+    public void moverfiguras(Figura figura){
         boolean condicion = false;
         Figura pre_figura = null;
         Canvas pre_canvas = null;
-        ArrayList<Canvas> arr_List_figuras = ins.getList_figuras();
-        int largo = arr_List_figuras.size();
-        //cambiar el tipo de recorrido, trabajar como arreglo
-        for ( Object obj : ins.getList_orden()) {
-            if (obj instanceof Canvas) {
-                Figura figura_InList = obtenerFiguraDesdeCanvas((Canvas) obj);
-
+        int largo = ins.getList_orden().size();
+        ArrayList<Canvas> arr_list_canvas = ins.getList_orden();
+        for (int i = 0; i < largo; i++ ) {
+            Figura figura_InList = obtenerFiguraDesdeCanvas(arr_list_canvas.get(i));
+            if(figura_InList != null){
                 if(figura == figura_InList){
                     condicion = true;
                     pre_figura = figura_InList;
                     pre_canvas = obtenerCanvasDesdeFigura(figura_InList);
                 }
                 if (condicion && figura_InList != figura){
-                    //if(figura_InList != null){
-
-                        try {
-                            //agregar condicional que solo se mueven si la siguiente figura no es fin algoritmo
-
-
-                            /*
-                            //asignar nueva posicion a la figura
-                            double nuevaPosY = pre_figura.getVertice_conexion().getY() + 100;
-                            System.out.println("Coordenada_NuevaPosicion:"+nuevaPosY);
-                            figura_InList.setVertice_conexion(new Vertice((panel_Diagrama.getMinWidth() / 2), nuevaPosY));
-                            System.out.printf("Prefigura:"+pre_figura.getContenido()+"\n");
-                            System.out.printf("figura:"+figura_InList.getContenido()+"\n");
-                            */
-                            //mover el canvas en relacion a la figura previa
-                            double cordenadas = pre_figura.getVertice_conexion().getY()+pre_figura.getDimenciones().getAlto()+106.5;
-                            System.out.println("ConexionY_pF:"+pre_figura.getVertice_conexion().getY()+"  --  Dimension_pF:"+pre_figura.getDimenciones().getAlto()+"  --  Constante: 106.5"+"  --  total:"+cordenadas);
-                            ((Canvas) obj).setLayoutY(cordenadas);
-                        }catch (NullPointerException e){
-
-                        }
-
-                    //}
+                    Figura figura_final = obtenerFiguraDesdeCanvas(arr_list_canvas.get(largo-1));
+                    if(figura_InList.getContenido() != figura_final.getContenido() ){
+                        /*
+                        //asignar nueva posicion a la figura
+                        double nuevaPosY = pre_figura.getVertice_conexion().getY() + 100;
+                        System.out.println("Coordenada_NuevaPosicion:"+nuevaPosY);
+                        figura_InList.setVertice_conexion(new Vertice((panel_Diagrama.getMinWidth() / 2), nuevaPosY));
+                        System.out.printf("Prefigura:"+pre_figura.getContenido()+"\n");
+                        System.out.printf("figura:"+figura_InList.getContenido()+"\n");
+                        */
+                        //mover el canvas en relacion a la figura previa
+                        double cordenadas = pre_figura.getVertice_conexion().getY()+pre_figura.getDimenciones().getAlto()+106.5;
+                        System.out.println("ConexionY_pF:"+pre_figura.getVertice_conexion().getY()+"  --  Dimension_pF:"+pre_figura.getDimenciones().getAlto()+"  --  Constante: 106.5"+"  --  total:"+cordenadas);
+                        arr_list_canvas.get(i).setLayoutY(cordenadas);
+                    }else{
+                        arr_list_canvas.get(largo-1).setLayoutY(arr_list_canvas.get(i).getLayoutY()+arr_list_canvas.get(i).getHeight()-5);
+                    }
                 }
-                pre_figura = figura_InList;
-                pre_canvas = (Canvas) obj;
             }
+            pre_figura = figura_InList;
+            pre_canvas = arr_list_canvas.get(i);
         }
     }
 
@@ -731,7 +642,7 @@ public class AppController {
         return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
     }
 
-    public Canvas conectar(Figura figuraOrigen, Figura figuraDestino, double x, double y) {
+    public Canvas conectar(Figura figuraOrigen, Figura figuraDestino) {
         //canvas conector
         Vertice origen = new Vertice((figuraOrigen.getVertice_conexion().getX()), figuraOrigen.getVertice_conexion().getY()-figuraOrigen.getDimenciones().getAlto());
         Vertice destino = new Vertice(figuraDestino.getVertice_conexion().getX(),figuraDestino.getVertice_conexion().getY());
@@ -751,7 +662,7 @@ public class AppController {
 
         // Agregar el canvas conector a la lista de conectores
         Canvas canvasF = obtenerCanvasDesdeFigura(figuraDestino);
-        int indice_C = determinarIndiceCanvas_InList_orden(canvasF)+1;
+        int indice_C = determinarIndiceCanvas_InList_orden(canvasF);//+1
         ins.agregarElemento(conectorCanvas,1,indice_C);
 
         // Agregar el conector a la lista de conectores
@@ -763,12 +674,13 @@ public class AppController {
     private Figura obtenerFiguraDesdeCanvas(Canvas canvas) {
         ArrayList<Canvas> canvasList = ins.getList_orden();
         ArrayList<Figura> figuraList = ins.getList_figuras();
+        int largo = ins.getList_figuras().size();
 
         int index = canvasList.indexOf(canvas);
         if (index != -1 && index < figuraList.size()) {
             return figuraList.get(index);
         }
-        return null;
+        return (Figura)ins.getList_figuras().get(largo-1);
     }
 
     private Canvas obtenerCanvasDesdeFigura(Figura figura) {
@@ -973,6 +885,7 @@ public class AppController {
         gc.setTextBaseline(VPos.CENTER);
         gc.fillText(figura.getContenido(), (figura.getDimenciones().getAncho()/ 2)+15, figura.getDimenciones().getAlto()-15);
     }
+
     //FIGURAS_INTERACTIVAS----------------------------------------------------------------------------------------------
     public void dibujo_paralelogramo(Canvas canvas, Figura figura, int tipo){
         // Calcular los otros vértices
@@ -984,6 +897,9 @@ public class AppController {
         // Dibujar el paralelogramo
         gc.setLineWidth(tamaño_Lbordes);
         gc.setStroke(colorBordes);
+
+        canvas.setLayoutX(figura.getVertice_conexion().getX() - 80);
+        canvas.setLayoutY(figura.getVertice_conexion().getY() + 50);
 
         // Rellenar figura
         gc.setFill(colorRelleno);
@@ -1358,7 +1274,7 @@ public class AppController {
         });
     }
 
-    public void dibujo_rectangulo(double x, double y,Canvas canvas, Figura figura) {
+    public void dibujo_rectangulo(Canvas canvas, Figura figura) {
         String finalTexto = figura.getContenido();
         javafx.scene.text.Text text = new javafx.scene.text.Text(figura.getContenido());
 
@@ -1369,7 +1285,7 @@ public class AppController {
         //posicion de la figura en relacion al AnchorPane
         double diferencia = figura.getDimenciones().getAncho() / 2;
         canvas.setLayoutX((panel_Diagrama.getMinWidth() / 2) - diferencia+15);
-        canvas.setLayoutY(y+25);
+        canvas.setLayoutY(figura.getVertice_conexion().getY() + 50);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         // Dibujar el rectángulo
@@ -1476,7 +1392,7 @@ public class AppController {
         String pre_text = figura.getContenido();
         figura.setContenido("");
         limpiar_canvas(canvas);
-        dibujo_rectangulo(currentX, currentY-25, canvas,figura);
+        dibujo_rectangulo(canvas,figura);
 
         // Agregar evento de tecla para actualizar el contenido al presionar Enter
         textContenido.setOnKeyPressed(event_2 -> {
@@ -1507,14 +1423,14 @@ public class AppController {
 
                 //redibujo
                 limpiar_canvas(canvas);
-                dibujo_rectangulo(currentX, currentY-25, canvas, figura);
+                dibujo_rectangulo(canvas, figura);
                 textContenido.clear();
                 panel_Diagrama.getChildren().remove(textContenido);
             }
         });
     }
 
-    public void dibujo_documento(double x, double y, Canvas canvas, Figura figura) {
+    public void dibujo_documento(double posY, Canvas canvas, Figura figura) {
         String finalTexto = figura.getContenido();
         javafx.scene.text.Text text = new javafx.scene.text.Text(figura.getContenido());
 
@@ -1525,7 +1441,7 @@ public class AppController {
         //posicion de la figura en relacion al AnchorPane
         double diferencia = figura.getDimenciones().getAncho() / 2;
         canvas.setLayoutX((panel_Diagrama.getMinWidth() / 2) - diferencia+15);
-        canvas.setLayoutY(y+25);
+        canvas.setLayoutY(posY + 58);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         // Dibujar el cuerpo del documento (rectángulo)
@@ -1635,7 +1551,7 @@ public class AppController {
         String pre_text = figura.getContenido();
         figura.setContenido("");
         limpiar_canvas(canvas);
-        dibujo_documento(currentX, currentY-25, canvas,figura);
+        dibujo_documento(currentY-25, canvas,figura);
 
         // Agregar evento de tecla para actualizar el contenido al presionar Enter
         textContenido.setOnKeyPressed(event_2 -> {
@@ -1666,7 +1582,7 @@ public class AppController {
 
                 //redibujo
                 limpiar_canvas(canvas);
-                dibujo_documento(currentX, currentY-25, canvas, figura);
+                dibujo_documento(currentY-25, canvas, figura);
                 textContenido.clear();
                 panel_Diagrama.getChildren().remove(textContenido);
             }
