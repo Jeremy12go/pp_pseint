@@ -188,7 +188,9 @@ public class AppController {
         sourceDiagram.setLayoutX(originalX);
         sourceDiagram.setLayoutY(originalY);
         // Verificar la imagen soltada
-        if (sourceDiagram == figura_condiconal || sourceDiagram == figura_documento || sourceDiagram == figura_entrada || sourceDiagram == figura_proceso || sourceDiagram == figura_salida) {
+        if (sourceDiagram == figura_condiconal || sourceDiagram == figura_documento || sourceDiagram == figura_entrada
+                || sourceDiagram == figura_proceso || sourceDiagram == figura_salida || sourceDiagram == figura_mientras
+                || sourceDiagram == figura_hacer_mientras || sourceDiagram == figura_para) {
             double releaseX = event.getSceneX();
             double releaseY = event.getSceneY();
             Bounds basureroBounds = basurero.localToScene(basurero.getBoundsInLocal());
@@ -255,7 +257,7 @@ public class AppController {
                 double nuevaPosY = VG.getUltimoCanvasConexion().getLayoutY() + 25;
                 condicional.setVertice_conexion(new Vertice((panel_Diagrama.getMinWidth() / 2), nuevaPosY));
 
-                dibujo_condicional(x, nuevaPosY, canvas_Fcondicional, condicional);
+                dibujo_condicional(nuevaPosY, canvas_Fcondicional, condicional);
 
                 // Agregar la nueva figura a la lista de figuras, antes de figura siguiente
                 int indice_Fposterior = determinarIndiceFigura_InList_figuras(VG.getUltimaFiguraAñadida(), x, y);
@@ -403,15 +405,19 @@ public class AppController {
                 moverfiguras(proceso);
 
             } else if (figura_hacer_mientras == sourceDiagram) {
-                Vertice p_Fcondicional_direccion = new Vertice(32.5, 25);
-                Vertice p_Fcondicional_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
+                Vertice p_Fhacer_mientras_direccion = new Vertice(32.5, 25);
+                Vertice p_Fhacer_mientras_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
                 Arista dimencion_Fentrada = new Arista(120, 70);
                 contenido = " Hacer Mientras ";
                 ArrayList<String> contenidoValidado = new ArrayList<>();
-                Hacer_Mientras hacer_mientras = new Hacer_Mientras(contenido, p_Fcondicional_direccion, p_Fcondicional_conexion, dimencion_Fentrada, contenidoValidado);
+                Hacer_Mientras hacer_mientras = new Hacer_Mientras(contenido, p_Fhacer_mientras_direccion, p_Fhacer_mientras_conexion, dimencion_Fentrada, contenidoValidado);
                 Canvas canvas_Fhacer_mientras = new Canvas(dimencion_Fentrada.getAncho(), dimencion_Fentrada.getAlto());
 
-                dibujo_hacerMientras(contenido, x, y, canvas_Fhacer_mientras, hacer_mientras);
+                // Obtener la posición Y ajustada para la nueva figura
+                double nuevaPosY = VG.getUltimoCanvasConexion().getLayoutY() + 25;
+                hacer_mientras.setVertice_conexion(new Vertice((panel_Diagrama.getMinWidth() / 2), nuevaPosY));
+
+                dibujo_hacerMientras(contenido, x, nuevaPosY , canvas_Fhacer_mientras, hacer_mientras);
 
                 // Agregar la nueva figura a la lista de figuras, antes de figura siguiente
                 int indice_Fposterior = determinarIndiceFigura_InList_figuras(VG.getUltimaFiguraAñadida(), x, y);
@@ -439,9 +445,11 @@ public class AppController {
                 Mientras mientras = new Mientras(contenido, p_Fcondicional_direccion, p_Fcondicional_conexion, dimencion_Fentrada, contenidoValidado);
                 Canvas canvas_Fmientras = new Canvas(dimencion_Fentrada.getAncho(), dimencion_Fentrada.getAlto());
 
-                dibujo_mientras(contenido, x, y, canvas_Fmientras, mientras);
+                // Obtener la posición Y ajustada para la nueva figura
+                double nuevaPosY = VG.getUltimoCanvasConexion().getLayoutY() + 25;
+                mientras.setVertice_conexion(new Vertice((panel_Diagrama.getMinWidth() / 2), nuevaPosY));
 
-                dibujo_hacerMientras(contenido, x, y, canvas_Fmientras, mientras);
+                dibujo_mientras(contenido, x, nuevaPosY, canvas_Fmientras, mientras);
 
                 // Agregar la nueva figura a la lista de figuras, antes de figura siguiente
                 int indice_Fposterior = determinarIndiceFigura_InList_figuras(VG.getUltimaFiguraAñadida(), x, y);
@@ -1048,7 +1056,7 @@ public class AppController {
         });
     }
 
-    public void dibujo_condicional(double x, double y, Canvas canvas, Figura figura){
+    public void dibujo_condicional(double y, Canvas canvas, Figura figura){
         String finalTexto = figura.getContenido();
         javafx.scene.text.Text text = new javafx.scene.text.Text(figura.getContenido());
 
@@ -1207,7 +1215,7 @@ public class AppController {
         String pre_text = figura.getContenido();
         figura.setContenido("");
         limpiar_canvas(canvas);
-        dibujo_condicional(currentX, currentY-25, canvas,figura);
+        dibujo_condicional(currentY-25, canvas,figura);
 
                 // Agregar evento de tecla para actualizar el contenido al presionar Enter
                 textContenido.setOnKeyPressed(event_2 -> {
@@ -1254,7 +1262,7 @@ public class AppController {
 
                 //redibujo
                 limpiar_canvas(canvas);
-                dibujo_condicional(currentX, currentY-25, canvas, figura);
+                dibujo_condicional(currentY-25, canvas, figura);
                 textContenido.clear();
                 panel_Diagrama.getChildren().remove(textContenido);
                         panel_Diagrama.getChildren().remove(canvas);
@@ -1603,7 +1611,7 @@ public class AppController {
         //posicion de la figura en relacion al AnchorPane
         double diferencia = figura.getDimenciones().getAncho() / 2;
         canvas.setLayoutX((panel_Diagrama.getMinWidth() / 2) - diferencia + 42.5);
-        canvas.setLayoutY(y+24);
+        canvas.setLayoutY(y+50);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         // Calcular los puntos del rombo
@@ -1784,7 +1792,7 @@ public class AppController {
         //posicion de la figura en relacion al AnchorPane
         double diferencia = figura.getDimenciones().getAncho() / 2;
         canvas.setLayoutX((panel_Diagrama.getMinWidth() / 2) - diferencia + 42.5);
-        canvas.setLayoutY(y+24);
+        canvas.setLayoutY(y+50);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         // Calcular los puntos del rombo
