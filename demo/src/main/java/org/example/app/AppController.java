@@ -1160,8 +1160,8 @@ public class AppController {
         double startXRight = centerX + size; // Punto de inicio en el lado derecho del rombo
 
         // Crear canvas conectores para las líneas hacia la izquierda y la derecha
-        Canvas conectorIzquierda = crear_canvasConector2(startXLeft, startY+25, true);//cosiderar +0
-        Canvas conectorDerecha = crear_canvasConector2(startXRight, startY+25, false);//cosiderar +0
+        Canvas conectorIzquierda = crear_canvasConector2(startXLeft, startY, true);//cosiderar +0
+        Canvas conectorDerecha = crear_canvasConector2(startXRight, startY, false);//cosiderar +0
 
         // Calcular las coordenadas para la línea horizontal entre las líneas verticales
         double startXHorizontal = startXLeft;
@@ -1170,14 +1170,8 @@ public class AppController {
         double endYHorizontal = startY + 90; // Desplazamiento hacia abajo desde el punto medio vertical del rombo
 
         // Crear la línea horizontal
-        Line conectorHorizontal = new Line(startXHorizontal, startYHorizontal+25, endXHorizontal+50, endYHorizontal+25);
+        Line conectorHorizontal = new Line(startXHorizontal, startYHorizontal, endXHorizontal+50, endYHorizontal);
         conectorHorizontal.setStroke(Color.BLACK);
-
-        // Calcular las coordenadas para la línea central
-        double startXCentral = (startXHorizontal + endXHorizontal + 50) / 2;
-        double endXCentral = (startXHorizontal + endXHorizontal + 50) / 2;
-        double startYCentral = startYHorizontal;
-        double endYCentral = startYHorizontal + 50;
 
         // Agregar los conectores al panel
         panel_Diagrama.getChildren().addAll(conectorIzquierda, conectorDerecha, conectorHorizontal);
