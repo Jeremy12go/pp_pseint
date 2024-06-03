@@ -1042,12 +1042,13 @@ public class AppController {
                     textContenido.setMinWidth(canvas.getWidth()*0.7);
                 }
 
+                //TUVE QUE COMENTAR ESTO PARA QUE SE MANTENGA EN LA MISMA POS
                 //editar posicion en relacion al largo(mitad del panel)
-                double _diferencia_ = figura.getDimenciones().getAncho()/2;
-                textContenido.setLayoutX((panel_Diagrama.getWidth()/2)-_diferencia_);
-                canvas.setLayoutX((panel_Diagrama.getWidth()/2)-_diferencia_);
-                Vertice reajuste_v = new Vertice((panel_Diagrama.getMinWidth()/2)-_diferencia_,figura.getDimenciones().getAlto());
-                figura.setVertice_conexion(reajuste_v);
+                //double _diferencia_ = figura.getDimenciones().getAncho()/2;
+                //textContenido.setLayoutX((panel_Diagrama.getWidth()/2)-_diferencia_);
+                //canvas.setLayoutX((panel_Diagrama.getWidth()/2)-_diferencia_);
+                //Vertice reajuste_v = new Vertice((panel_Diagrama.getMinWidth()/2)-_diferencia_,figura.getDimenciones().getAlto());
+                //figura.setVertice_conexion(reajuste_v);
 
                 //redibujo
                 limpiar_canvas(canvas);
@@ -1345,10 +1346,11 @@ public class AppController {
                     textContenido.setMinWidth(canvas.getWidth()*0.6);
                 }
 
+                //Para que funcione tuve que comentar esta parte
                 //editar posicion en relacion al largo(mitad del panel)
-                double _diferencia_ = figura.getDimenciones().getAncho()/2;
-                Vertice reajuste_v = new Vertice((panel_Diagrama.getMinWidth()/2)-_diferencia_,figura.getDimenciones().getAlto());
-                figura.setVertice_conexion(reajuste_v);
+                //double _diferencia_ = figura.getDimenciones().getAncho()/2;
+                //Vertice reajuste_v = new Vertice((panel_Diagrama.getMinWidth()/2)-_diferencia_,figura.getDimenciones().getAlto());
+                //figura.setVertice_conexion(reajuste_v);
 
                 //redibujo
                 limpiar_canvas(canvas);
@@ -1446,7 +1448,7 @@ public class AppController {
             if (clickCount == 2) {
                 // Restablecer el contador
                 clickCount = 0;
-                edición_rectangulo(canvas,figura);
+                edición_Documento(canvas,figura);
             } else {
                 Timeline timeline = new Timeline(new KeyFrame(Duration.millis(300), e -> {
                     clickCount = 0;
@@ -1478,7 +1480,7 @@ public class AppController {
         String pre_text = figura.getContenido();
         figura.setContenido("");
         limpiar_canvas(canvas);
-        dibujo_documento(currentY-25, canvas,figura);
+        dibujo_documento(currentY-60, canvas,figura);
 
         // Agregar evento de tecla para actualizar el contenido al presionar Enter
         textContenido.setOnKeyPressed(event_2 -> {
@@ -1509,7 +1511,7 @@ public class AppController {
 
                 //redibujo
                 limpiar_canvas(canvas);
-                dibujo_documento(currentY-25, canvas, figura);
+                dibujo_documento(currentY-60, canvas, figura);
                 textContenido.clear();
                 panel_Diagrama.getChildren().remove(textContenido);
             }
@@ -1554,8 +1556,8 @@ public class AppController {
         double startXLeft = centerX - size + 10; // Punto de inicio en el lado izquierdo del rombo
 
         Canvas conectorIzquierda = crear_canvasLineaIzquierda(startXLeft, startY+110, 50);
-        Canvas conectorArriba = crear_canvasLineaArriba(startXLeft,startY+110, 50);
-        Canvas conectorDerecha = crear_canvasLineaDerecha(startXLeft,startY+60, 80);
+        Canvas conectorArriba = crear_canvasLineaArriba(startXLeft,startY+120, 40);
+        Canvas conectorDerecha = crear_canvasLineaDerecha(startXLeft,startY+70, 80);
 
         panel_Diagrama.getChildren().addAll(conectorIzquierda,conectorArriba,conectorDerecha);
 
