@@ -31,22 +31,47 @@ public class Pseudocode {
         for (Canvas canvas : figuras) {
             Figura figura = (Figura) canvas.getUserData();
             if (figura instanceof Entrada) {
-                pseudocodeContent.append("\tEntrada(").append(figura.getContenido()).append(")").append("\n");
+                if(figura.getContenido().equals(" Entrada: ")){
+                    pseudocodeContent.append("\tEntrada: ").append("- completar \n");
+                } else {
+                    pseudocodeContent.append("\tEntrada: ").append(figura.getContenido()).append("\n");
+                }
             } else if (figura instanceof Salida) {
-                pseudocodeContent.append("\tSalida(").append(figura.getContenido()).append(")").append("\n");
+                if(figura.getContenido().equals(" Salida: ")){
+                    pseudocodeContent.append("\tSalida:").append("- completar \n");
+                } else {
+                    pseudocodeContent.append("\tSalida: ").append(figura.getContenido()).append("\n");
+                }
             } else if (figura instanceof Documento) {
-                pseudocodeContent.append("\tDocumento ").append(figura.getContenido()).append("\n");
+                if(figura.getContenido().equals(" Documento: ")){
+                    pseudocodeContent.append("\tDocumento: ").append("- completar \n");
+                } else {
+                    pseudocodeContent.append("\tDocumento: ").append(figura.getContenido()).append("\n");
+                }
             } else if (figura instanceof Proceso) {
-                pseudocodeContent.append("\tProceso ").append(figura.getContenido()).append("\n");
+                if(figura.getContenido().equals(" Proceso: ")){
+                    pseudocodeContent.append("\tProceso ").append("- completar \n");
+                } else {
+                    pseudocodeContent.append("\tProceso: ").append(figura.getContenido()).append("\n");
+                }
             } else if (figura instanceof Condicional) {
-                pseudocodeContent.append("\tCondicional \n\tSi ").append(figura.getContenido()).append("\n");
-                // pseudocodeContent.append("\t\tSalida ").append(((Condicional) figura).getSalidaSi()).append("\n");
-                pseudocodeContent.append("\tSino\n");
+                pseudocodeContent.append("\tCondicional\n\t\tSi ").append(figura.getContenido()).append(":\n");
+                //proceso
+                //pseudocodeContent.append("\t\tSalida ").append(((Condicional) figura).getSalidaSi()).append("\n");
+                pseudocodeContent.append("\t\tSino: \n");
+                //proceso
                 // pseudocodeContent.append("\t\tSalida ").append(((Condicional) figura).getSalidaNo()).append("\n");
             } else if (figura instanceof Hacer_Mientras) {
-                pseudocodeContent.append("\tHacer Mientras ").append(figura.getContenido()).append("\n");
+                //proceso
+                pseudocodeContent.append("\tHacer Mientras:\tSi ").append(figura.getContenido()).append(" :\n");
+                //proceso
+                pseudocodeContent.append("\t\tSino: \n");
+                //salida
             } else if (figura instanceof Mientras) {
-                pseudocodeContent.append("\tMientras ").append(figura.getContenido()).append("\n");
+                pseudocodeContent.append("\tMientras:\tSi ").append(figura.getContenido()).append(" :\n");
+                //proceso
+                pseudocodeContent.append("\t\tSino: \n");
+                //proceso
             } else if (figura instanceof Para) {
                 pseudocodeContent.append("\tPara ").append(figura.getContenido()).append("\n");
             }

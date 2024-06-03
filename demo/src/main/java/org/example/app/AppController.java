@@ -273,6 +273,7 @@ public class AppController {
 
                 //funcion que mueve las figuras por debajo de la nueva figura
                 moverfiguras(condicional);
+                canvas_Fcondicional.setUserData(condicional);
 
             } else if (figura_documento == sourceDiagram) {
                 Vertice p_Fdocumento_direccion = new Vertice(32.5, 25); //no cambiar
@@ -304,6 +305,7 @@ public class AppController {
 
                 //funcion que mueve las figuras por debajo de la nueva figura
                 moverfiguras(documento);
+                canvas_Fdocumento.setUserData(documento);
 
             } else if (figura_entrada == sourceDiagram) {
                 Vertice p_Fentrada_direccion = new Vertice(32.5, 25); //no cambiar
@@ -335,6 +337,7 @@ public class AppController {
 
                 //funcion que mueve las figuras por debajo de la nueva figura
                 moverfiguras(entrada);
+                canvas_Fentrada.setUserData(entrada);
 
             } else if (figura_salida == sourceDiagram) {
 
@@ -367,6 +370,7 @@ public class AppController {
 
                 //funcion que mueve las figuras por debajo de la nueva figura
                 moverfiguras(salida);
+                canvas_Fsalida.setUserData(salida);
 
             } else if (figura_proceso == sourceDiagram) {
                 Vertice p_Fproceso_direccion = new Vertice(32.5, 25); //no cambiar
@@ -401,6 +405,7 @@ public class AppController {
 
                 //funcion que mueve las figuras por debajo de la nueva figura
                 moverfiguras(proceso);
+                canvas_Fproceso.setUserData(proceso);
 
             } else if (figura_hacer_mientras == sourceDiagram) {
                 Vertice p_Fhacer_mientras_direccion = new Vertice(32.5, 25);
@@ -433,6 +438,7 @@ public class AppController {
 
                 //funcion que mueve las figuras por debajo de la nueva figura
                 moverfiguras(hacer_mientras);
+                canvas_Fhacer_mientras.setUserData(hacer_mientras);
 
             } else if (figura_mientras == sourceDiagram) {
                 Vertice p_Fcondicional_direccion = new Vertice(32.5, 25);
@@ -465,6 +471,7 @@ public class AppController {
 
                 //funcion que mueve las figuras por debajo de la nueva figura
                 moverfiguras(mientras);
+                canvas_Fmientras.setUserData(mientras);
 
             } else if (figura_para == sourceDiagram) {
                 //Figura Para
@@ -1907,24 +1914,6 @@ public class AppController {
         trash.setLayoutY(trashY);
     }
 
-    @FXML
-    private void borrarTodo() {
-        // Filtrar las figuras que no deben ser borradas
-        List<Node> figurasNoBorrar = List.of(canvasInicio, canvasFin, conector);
-
-        // Limpiar el panel
-        panel_Diagrama.getChildren().retainAll(figurasNoBorrar);
-
-        // Limpiar la lista de figuras y conectores en la instancia ins, excepto las figuras que no deben ser borradas
-        ins.getList_figuras().removeIf(figura -> figura != figuraInicio && figura != figuraFin);
-        ins.getList_conexiones().clear(); // Suponiendo que ins es la instancia de tu clase que almacena las conexiones
-        ins.getList_orden().retainAll(figurasNoBorrar);
-    }
-
-    @FXML
-    private void guardarApseudocode() {
-        Pseudocode.generatePseudocode(panel_Diagrama, pseudocode);
-    }
 
     // MÉTODOS ASOCIADOS A CONDICIONAL
     public Canvas crear_canvasConector2(double startX, double startY, boolean isLeft) {
@@ -1956,17 +1945,4 @@ public class AppController {
         //----------------------------------------------------------------------------------
     }
 
-    // Método para centrar el Pane basurero y el ícono del basurero
-    private void centrarPane() {
-        double basureroX = (panel_Diagrama.getWidth() - basurero.getWidth()) / 2;
-        double basureroY = (panel_Diagrama.getHeight() - basurero.getHeight()) / 2;
-        basurero.setLayoutX(basureroX);
-        basurero.setLayoutY(basureroY);
-
-        // Centrar el ícono del basurero dentro del Pane basurero
-        double trashX = (basurero.getWidth() - trash.getFitWidth()) / 2;
-        double trashY = (basurero.getHeight() - trash.getFitHeight()) / 2;
-        trash.setLayoutX(trashX);
-        trash.setLayoutY(trashY);
-    }
 }
