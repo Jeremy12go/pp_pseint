@@ -212,20 +212,21 @@ public class AppController {
     @FXML
     private void borrarTodo() {
         try{
-            // Filtrar las figuras que no deben ser borradas
-            List<Node> figurasNoBorrar = List.of(canvasInicio, canvasFin, conector);
+            // Limpiar listas de elementos
+            panel_Diagrama.getChildren().clear();
+            ins.getList_orden().clear();
+            ins.getList_figuras().clear();
 
-            // Limpiar el panel
-            panel_Diagrama.getChildren().retainAll(figurasNoBorrar);
+            //colocar elementos iniciales
+            figurasInicio_fin();
 
-            // Limpiar la lista de figuras y conectores en la instancia ins, excepto las figuras que no deben ser borradas
-            ins.getList_figuras().removeIf(figura -> figura != figuraInicio && figura != figuraFin);
-            ins.getList_conexiones().clear(); // Suponiendo que ins es la instancia de tu clase que almacena las conexiones
-            ins.getList_orden().retainAll(figurasNoBorrar);
+            VG.cambiarUltimaFiguraAñadida((Figura) ins.getList_figuras().get(0));
+            VG.cambiarUltimoCanvasFigura((Canvas)ins.getList_orden().get(0));
+            VG.cambiarUltimoCanvasConexion((Canvas)ins.getList_orden().get(1));
+
         }catch (NullPointerException e){
             System.out.println("Ups... DLC \'borrar todo\' debe adquirirse por separado :)");
         }
-
     }
     @FXML
     private void guardarApseudocode() {
@@ -1957,6 +1958,7 @@ public class AppController {
 
         return conector;
     }
+
     public Canvas crear_canvasLineaIzquierda(double startX, double startY, double length) {
         Canvas conector = new Canvas();
 
@@ -1977,6 +1979,7 @@ public class AppController {
 
         return conector;
     }
+
     public Canvas crear_canvasLineaArriba(double startX, double startY, double length) {
         Canvas conector = new Canvas();
 
@@ -1997,6 +2000,7 @@ public class AppController {
 
         return conector;
     }
+
     public Canvas crear_canvasLineaDerecha(double startX, double startY, double length) {
         Canvas conector = new Canvas();
 
@@ -2017,6 +2021,7 @@ public class AppController {
 
         return conector;
     }
+
     public Canvas crear_canvasLineaAbajo(double startX, double startY, double length) {
         Canvas conector = new Canvas();
 
