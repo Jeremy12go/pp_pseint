@@ -9,6 +9,10 @@ public class Condicional extends Figura{
         super(contenido, vertice_direccion, vertice_conexion, dimension);
         this.contenido_validado = contenido_validado;
     }
+
+    public Condicional(String condicional) {
+    }
+
     public void validacion(String contenido){
 
     }

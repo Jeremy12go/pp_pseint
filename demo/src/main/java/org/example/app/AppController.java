@@ -137,6 +137,19 @@ public class AppController {
 
     }
 
+    @FXML
+    private void generarDiagrama() {
+        PseudocodeAdiagrama.generateFlowDiagram(pseudocode, panel_Diagrama);
+    }
+
+    @FXML
+    private void editarPseudocodigo() {
+        String newPseudocode = pseudocode.getText();
+        PseudocodeAdiagrama.editPseudocode(newPseudocode, pseudocode, panel_Diagrama);
+    }
+
+
+
     Diagrama ins = Diagrama.getInstance();
 
 
@@ -324,7 +337,7 @@ public class AppController {
             } else if (figura_entrada == sourceDiagram) {
                 Vertice p_Fentrada_direccion = new Vertice(32.5, 25); //no cambiar
                 Vertice p_Fentrada_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
-                contenido = " Entrada: ";
+                contenido = " Entrada ";
                 Arista dimencion_Fentrada = new Arista(153, 50);
                 Entrada entrada = new Entrada(contenido, p_Fentrada_direccion, p_Fentrada_conexion, dimencion_Fentrada);
                 Canvas canvas_Fentrada = new Canvas(dimencion_Fentrada.getAncho(), dimencion_Fentrada.getAlto());
@@ -359,7 +372,7 @@ public class AppController {
 
                 Vertice p_Fsalida_direccion = new Vertice(32.5, 25); //no cambiar
                 Vertice p_Fsalida_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
-                contenido = " Salida: ";
+                contenido = " Salida ";
                 Arista dimencion_Fsalida = new Arista(153, 50);
                 Salida salida = new Salida(contenido, p_Fsalida_direccion, p_Fsalida_conexion, dimencion_Fsalida);
                 Canvas canvas_Fsalida = new Canvas(dimencion_Fsalida.getAncho(), dimencion_Fsalida.getAlto());

@@ -9,6 +9,10 @@ public class Hacer_Mientras extends Figura{
         super(contenido, vertice_direccion, vertice_conexion, dimension);
         this.contenido_validado = contenido_validado;
     }
+
+    public Hacer_Mientras(String trim) {
+    }
+
     public void validacion(String contenido){
 
     }

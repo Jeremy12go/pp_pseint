@@ -14,6 +14,9 @@ public class Proceso extends Figura{
         this.operandos = operandos;
     }
 
+    public Proceso(String trim) {
+    }
+
     public void validacion(String contenido){
 
     }

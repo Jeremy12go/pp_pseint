@@ -4,8 +4,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.canvas.Canvas;
-
 import java.util.List;
+import java.util.Stack;
 
 public class Pseudocode {
 
@@ -22,6 +22,8 @@ public class Pseudocode {
 
     public static String generatePseudocode(AnchorPane panel_Diagrama, Label pseudocode) {
         StringBuilder pseudocodeContent = new StringBuilder("\n\nInicio Titulo\n");
+        Stack<String> indentStack = new Stack<>();
+        indentStack.push(""); // Initial indentation level
 
         // Obtener las figuras del AnchorPane
         List<Canvas> figuras = panel_Diagrama.getChildren().filtered(node -> node instanceof Canvas).stream()
@@ -30,55 +32,71 @@ public class Pseudocode {
         // Recorrer las figuras y generar el pseudocódigo
         for (Canvas canvas : figuras) {
             Figura figura = (Figura) canvas.getUserData();
+            String currentIndent = indentStack.peek();
+
             if (figura instanceof Entrada) {
-                if(figura.getContenido().equals(" Entrada: ")){
-                    pseudocodeContent.append("\tEntrada: ").append("- completar \n");
+                if (figura.getContenido().equals(" Entrada ")) {
+                    pseudocodeContent.append(currentIndent).append("Entrada: ").append("- completar \n");
                 } else {
-                    pseudocodeContent.append("\tEntrada: ").append(figura.getContenido()).append("\n");
+                    pseudocodeContent.append(currentIndent).append("Entrada: ").append(figura.getContenido()).append("\n");
                 }
             } else if (figura instanceof Salida) {
-                if(figura.getContenido().equals(" Salida: ")){
-                    pseudocodeContent.append("\tSalida:").append("- completar \n");
+                if (figura.getContenido().equals(" Salida ")) {
+                    pseudocodeContent.append(currentIndent).append("Salida: ").append("- completar \n");
                 } else {
-                    pseudocodeContent.append("\tSalida: ").append(figura.getContenido()).append("\n");
+                    pseudocodeContent.append(currentIndent).append("Salida: ").append(figura.getContenido()).append("\n");
                 }
             } else if (figura instanceof Documento) {
-                if(figura.getContenido().equals(" Documento: ")){
-                    pseudocodeContent.append("\tDocumento: ").append("- completar \n");
+                if (figura.getContenido().equals(" Documento ")) {
+                    pseudocodeContent.append(currentIndent).append("Documento: ").append("- completar \n");
                 } else {
-                    pseudocodeContent.append("\tDocumento: ").append(figura.getContenido()).append("\n");
+                    pseudocodeContent.append(currentIndent).append("Documento: ").append(figura.getContenido()).append("\n");
                 }
             } else if (figura instanceof Proceso) {
-                if(figura.getContenido().equals(" Proceso: ")){
-                    pseudocodeContent.append("\tProceso ").append("- completar \n");
+                if (figura.getContenido().equals(" Proceso ")) {
+                    pseudocodeContent.append(currentIndent).append("Proceso: ").append("- completar \n");
                 } else {
-                    pseudocodeContent.append("\tProceso: ").append(figura.getContenido()).append("\n");
+                    pseudocodeContent.append(currentIndent).append("Proceso: ").append(figura.getContenido()).append("\n");
                 }
             } else if (figura instanceof Condicional) {
-                pseudocodeContent.append("\tCondicional\n\t\tSi ").append(figura.getContenido()).append(":\n");
-                //proceso
-                //pseudocodeContent.append("\t\tSalida ").append(((Condicional) figura).getSalidaSi()).append("\n");
-                pseudocodeContent.append("\t\tSino: \n");
-                //proceso
-                // pseudocodeContent.append("\t\tSalida ").append(((Condicional) figura).getSalidaNo()).append("\n");
+                pseudocodeContent.append(currentIndent).append("Condicional\n").append(currentIndent).append("\tSi ").append(figura.getContenido()).append(":\n");
+                indentStack.push(currentIndent + "\t");
+                // pseudocodeContent.append(currentIndent).append("\t\tSalida ").append(((Condicional) figura).getSalidaSi()).append("\n");
+                pseudocodeContent.append(currentIndent).append("\tSino:\n");
+                // pseudocodeContent.append(currentIndent).append("\t\tSalida ").append(((Condicional) figura).getSalidaNo()).append("\n");
+                indentStack.pop();
             } else if (figura instanceof Hacer_Mientras) {
-                //proceso
-                pseudocodeContent.append("\tHacer Mientras:\tSi ").append(figura.getContenido()).append(" :\n");
-                //proceso
-                pseudocodeContent.append("\t\tSino: \n");
-                //salida
+                if (figura.getContenido().equals(" Hacer Mientras ")) {
+                    pseudocodeContent.append(currentIndent).append("Hacer Mientras: ").append("- completar \n");
+                } else {
+                    pseudocodeContent.append(currentIndent).append("Hacer Mientras: ").append(figura.getContenido()).append(":\n");
+                }
+                indentStack.push(currentIndent + "\t");
+                // pseudocodeContent.append(currentIndent).append("\tProceso\n");
+                indentStack.pop();
             } else if (figura instanceof Mientras) {
-                pseudocodeContent.append("\tMientras:\tSi ").append(figura.getContenido()).append(" :\n");
-                //proceso
-                pseudocodeContent.append("\t\tSino: \n");
-                //proceso
+                if (figura.getContenido().equals(" Mientras ")) {
+                    pseudocodeContent.append(currentIndent).append("Mientras: ").append("- completar \n");
+                } else {
+                    pseudocodeContent.append(currentIndent).append("Mientras: ").append(figura.getContenido()).append(":\n");
+                }
+                indentStack.push(currentIndent + "\t"); // Increase indentation level
+                // pseudocodeContent.append(currentIndent).append("\tProceso\n");
+                indentStack.pop();
             } else if (figura instanceof Para) {
-                pseudocodeContent.append("\tPara ").append(figura.getContenido()).append("\n");
+                if (figura.getContenido().equals(" Para ")) {
+                    pseudocodeContent.append(currentIndent).append("Para: ").append("- completar \n");
+                } else {
+                    pseudocodeContent.append(currentIndent).append("Para: ").append(figura.getContenido()).append(":\n");
+                }
+                indentStack.push(currentIndent + "\t");
+                // pseudocodeContent.append(currentIndent).append("\tProceso\n");
+                indentStack.pop();
             }
         }
 
         pseudocodeContent.append("Fin");
         pseudocode.setText(pseudocodeContent.toString());
-        return pseudocode.toString();
+        return pseudocodeContent.toString();
     }
 }
