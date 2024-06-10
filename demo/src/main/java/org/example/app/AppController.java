@@ -1,6 +1,7 @@
 package org.example.app;
 import Clases.*;
 import javafx.animation.KeyFrame;
+import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
@@ -25,6 +26,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
+import javafx.scene.transform.Scale;
 import javafx.util.Duration;
 
 public class AppController {
@@ -128,6 +130,9 @@ public class AppController {
         Image image5 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("trash.png")));
         trash.setImage(image5);
 
+        Scale escalaTransformacion = new Scale(1,1,0,0);
+        panel_Diagrama.getTransforms().add(escalaTransformacion);
+
         textContenido.setOpacity(0.0);
         textContenido.setDisable(true);
         panel_Diagrama.getChildren().add(textContenido);
@@ -138,7 +143,7 @@ public class AppController {
     }
 
     Diagrama ins = Diagrama.getInstance();
-
+    private boolean altPressed = false;
 
     //MOUSE_FUNCIONES------------------------------------------------------------------------------
     @FXML
@@ -150,7 +155,6 @@ public class AppController {
         originalY = sourceDiagram.getLayoutY();
         basurero.setVisible(true);
     }
-
     @FXML
     private void onMouseDragged(MouseEvent event) {
         ImageView sourceDiagram = (ImageView) event.getSource();
@@ -231,6 +235,18 @@ public class AppController {
     @FXML
     private void guardarApseudocode() {
         Pseudocode.generatePseudocode(panel_Diagrama, pseudocode);
+    }
+    @FXML
+    protected void fondoCuadriculado(double width, double height) {
+        Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("fondoCuadriculado.jpg")));
+
+        //no tocar parametros backgroundSize
+        BackgroundSize backgroundSize = new BackgroundSize(800, 500, false, false, false, false);
+        BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT,
+                BackgroundPosition.DEFAULT, backgroundSize);
+        Background background = new Background(backgroundImage);
+        panel_Diagrama.setBackground(background);
+        panel_Diagrama.setMinSize(width, height);
     }
 
     //-------------------------------------------------------------------------------------------------------------
@@ -591,17 +607,43 @@ public class AppController {
         }
     }
 
-    @FXML
-    protected void fondoCuadriculado(double width, double height) {
-        Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("fondoCuadriculado.jpg")));
+    public void zoom(ScrollEvent event) {
+        if (altPressed) {
+            // Desactivar el desplazamiento vertical
+            /*
+            panel_contenedor.addEventFilter(ScrollEvent.SCROLL, event_1 -> {
+                if (event_1.getDeltaY() != 0) {
+                    event_1.consume();
+                }
+            });*/
+            double deltaY = event.getDeltaY();
+            double scaleFactor = deltaY > 0 ? 1.1 : 0.9; //1.1 para zoom in, 0.9 para zoom out
+            System.out.println("Factor:"+scaleFactor+" -- deltaY:"+deltaY);
+            // Obtener la transformación de escala actual
+            Scale escalaTransformacion = (Scale) panel_Diagrama.getTransforms().get(0);
 
-        //no tocar parametros backgroundSize
-        BackgroundSize backgroundSize = new BackgroundSize(800, 500, false, false, false, false);
-        BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT,
-                BackgroundPosition.DEFAULT, backgroundSize);
-        Background background = new Background(backgroundImage);
-        panel_Diagrama.setBackground(background);
-        panel_Diagrama.setMinSize(width, height);
+            // Aplicar el factor de escala
+            escalaTransformacion.setX(escalaTransformacion.getX() * scaleFactor);
+            escalaTransformacion.setY(escalaTransformacion.getY() * scaleFactor);
+        }
+
+    }
+
+    public void altKeyPressed(KeyEvent event) {
+        if (event.getCode() == KeyCode.ALT) {
+            System.out.println("Presionando alt");
+            altPressed = true;
+            //desactivar movimiento Y del scroll
+            panel_contenedor.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        }
+    }
+
+    public void altKeyReleased(KeyEvent event) {
+        if (event.getCode() == KeyCode.ALT) {
+            altPressed = false;
+            //activar movimiento Y del scroll
+            panel_contenedor.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        }
     }
 
     public void ajustar_Panes(double width, double height){

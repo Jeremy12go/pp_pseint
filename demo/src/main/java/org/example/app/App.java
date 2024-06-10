@@ -7,6 +7,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.input.ScrollEvent;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import java.io.IOException;
@@ -47,6 +48,11 @@ public class App extends Application {
         URL estiloURL = getClass().getResource("style.css");
         if (estiloURL != null) {
             root.getStylesheets().add(estiloURL.toExternalForm());
+
+            root.setOnKeyPressed(event -> appController.altKeyPressed(event));
+            root.setOnKeyReleased(event -> appController.altKeyReleased(event));
+            root.setOnScroll(event -> appController.zoom(event));
+
         } else {
             System.err.println("No se pudo encontrar el archivo de estilos 'estilos.css'");
         }
