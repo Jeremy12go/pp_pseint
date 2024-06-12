@@ -5,6 +5,7 @@ import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
+import javafx.geometry.Rectangle2D;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -27,6 +28,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Scale;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class AppController {
@@ -95,6 +98,8 @@ public class AppController {
 
     @FXML
     private Button borrarTodoButton;
+    @FXML
+    private boolean maximizar;
 
     @FXML
     public void initialize() throws IOException {
@@ -131,7 +136,8 @@ public class AppController {
         trash.setImage(image5);
 
         Scale escalaTransformacion = new Scale(1,1,0,0);
-        panel_Diagrama.getTransforms().add(escalaTransformacion);
+        Scale escalaReset = new Scale(1,1,0,0);
+        panel_Diagrama.getTransforms().addAll(escalaTransformacion,escalaReset);
 
         textContenido.setOpacity(0.0);
         textContenido.setDisable(true);
@@ -609,25 +615,41 @@ public class AppController {
 
     public void zoom(ScrollEvent event) {
         if (altPressed) {
-            // Desactivar el desplazamiento vertical
-            /*
-            panel_contenedor.addEventFilter(ScrollEvent.SCROLL, event_1 -> {
-                if (event_1.getDeltaY() != 0) {
-                    event_1.consume();
-                }
-            });*/
+
             double deltaY = event.getDeltaY();
             double scaleFactor = deltaY > 0 ? 1.1 : 0.9; //1.1 para zoom in, 0.9 para zoom out
-            System.out.println("Factor:"+scaleFactor+" -- deltaY:"+deltaY);
             // Obtener la transformación de escala actual
             Scale escalaTransformacion = (Scale) panel_Diagrama.getTransforms().get(0);
 
             // Aplicar el factor de escala
             escalaTransformacion.setX(escalaTransformacion.getX() * scaleFactor);
             escalaTransformacion.setY(escalaTransformacion.getY() * scaleFactor);
-        }
 
+            // Ajustar dimensiones del panel
+            ajustar_Panes(panel_Diagrama.getWidth(),
+                    panel_Diagrama.getHeight());
+            fondoCuadriculado(panel_Diagrama.getWidth()+120*(deltaY>0 ? 1.2 : 0.9),
+                    panel_Diagrama.getHeight()+120*(deltaY>0 ? 1.2 : 0.9));
+
+        }
     }
+
+    public void reset_zoom(){
+        Scale escalaTransformada = (Scale) panel_Diagrama.getTransforms().get(0);
+        Scale escalaReset = (Scale) panel_Diagrama.getTransforms().get(1);
+        escalaTransformada.setX(escalaReset.getX());
+        escalaTransformada.setY(escalaReset.getY());
+
+        //reajustar la posicion de las figuras el maximar la ventana
+        if (getMaximizar()) { // ventana Maximizada
+            ajustar_Panes(1920, 1080);
+            fondoCuadriculado(1920, 1080 + 500);
+        } else { // ventana Minimizada
+            ajustar_Panes(740, 654);
+            fondoCuadriculado(740, 645 + 500);
+        }
+    }
+
 
     public void altKeyPressed(KeyEvent event) {
         if (event.getCode() == KeyCode.ALT) {
@@ -2101,5 +2123,12 @@ public class AppController {
         double trashY = (basurero.getHeight() - trash.getFitHeight()) / 2;
         trash.setLayoutX(trashX);
         trash.setLayoutY(trashY);
+    }
+
+    public void setMaximizar(boolean maximizar){
+        this.maximizar = maximizar;
+    }
+    public boolean getMaximizar(){
+        return maximizar;
     }
 }

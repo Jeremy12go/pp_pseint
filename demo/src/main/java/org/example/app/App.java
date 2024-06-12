@@ -7,7 +7,6 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.input.ScrollEvent;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import java.io.IOException;
@@ -29,6 +28,7 @@ public class App extends Application {
         Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("Icono_PP_white.png")));
 
         stage.maximizedProperty().addListener((observable, oldValue, newValue) -> {
+            appController.setMaximizar(true);
             //reajustar la posicion de las figuras el maximar la ventana
             if (newValue) {
                 Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
@@ -36,10 +36,10 @@ public class App extends Application {
                 double screenHeight = screenBounds.getHeight();
                 appController.ajustar_Panes(screenWidth, screenHeight);
                 //Reajuste de las dimensiones luego de cambiar las dimensiones de la ventana
-                appController.fondoCuadriculado(screenWidth-110, screenHeight+1200);
+                appController.fondoCuadriculado(screenWidth-110, screenHeight+500);
             } else {
                 appController.ajustar_Panes(initialWidth, initialHeight);
-                appController.fondoCuadriculado(initialWidth, initialHeight+1000);
+                appController.fondoCuadriculado(initialWidth, initialHeight+500);
             }
         });
         stage.getIcons().add(image);
@@ -48,15 +48,12 @@ public class App extends Application {
         URL estiloURL = getClass().getResource("style.css");
         if (estiloURL != null) {
             root.getStylesheets().add(estiloURL.toExternalForm());
-
             root.setOnKeyPressed(event -> appController.altKeyPressed(event));
             root.setOnKeyReleased(event -> appController.altKeyReleased(event));
             root.setOnScroll(event -> appController.zoom(event));
-
         } else {
             System.err.println("No se pudo encontrar el archivo de estilos 'estilos.css'");
         }
-
         stage.show();
     }
 
