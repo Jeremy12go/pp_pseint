@@ -20,6 +20,7 @@ public class Figura {
     public void asignar_conexion(Vertice vertice_conexion){
         this.vertice_conexion=vertice_conexion;
     }
+
     public void mover(Vertice vertice_direccion){
 
     }

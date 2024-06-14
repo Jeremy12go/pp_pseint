@@ -613,6 +613,14 @@ public class AppController {
         }
     }
 
+    public void deshacer(){
+
+    }
+
+    public void rehacer(){
+
+    }
+
     public void zoom(ScrollEvent event) {
         if (altPressed) {
 
@@ -649,7 +657,6 @@ public class AppController {
             fondoCuadriculado(740, 645 + 500);
         }
     }
-
 
     public void altKeyPressed(KeyEvent event) {
         if (event.getCode() == KeyCode.ALT) {
@@ -2128,6 +2135,7 @@ public class AppController {
     public void setMaximizar(boolean maximizar){
         this.maximizar = maximizar;
     }
+
     public boolean getMaximizar(){
         return maximizar;
     }
