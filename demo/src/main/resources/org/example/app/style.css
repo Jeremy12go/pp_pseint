@@ -17,3 +17,54 @@
 .Contenido_edit .scroll-pane .content{
     -fx-background-color: transparent;
 }
+.botones{
+    -fx-background-color: #242c3c;
+    -fx-border-color: transparent;
+    -fx-text-origin: bold;
+    -fx-text-fill: #000000;
+    -fx-background-radius: 25 25 25 25;
+    -fx-border-radius: 25 25 25 25;
+    -fx-border-width: 2.5;
+}
+.boton_Deshacer{
+    -fx-background-image: url("deshacer.png");
+    -fx-content-display: left;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-color: transparent;
+}
+.boton_Rehacer{
+    -fx-background-image: url("rehacer.png");
+    -fx-content-display: left;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-color: transparent;
+}
+.boton_BorrarTodo{
+    -fx-background-image: url("craneo.png");
+    -fx-content-display: left;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-color: transparent;
+}
+.boton_CentrarZoom{
+    -fx-background-image: url("Centrar.png");
+    -fx-content-display: left;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-color: transparent;
+}
+.boton_Pseudocodigo{
+    -fx-background-image: url("codigo.png");
+    -fx-content-display: left;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-color: transparent;
+}
+
+.accion:hover{
+    -fx-border-color: #000000;
+    -fx-background-radius: 25 25 25 25;
+    -fx-border-radius: 0 0 0 0;
+    -fx-border-width: 2.5;
+}

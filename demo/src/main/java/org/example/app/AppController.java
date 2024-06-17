@@ -1,9 +1,11 @@
 package org.example.app;
 import Clases.*;
 import javafx.animation.KeyFrame;
+import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
+import javafx.geometry.Rectangle2D;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -15,7 +17,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import java.io.IOException;
 import java.util.*;
-
 import javafx.scene.shape.ArcType;
 import java.math.*;
 import javafx.scene.image.ImageView;
@@ -23,6 +24,9 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
+import javafx.scene.transform.Scale;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class AppController {
@@ -94,6 +98,8 @@ public class AppController {
     @FXML
     private Button borrarTodoButton;
     @FXML
+    private boolean maximizar;
+    @FXML
     private Button editButton;
 
     @FXML
@@ -129,6 +135,10 @@ public class AppController {
         figura_para.setImage(image9);
         Image image5 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("trash.png")));
         trash.setImage(image5);
+
+        Scale escalaTransformacion = new Scale(1,1,0,0);
+        Scale escalaReset = new Scale(1,1,0,0);
+        panel_Diagrama.getTransforms().addAll(escalaTransformacion,escalaReset);
 
         textContenido.setOpacity(0.0);
         textContenido.setDisable(true);
@@ -179,6 +189,8 @@ public class AppController {
     }
     //----------------------------------------------------------------------------------------
     Diagrama ins = Diagrama.getInstance();
+    private boolean altPressed = false;
+
     //MOUSE_FUNCIONES------------------------------------------------------------------------------
     @FXML
     private void onMousePressed(MouseEvent event) {
@@ -251,16 +263,18 @@ public class AppController {
     @FXML
     private void borrarTodo() {
         try{
-            // Filtrar las figuras que no deben ser borradas
-            List<Node> figurasNoBorrar = List.of(canvasInicio, canvasFin, conector);
+            // Limpiar listas de elementos
+            panel_Diagrama.getChildren().clear();
+            ins.getList_orden().clear();
+            ins.getList_figuras().clear();
 
-            // Limpiar el panel
-            panel_Diagrama.getChildren().retainAll(figurasNoBorrar);
+            //colocar elementos iniciales
+            figurasInicio_fin();
 
-            // Limpiar la lista de figuras y conectores en la instancia ins, excepto las figuras que no deben ser borradas
-            ins.getList_figuras().removeIf(figura -> figura != figuraInicio && figura != figuraFin);
-            ins.getList_conexiones().clear(); // Suponiendo que ins es la instancia de tu clase que almacena las conexiones
-            ins.getList_orden().retainAll(figurasNoBorrar);
+            VG.cambiarUltimaFiguraAñadida((Figura) ins.getList_figuras().get(0));
+            VG.cambiarUltimoCanvasFigura((Canvas)ins.getList_orden().get(0));
+            VG.cambiarUltimoCanvasConexion((Canvas)ins.getList_orden().get(1));
+
         }catch (NullPointerException e){
             System.out.println("Ups... DLC \'borrar todo\' debe adquirirse por separado :)");
         }
@@ -269,6 +283,18 @@ public class AppController {
     @FXML
     private void guardarApseudocode() {
         Pseudocode.generatePseudocode(panel_Diagrama, pseudocode);
+    }
+    @FXML
+    protected void fondoCuadriculado(double width, double height) {
+        Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("fondoCuadriculado.jpg")));
+
+        //no tocar parametros backgroundSize
+        BackgroundSize backgroundSize = new BackgroundSize(800, 500, false, false, false, false);
+        BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT,
+                BackgroundPosition.DEFAULT, backgroundSize);
+        Background background = new Background(backgroundImage);
+        panel_Diagrama.setBackground(background);
+        panel_Diagrama.setMinSize(width, height);
     }
 
     //-------------------------------------------------------------------------------------------------------------
@@ -617,17 +643,78 @@ public class AppController {
         }
     }
 
-    @FXML
-    protected void fondoCuadriculado(double width, double height) {
-        Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("fondoCuadriculado.jpg")));
+    public void prueba(){
+        int aux = 0;
+        for(Object obj : ins.getList_orden()){
+            if(obj instanceof Canvas){
+                if(aux%2==1){
+                    ((Canvas) obj).setLayoutX(((Canvas)obj).getLayoutX()-40);
+                }
+            }
+            aux++;
+        }
+    }
 
-        //no tocar parametros backgroundSize
-        BackgroundSize backgroundSize = new BackgroundSize(800, 500, false, false, false, false);
-        BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT,
-                BackgroundPosition.DEFAULT, backgroundSize);
-        Background background = new Background(backgroundImage);
-        panel_Diagrama.setBackground(background);
-        panel_Diagrama.setMinSize(width, height);
+    public void deshacer(){
+
+    }
+
+    public void rehacer(){
+
+    }
+
+    public void zoom(ScrollEvent event) {
+        if (altPressed) {
+
+            double deltaY = event.getDeltaY();
+            double scaleFactor = deltaY > 0 ? 1.1 : 0.9; //1.1 para zoom in, 0.9 para zoom out
+            // Obtener la transformación de escala actual
+            Scale escalaTransformacion = (Scale) panel_Diagrama.getTransforms().get(0);
+
+            // Aplicar el factor de escala
+            escalaTransformacion.setX(escalaTransformacion.getX() * scaleFactor);
+            escalaTransformacion.setY(escalaTransformacion.getY() * scaleFactor);
+
+            // Ajustar dimensiones del panel
+            ajustar_Panes(panel_Diagrama.getWidth(),
+                    panel_Diagrama.getHeight());
+            fondoCuadriculado(panel_Diagrama.getWidth()+120*(deltaY>0 ? 1.2 : 0.9),
+                    panel_Diagrama.getHeight()+120*(deltaY>0 ? 1.2 : 0.9));
+
+        }
+    }
+
+    public void reset_zoom(){
+        Scale escalaTransformada = (Scale) panel_Diagrama.getTransforms().get(0);
+        Scale escalaReset = (Scale) panel_Diagrama.getTransforms().get(1);
+        escalaTransformada.setX(escalaReset.getX());
+        escalaTransformada.setY(escalaReset.getY());
+
+        //reajustar la posicion de las figuras el maximar la ventana
+        if (getMaximizar()) { // ventana Maximizada
+            ajustar_Panes(1920, 1080);
+            fondoCuadriculado(1920, 1080 + 500);
+        } else { // ventana Minimizada
+            ajustar_Panes(740, 654);
+            fondoCuadriculado(740, 645 + 500);
+        }
+    }
+
+    public void altKeyPressed(KeyEvent event) {
+        if (event.getCode() == KeyCode.ALT) {
+            System.out.println("Presionando alt");
+            altPressed = true;
+            //desactivar movimiento Y del scroll
+            panel_contenedor.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        }
+    }
+
+    public void altKeyReleased(KeyEvent event) {
+        if (event.getCode() == KeyCode.ALT) {
+            altPressed = false;
+            //activar movimiento Y del scroll
+            panel_contenedor.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        }
     }
 
     public void ajustar_Panes(double width, double height){
@@ -1203,6 +1290,7 @@ public class AppController {
         // Agregar los conectores al panel
         panel_Diagrama.getChildren().addAll(conectorIzquierda, conectorDerecha, conectorHorizontal);
 
+
         //MOVIMIENTO_FIGURA----------------------------------------------------
         canvas.setOnMousePressed(event -> {
             // Registrar las coordenadas del mouse en relación con la esquina superior izquierda de la figura
@@ -1756,10 +1844,9 @@ public class AppController {
                 textContenido.setMinWidth(size); // Ajustar según tus necesidades
                 textContenido.setMinHeight(size); // Ajustar según tus necesidades
                 textContenido.setText(finalTexto);
-                // Establecer el color del texto como negro
                 textContenido.setStyle("-fx-text-fill: black;");
-                panel_Diagrama.getChildren().add(textContenido);
 
+                panel_Diagrama.getChildren().add(textContenido);
 
                 // Agregar evento de tecla para actualizar el contenido al presionar Enter
                 textContenido.setOnKeyPressed(event_2 -> {
@@ -2024,6 +2111,7 @@ public class AppController {
 
         return conector;
     }
+
     public Canvas crear_canvasLineaDerecha(double startX, double startY, double length) {
         Canvas conector = new Canvas();
 
@@ -2044,6 +2132,7 @@ public class AppController {
 
         return conector;
     }
+
     public Canvas crear_canvasLineaAbajo(double startX, double startY, double length) {
         Canvas conector = new Canvas();
 
@@ -2069,4 +2158,25 @@ public class AppController {
 
     //----------------------------------------------------------------------------------
 
+    // Método para centrar el Pane basurero y el ícono del basurero
+    private void centrarPane() {
+        double basureroX = (panel_Diagrama.getWidth() - basurero.getWidth()) / 2;
+        double basureroY = (panel_Diagrama.getHeight() - basurero.getHeight()) / 2;
+        basurero.setLayoutX(basureroX);
+        basurero.setLayoutY(basureroY);
+
+        // Centrar el ícono del basurero dentro del Pane basurero
+        double trashX = (basurero.getWidth() - trash.getFitWidth()) / 2;
+        double trashY = (basurero.getHeight() - trash.getFitHeight()) / 2;
+        trash.setLayoutX(trashX);
+        trash.setLayoutY(trashY);
+    }
+
+    public void setMaximizar(boolean maximizar){
+        this.maximizar = maximizar;
+    }
+
+    public boolean getMaximizar(){
+        return maximizar;
+    }
 }

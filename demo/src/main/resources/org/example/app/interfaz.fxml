@@ -11,6 +11,8 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
+<?import java.lang.String?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.app.AppController">
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.app.AppController">
     <children>
@@ -21,6 +23,42 @@
                     <Tab text="Diagrama de flujo">
                         <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="900.0">
+                                <!-- Botones de funcionalidad -->
+                                <Button layoutX="140" layoutY="4" onAction="#deshacer" text=" ">
+                                    <styleClass>
+                                        <String fx:value="botones" />
+                                        <String fx:value="boton_Deshacer"/>
+                                        <String fx:value="accion" />
+                                    </styleClass>
+                                </Button>
+                                <Button layoutX="180" layoutY="4" onAction="#rehacer" text=" ">
+                                    <styleClass>
+                                        <String fx:value="botones" />
+                                        <String fx:value="boton_Rehacer"/>
+                                        <String fx:value="accion" />
+                                    </styleClass>
+                                </Button>
+                                <Button layoutX="280" layoutY="4" onAction="#borrarTodo" text="       Borrar Todo">
+                                    <styleClass>
+                                        <String fx:value="botones" />
+                                        <String fx:value="boton_BorrarTodo"/>
+                                        <String fx:value="accion" />
+                                    </styleClass>
+                                </Button>
+                                <Button layoutX="450" layoutY="4" onAction="#guardarApseudocode" text="       A Pseudocódigo">
+                                    <styleClass>
+                                        <String fx:value="botones" />
+                                        <String fx:value="boton_Pseudocodigo"/>
+                                        <String fx:value="accion" />
+                                    </styleClass>
+                                </Button>
+                                <Button layoutX="700" layoutY="4" onAction="#reset_zoom" text="       Centrar vista">
+                                    <styleClass>
+                                        <String fx:value="botones" />
+                                        <String fx:value="boton_CentrarZoom"/>
+                                        <String fx:value="accion" />
+                                    </styleClass>
+                                </Button>
                                 <children>
                                     <Button layoutX="250" onAction="#borrarTodo" text="Borrar Todo" />
                                     <Button layoutX="350" onAction="#guardarApseudocode" text="A Pseudocódigo" />
@@ -28,12 +66,11 @@
                                     <Button fx:id="editButton" layoutX="610" onAction="#handleEditButtonClicked" text="Editar Pseudocode" />
                                 </children>
                                 <!-- Pane para el Diagrama -->
-                                <Pane layoutX="140.0" layoutY="30.0" prefHeight="570.0" prefWidth="760.0" BorderPane.alignment="CENTER">
+                                <Pane layoutX="140.0" layoutY="40.0" prefHeight="580.0" prefWidth="760.0" BorderPane.alignment="CENTER">
                                     <children>
-                                        <ScrollPane fx:id="panel_contenedor" fitToHeight="true" prefHeight="570.0" prefWidth="760.0">
+                                        <ScrollPane fx:id="panel_contenedor" hbarPolicy="NEVER" pannable="true" prefHeight="580.0" prefWidth="760.0" vbarPolicy="NEVER">
                                             <content>
-                                                <AnchorPane fx:id="panel_Diagrama" minHeight="0.0" minWidth="0.0" prefHeight="567.0" prefWidth="740.0">
-
+                                                <AnchorPane fx:id="panel_Diagrama" prefHeight="580.0" prefWidth="760.0" minHeight="0.0" minWidth="0.0">
                                                 </AnchorPane>
                                             </content>
                                         </ScrollPane>
