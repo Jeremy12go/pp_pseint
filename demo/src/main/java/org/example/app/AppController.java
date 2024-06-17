@@ -643,18 +643,6 @@ public class AppController {
         }
     }
 
-    public void prueba(){
-        int aux = 0;
-        for(Object obj : ins.getList_orden()){
-            if(obj instanceof Canvas){
-                if(aux%2==1){
-                    ((Canvas) obj).setLayoutX(((Canvas)obj).getLayoutX()-40);
-                }
-            }
-            aux++;
-        }
-    }
-
     public void deshacer(){
 
     }
