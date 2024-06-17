@@ -6,13 +6,12 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
 
-<?import javafx.geometry.Insets?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.app.AppController">
     <children>
         <!-- Pane Top -->
@@ -22,8 +21,12 @@
                     <Tab text="Diagrama de flujo">
                         <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="900.0">
-                                <Button onAction="#borrarTodo" text="Borrar Todo" layoutX="450"/>
-                                <Button onAction="#guardarApseudocode" text="A Pseudocódigo" layoutX="550"/>
+                                <children>
+                                    <Button layoutX="250" onAction="#borrarTodo" text="Borrar Todo" />
+                                    <Button layoutX="350" onAction="#guardarApseudocode" text="A Pseudocódigo" />
+                                    <Button layoutX="480" onAction="#generarDiagrama" text="Generar Diagrama" />
+                                    <Button fx:id="editButton" layoutX="610" onAction="#handleEditButtonClicked" text="Editar Pseudocode" />
+                                </children>
                                 <!-- Pane para el Diagrama -->
                                 <Pane layoutX="140.0" layoutY="30.0" prefHeight="570.0" prefWidth="760.0" BorderPane.alignment="CENTER">
                                     <children>
@@ -43,22 +46,22 @@
                                         </Pane>
                                         <Pane fx:id="panel_menu" prefHeight="540.0" prefWidth="140.0" />
                                     </children>
-                                    <ImageView fx:id="figura_procesoE" fitHeight="100.0" fitWidth="80.0" layoutY="20.0" layoutX="20.0" pickOnBounds="true" preserveRatio="true" /> <!-- 135 -->
-                                    <ImageView fx:id="figura_proceso" fitHeight="100.0" fitWidth="80.0" layoutY="20.0" layoutX="20.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" pickOnBounds="true" preserveRatio="true" />
-                                    <ImageView fx:id="figura_entradaE" fitHeight="100.0" fitWidth="80.0" layoutY="80.0" layoutX="20.0" pickOnBounds="true" preserveRatio="true" />
-                                    <ImageView fx:id="figura_entrada" fitHeight="100.0" fitWidth="80.0" layoutY="80.0" layoutX="20.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" pickOnBounds="true" preserveRatio="true" />
-                                    <ImageView fx:id="figura_salidaE" fitHeight="100.0" fitWidth="80.0" layoutY="140.0" layoutX="20.0" pickOnBounds="true" preserveRatio="true" />
-                                    <ImageView fx:id="figura_salida" fitHeight="100.0" fitWidth="80.0" layoutY="140.0" layoutX="20.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" pickOnBounds="true" preserveRatio="true" />
-                                    <ImageView fx:id="figura_condiconalE" fitHeight="100.0" fitWidth="70.0" layoutY="220.0" layoutX="20.0" pickOnBounds="true" preserveRatio="true" />
-                                    <ImageView fx:id="figura_condiconal" fitHeight="100.0" fitWidth="70.0" layoutY="220.0" layoutX="20.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" pickOnBounds="true" preserveRatio="true" />
-                                    <ImageView fx:id="figura_documentoE" fitHeight="100.0" fitWidth="80.0" layoutY="300.0" layoutX="20.0" pickOnBounds="true" preserveRatio="true" />
-                                    <ImageView fx:id="figura_documento" fitHeight="100.0" fitWidth="80.0" layoutY="300.0" layoutX="20.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" pickOnBounds="true" preserveRatio="true" />
-                                    <ImageView fx:id="figura_mientrasE" fitHeight="100.0" fitWidth="70.0" layoutY="380.0" layoutX="20.0" pickOnBounds="true" preserveRatio="true" />
-                                    <ImageView fx:id="figura_mientras" fitHeight="100.0" fitWidth="70.0" layoutY="380.0" layoutX="20.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" pickOnBounds="true" preserveRatio="true" />
-                                    <ImageView fx:id="figura_hacer_mientrasE" fitHeight="100.0" fitWidth="70.0" layoutY="460.0" layoutX="20.0" pickOnBounds="true" preserveRatio="true" />
-                                    <ImageView fx:id="figura_hacer_mientras" fitHeight="100.0" fitWidth="70.0" layoutY="460.0" layoutX="20.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" pickOnBounds="true" preserveRatio="true" />
-                                    <ImageView fx:id="figura_paraE" fitHeight="100.0" fitWidth="70.0" layoutY="540.0" layoutX="20.0" pickOnBounds="true" preserveRatio="true" />
-                                    <ImageView fx:id="figura_para" fitHeight="100.0" fitWidth="70.0" layoutY="540.0" layoutX="20.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" pickOnBounds="true" preserveRatio="true" />
+                                    <ImageView fx:id="figura_procesoE" fitHeight="100.0" fitWidth="80.0" layoutX="20.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true" /> <!-- 135 -->
+                                    <ImageView fx:id="figura_proceso" fitHeight="100.0" fitWidth="80.0" layoutX="20.0" layoutY="20.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" pickOnBounds="true" preserveRatio="true" />
+                                    <ImageView fx:id="figura_entradaE" fitHeight="100.0" fitWidth="80.0" layoutX="20.0" layoutY="80.0" pickOnBounds="true" preserveRatio="true" />
+                                    <ImageView fx:id="figura_entrada" fitHeight="100.0" fitWidth="80.0" layoutX="20.0" layoutY="80.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" pickOnBounds="true" preserveRatio="true" />
+                                    <ImageView fx:id="figura_salidaE" fitHeight="100.0" fitWidth="80.0" layoutX="20.0" layoutY="140.0" pickOnBounds="true" preserveRatio="true" />
+                                    <ImageView fx:id="figura_salida" fitHeight="100.0" fitWidth="80.0" layoutX="20.0" layoutY="140.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" pickOnBounds="true" preserveRatio="true" />
+                                    <ImageView fx:id="figura_condiconalE" fitHeight="100.0" fitWidth="70.0" layoutX="20.0" layoutY="220.0" pickOnBounds="true" preserveRatio="true" />
+                                    <ImageView fx:id="figura_condiconal" fitHeight="100.0" fitWidth="70.0" layoutX="20.0" layoutY="220.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" pickOnBounds="true" preserveRatio="true" />
+                                    <ImageView fx:id="figura_documentoE" fitHeight="100.0" fitWidth="80.0" layoutX="20.0" layoutY="300.0" pickOnBounds="true" preserveRatio="true" />
+                                    <ImageView fx:id="figura_documento" fitHeight="100.0" fitWidth="80.0" layoutX="20.0" layoutY="300.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" pickOnBounds="true" preserveRatio="true" />
+                                    <ImageView fx:id="figura_mientrasE" fitHeight="100.0" fitWidth="70.0" layoutX="20.0" layoutY="380.0" pickOnBounds="true" preserveRatio="true" />
+                                    <ImageView fx:id="figura_mientras" fitHeight="100.0" fitWidth="70.0" layoutX="20.0" layoutY="380.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" pickOnBounds="true" preserveRatio="true" />
+                                    <ImageView fx:id="figura_hacer_mientrasE" fitHeight="100.0" fitWidth="70.0" layoutX="20.0" layoutY="460.0" pickOnBounds="true" preserveRatio="true" />
+                                    <ImageView fx:id="figura_hacer_mientras" fitHeight="100.0" fitWidth="70.0" layoutX="20.0" layoutY="460.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" pickOnBounds="true" preserveRatio="true" />
+                                    <ImageView fx:id="figura_paraE" fitHeight="100.0" fitWidth="70.0" layoutX="20.0" layoutY="540.0" pickOnBounds="true" preserveRatio="true" />
+                                    <ImageView fx:id="figura_para" fitHeight="100.0" fitWidth="70.0" layoutX="20.0" layoutY="540.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" pickOnBounds="true" preserveRatio="true" />
                                 </Pane>
                                 <!-- Pane para el Basurero -->
                                 <Pane fx:id="basurero" prefHeight="50.0" prefWidth="900.0" style="-fx-background-color: #f2f2f2; -fx-border-color: #666666; -fx-border-width: 1px;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
@@ -72,10 +75,9 @@
                     </Tab>
                     <Tab fx:id="pseudocodeTab" text="Pseudocódigo">
                         <content>
-                            <Button text="Generate Diagram" onAction="#generarDiagrama" layoutX="1" layoutY="1" />
-                            <Button text="Editar Pseudocódigo" onAction="#editarPseudocodigo" layoutX="2" layoutY="2" />
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="900.0">
-                                <Label fx:id="pseudocode" text="Aquí va el pseudocódigo del diagrama de flujo" />
+                                <Label fx:id="pseudocode" prefHeight="117.0" prefWidth="248.0" text="Aquí va el pseudocódigo del diagrama de flujo" />
+                                <TextField fx:id="editTextField" onAction="#applyNewText" prefHeight="60.0" prefWidth="149.0" visible="false" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="10" />
                             </AnchorPane>
                         </content>
                     </Tab>

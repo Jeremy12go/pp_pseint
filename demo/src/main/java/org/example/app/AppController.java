@@ -14,10 +14,8 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+
 import javafx.scene.shape.ArcType;
 import java.math.*;
 import javafx.scene.image.ImageView;
@@ -38,6 +36,8 @@ public class AppController {
     Tab pseudocodeTab;
     @FXML
     Label pseudocode;
+    @FXML
+    private TextField editTextField;
     @FXML
     Pane panel_menu;
     @FXML
@@ -93,6 +93,8 @@ public class AppController {
 
     @FXML
     private Button borrarTodoButton;
+    @FXML
+    private Button editButton;
 
     @FXML
     public void initialize() throws IOException {
@@ -135,24 +137,48 @@ public class AppController {
         VG.cambiarUltimoCanvasFigura((Canvas)ins.getList_orden().get(0));
         VG.cambiarUltimoCanvasConexion((Canvas)ins.getList_orden().get(1));
 
+        editTextField.setVisible(false);
     }
+    private String originalText;
 
     @FXML
     private void generarDiagrama() {
         PseudocodeAdiagrama.generateFlowDiagram(pseudocode, panel_Diagrama);
     }
 
+    //Editar-Pseudocode---------------------------------------------------------------------------------------
     @FXML
-    private void editarPseudocodigo() {
-        String newPseudocode = pseudocode.getText();
-        PseudocodeAdiagrama.editPseudocode(newPseudocode, pseudocode, panel_Diagrama);
+    public void handleEditButtonClicked() {
+        originalText = pseudocode.getText();
+        editTextField.setText(originalText);
+        pseudocode.setVisible(false);
+        editTextField.setVisible(true);
+        editTextField.requestFocus();
     }
 
+    @FXML
+    public void applyNewText() {
+        String newText = editTextField.getText();
+        newText = newText.replace("\n", System.lineSeparator()); // Convertir "\n" a salto de línea real
+        pseudocode.setText(newText);
+        editTextField.setVisible(false);
+        pseudocode.setVisible(true);
+    }
 
-
+    @FXML
+    public void handleTextFieldKeyPressed(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER && event.isShiftDown()) {
+            // Insertar salto de línea al presionar Shift + Enter
+            int caretPosition = editTextField.getCaretPosition();
+            editTextField.setText(editTextField.getText().substring(0, caretPosition) +
+                    "\n" + editTextField.getText().substring(caretPosition));
+            editTextField.positionCaret(caretPosition + 1); // Mover el cursor después del salto de línea
+        } else if (event.getCode() == KeyCode.ENTER) {
+            applyNewText();
+        }
+    }
+    //----------------------------------------------------------------------------------------
     Diagrama ins = Diagrama.getInstance();
-
-
     //MOUSE_FUNCIONES------------------------------------------------------------------------------
     @FXML
     private void onMousePressed(MouseEvent event) {
