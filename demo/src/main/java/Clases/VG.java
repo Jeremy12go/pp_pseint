@@ -8,6 +8,7 @@ public class VG {
     private static Figura ultimaFiguraAñadida;
     private static Canvas ultimoCanvasFigura;
     private static Canvas ultimoCanvasConexion;
+    private static int numero_figura;
 
     private static ArrayList<Figura> historialFiguras;
 
@@ -27,6 +28,18 @@ public class VG {
         historialFiguras = figuras;
     }
 
+    public static void setNumero_figura(int n){
+        numero_figura = n;
+    }
+
+    public static void aumentar_numero_figura() {
+        numero_figura++;
+    }
+
+    public static void disminuir_numero_figura() {
+        numero_figura--;
+    }
+
     public static Figura getUltimaFiguraAñadida() {
         return ultimaFiguraAñadida;
     }
@@ -40,4 +53,6 @@ public class VG {
     }
 
     public static ArrayList<Figura> getHistorialFiguras() {return historialFiguras;}
+
+    public static int getNumero_figura() {return numero_figura;}
 }
