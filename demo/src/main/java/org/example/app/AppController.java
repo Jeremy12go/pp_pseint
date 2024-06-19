@@ -16,6 +16,7 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import java.io.IOException;
+import java.net.URL;
 import java.util.*;
 import javafx.scene.shape.ArcType;
 import java.math.*;
@@ -106,7 +107,7 @@ public class AppController {
     public void initialize() throws IOException {
         fondoCuadriculado(740,1500);
         figurasInicio_fin();
-
+        URL estiloURL = getClass().getResource("style.css");
         Pseudocode.initializePseudocodeTab(pseudocodeTab,pseudocode);
 
         Image image1 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("figura_proceso.png")));

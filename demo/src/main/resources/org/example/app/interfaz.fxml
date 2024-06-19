@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
-<?import java.lang.String?>
-<?import javafx.scene.control.TextField?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.app.AppController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.app.AppController">
     <children>
         <!-- Pane Top -->
         <Pane prefHeight="60.0" prefWidth="900.0">
@@ -26,42 +26,35 @@
                                 <Button layoutX="140" layoutY="4" onAction="#deshacer" text=" ">
                                     <styleClass>
                                         <String fx:value="botones" />
-                                        <String fx:value="boton_Deshacer"/>
+                                        <String fx:value="boton_Deshacer" />
                                         <String fx:value="accion" />
                                     </styleClass>
                                 </Button>
                                 <Button layoutX="180" layoutY="4" onAction="#rehacer" text=" ">
                                     <styleClass>
                                         <String fx:value="botones" />
-                                        <String fx:value="boton_Rehacer"/>
+                                        <String fx:value="boton_Rehacer" />
                                         <String fx:value="accion" />
                                     </styleClass>
                                 </Button>
                                 <Button layoutX="280" layoutY="4" onAction="#borrarTodo" text="       Borrar Todo">
                                     <styleClass>
                                         <String fx:value="botones" />
-                                        <String fx:value="boton_BorrarTodo"/>
+                                        <String fx:value="boton_BorrarTodo" />
                                         <String fx:value="accion" />
                                     </styleClass>
                                 </Button>
                                 <Button layoutX="450" layoutY="4" onAction="#guardarApseudocode" text="       A Pseudocódigo">
                                     <styleClass>
                                         <String fx:value="botones" />
-                                        <String fx:value="boton_Pseudocodigo"/>
+                                        <String fx:value="boton_Pseudocodigo" />
                                         <String fx:value="accion" />
                                     </styleClass>
                                 </Button>
                                 <Button layoutX="600" layoutY="4" onAction="#reset_zoom" text="       Centrar vista">
                                     <styleClass>
                                         <String fx:value="botones" />
-                                        <String fx:value="boton_CentrarZoom"/>
-                                        <String fx:value="accion" />
-                                    </styleClass>
-                                </Button>
-                                <Button layoutX="700" layoutY="4" onAction="#reset_zoom" text="       Boton nuevo">
-                                    <styleClass>
-                                        <String fx:value="botones" />
-                                        <String fx:value="boton_CentrarZoom"/>
+                                        <String fx:value="boton_CentrarZoom" />
                                         <String fx:value="accion" />
                                     </styleClass>
                                 </Button>
@@ -70,7 +63,7 @@
                                     <children>
                                         <ScrollPane fx:id="panel_contenedor" hbarPolicy="NEVER" pannable="true" prefHeight="590.0" prefWidth="760.0" vbarPolicy="NEVER">
                                             <content>
-                                                <AnchorPane fx:id="panel_Diagrama" prefHeight="575.0" prefWidth="760.0" minHeight="0.0" minWidth="0.0">
+                                                <AnchorPane fx:id="panel_Diagrama" minHeight="0.0" minWidth="0.0" prefHeight="575.0" prefWidth="760.0">
                                                 </AnchorPane>
                                             </content>
                                         </ScrollPane>
@@ -113,8 +106,12 @@
                     <Tab fx:id="pseudocodeTab" text="Pseudocódigo">
                         <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="900.0">
-                                <Label fx:id="pseudocode" prefHeight="117.0" prefWidth="248.0" text="Aquí va el pseudocódigo del diagrama de flujo" />
-                                <TextField fx:id="editTextField" onAction="#applyNewText" prefHeight="60.0" prefWidth="149.0" visible="false" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="10" />
+                                <children>
+                                    <Pane style="-fx-background-color: #000000" layoutX="100" layoutY="100" prefHeight="300.0" prefWidth="300.0">
+                                        <Label fx:id="pseudocode" prefHeight="117.0" prefWidth="248.0" text="Aquí va el pseudocódigo del diagrama de flujo" />
+                                        <TextField fx:id="editTextField" onAction="#applyNewText" prefHeight="60.0" prefWidth="149.0" visible="false" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="10" />
+                                    </Pane>
+                                </children>
                             </AnchorPane>
                         </content>
                     </Tab>

@@ -1,9 +1,12 @@
 package Clases;
 
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.canvas.Canvas;
+
+import java.net.URL;
 import java.util.List;
 import java.util.Stack;
 
@@ -16,8 +19,28 @@ public class Pseudocode {
         pseudocode.setWrapText(true);
 
         contentPane.getChildren().add(pseudocode);
-
         pseudocodeTab.setContent(contentPane);
+
+        // Crear un boton
+        Button boton_nuevo = new Button();
+        boton_nuevo.setText("       A Pseudocódigo");
+        boton_nuevo.setOnMouseEntered(e -> boton_nuevo.setStyle("-fx-border-color: #000000;"+
+        "-fx-background-radius: 25 25 25 25;"+
+        "-fx-border-radius: 0 0 0 0;"+
+        "-fx-border-width: 2.5;"));
+        boton_nuevo.setOnMouseExited(e -> boton_nuevo.setStyle("-fx-background-color: #242c3c;" +
+                "    -fx-border-color: transparent;"+
+                "    -fx-text-origin: bold;"+
+                "    -fx-background-radius: 25 25 25 25;"+
+                "    -fx-border-radius: 25 25 25 25;"+
+                "    -fx-border-width: 2.5;"));
+
+
+        boton_nuevo.setOnAction(actionEvent -> {
+            //lo que quieres que haga :v
+        });
+        contentPane.getChildren().add(boton_nuevo);
+
     }
 
     public static String generatePseudocode(AnchorPane panel_Diagrama, Label pseudocode) {
