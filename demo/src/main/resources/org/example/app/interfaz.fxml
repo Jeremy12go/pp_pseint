@@ -20,38 +20,52 @@
                         <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="900.0">
                                 <!-- Botones de funcionalidad -->
-                                <Button layoutX="140" layoutY="4" onAction="#deshacer" text=" ">
+                                <Button layoutX="140" layoutY="6" onAction="#deshacer" text=" ">
                                     <styleClass>
                                         <String fx:value="botones" />
                                         <String fx:value="boton_Deshacer"/>
                                         <String fx:value="accion" />
                                     </styleClass>
                                 </Button>
-                                <Button layoutX="180" layoutY="4" onAction="#rehacer" text=" ">
+                                <Button layoutX="170" layoutY="6" onAction="#rehacer" text=" ">
                                     <styleClass>
                                         <String fx:value="botones" />
                                         <String fx:value="boton_Rehacer"/>
                                         <String fx:value="accion" />
                                     </styleClass>
                                 </Button>
-                                <Button layoutX="280" layoutY="4" onAction="#borrarTodo" text="       Borrar Todo">
+                                <Button layoutX="220" layoutY="4" onAction="#zoom_out" text="   ">
+                                    <styleClass>
+                                        <String fx:value="botones" />
+                                        <String fx:value="boton_DisminuirZoom"/>
+                                        <String fx:value="accion" />
+                                    </styleClass>
+                                </Button>
+                                <Button layoutX="255" layoutY="4" onAction="#reset_zoom" text="   ">
+                                    <styleClass>
+                                        <String fx:value="botones" />
+                                        <String fx:value="boton_CentrarZoom"/>
+                                        <String fx:value="accion" />
+                                    </styleClass>
+                                </Button>
+                                <Button layoutX="290" layoutY="4" onAction="#zoom_in" text="   ">
+                                    <styleClass>
+                                        <String fx:value="botones" />
+                                        <String fx:value="boton_AumentarZoom"/>
+                                        <String fx:value="accion" />
+                                    </styleClass>
+                                </Button>
+                                <Button layoutX="450" layoutY="4" onAction="#borrarTodo" text="       Borrar Todo">
                                     <styleClass>
                                         <String fx:value="botones" />
                                         <String fx:value="boton_BorrarTodo"/>
                                         <String fx:value="accion" />
                                     </styleClass>
                                 </Button>
-                                <Button layoutX="450" layoutY="4" onAction="#guardarApseudocode" text="       A Pseudocódigo">
+                                <Button layoutX="700" layoutY="4" onAction="#guardarApseudocode" text="       A Pseudocódigo">
                                     <styleClass>
                                         <String fx:value="botones" />
                                         <String fx:value="boton_Pseudocodigo"/>
-                                        <String fx:value="accion" />
-                                    </styleClass>
-                                </Button>
-                                <Button layoutX="700" layoutY="4" onAction="#reset_zoom" text="       Centrar vista">
-                                    <styleClass>
-                                        <String fx:value="botones" />
-                                        <String fx:value="boton_CentrarZoom"/>
                                         <String fx:value="accion" />
                                     </styleClass>
                                 </Button>

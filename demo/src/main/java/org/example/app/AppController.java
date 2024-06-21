@@ -25,8 +25,6 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Scale;
 import javafx.util.Duration;
 
-import javax.swing.*;
-
 public class AppController {
     @FXML
     AnchorPane panel_Diagrama;
@@ -144,7 +142,6 @@ public class AppController {
     }
 
     Diagrama ins = Diagrama.getInstance();
-    private boolean altPressed = false;
 
     //MOUSE_FUNCIONES------------------------------------------------------------------------------
     @FXML
@@ -611,41 +608,25 @@ public class AppController {
                     condicion = true;
                 }
                 if (condicion) {
-                    if (pre_canvas.getLayoutY() < posY && posY < actual_canvas.getLayoutY()) {
+                    if (pre_canvas.getLayoutY() < posY && posY < actual_canvas.getLayoutY() && determinar_NImaximo(figura_InList)) {
                         //System.out.println(pre_canvas.getLayoutY()+" < "+ y + " < "+actual_canvas.getLayoutY());
                         //System.out.println("f:"+(pre_canvas.getLayoutY()+diferencia));
+                        System.out.println("M1");
+                        actual_canvas.setLayoutY(pre_canvas.getLayoutY()+pre_canvas.getHeight());
 
                     }
                 }
-                /*
-                if(figura == figura_InList){
-                    condicion = true;
-                    pre_figura = figura_InList;
-                    pre_canvas = arr_list_canvas.get(i);
-                    canva_conector_siguiente = obtenerCanvasDesdeFigura(figura_InList);
-                }
-                if (condicion && figura_InList != figura){
-                    Figura figura_final = obtenerFiguraDesdeCanvas(arr_list_canvas.get(largo-1));
-                    if(figura_InList.getContenido() != figura_final.getContenido() ){
+                if (posY < list_canvas.get(largo - 1).getLayoutY() && determinar_NImaximo(figura_InList)) {
+                    //todo: si y esta entre el largo coneccion y posicion ultima figura sucede
+                    //cambiar condicional, cuando sea la ultima figura añadida, activar esto
+                    System.out.println("M2");
 
-                        //asignar nueva posicion a la figura
-                        double nuevaPosY = pre_figura.getVertice_conexion().getY() + 100;
-                        System.out.println("Coordenada_NuevaPosicion:"+nuevaPosY);
-                        figura_InList.setVertice_conexion(new Vertice((panel_Diagrama.getMinWidth() / 2), nuevaPosY));
-                        System.out.printf("Prefigura:"+pre_figura.getContenido()+"\n");
-                        System.out.printf("figura:"+figura_InList.getContenido()+"\n");
-
-                        //mover el canvas en relacion a la figura previa
-                        double cordenadas = pre_figura.getVertice_conexion().getY()+pre_figura.getDimenciones().getAlto()+106.5;
-                        arr_list_canvas.get(i).setLayoutY(cordenadas);
-                    }
-                }*/
-                //cambiar condicional, cuando sea la ultima figura añadida, activar esto
-                if (pre_figura.getContenido() != "Algoritmo titulo") {
                     //condiderar mover -5 para la figura documento
                     //todo: arreglar desplazamiento de figura final
                     list_canvas.get(largo - 1).setLayoutY(list_canvas.get(i).getLayoutY() + list_canvas.get(i).getHeight()-5);
+                    //list_canvas.get(largo - 1).setLayoutY(actual_canvas.getLayoutY()+actual_canvas.getHeight()+50);
                 }
+
                 pre_canvas = list_canvas.get(i);
             }
             pre_figura = figura_InList;
@@ -654,18 +635,32 @@ public class AppController {
         System.out.println();
     }
 
+    public boolean determinar_NImaximo(Figura figura){
+        ArrayList<Figura> list_figuras = ins.getList_figuras();
+        int max = figura.getNumero_identificador();
+        for(Figura obj : list_figuras){
+            if(obj != null){
+                if(obj.getNumero_identificador() > max){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     public void  moverfiguras_eliminando(){
 
     }
 
     public void prueba(){
         int aux = 0;
+        int cns = 100;
         for(Object obj : ins.getList_orden()){
             if(obj instanceof Canvas){
                 if(aux%2==1){
-                    ((Canvas) obj).setLayoutX(100);
+                    ((Canvas) obj).setLayoutX(aux* cns);
                 }else{
-                    ((Canvas) obj).setLayoutX(400);
+                    ((Canvas) obj).setLayoutX(aux* cns);
                 }
             }
             aux++;
@@ -680,25 +675,34 @@ public class AppController {
 
     }
 
-    public void zoom(ScrollEvent event) {
-        if (altPressed) {
+    public void zoom_in() {
 
-            double deltaY = event.getDeltaY();
-            double scaleFactor = deltaY > 0 ? 1.1 : 0.9; //1.1 para zoom in, 0.9 para zoom out
-            // Obtener la transformación de escala actual
-            Scale escalaTransformacion = (Scale) panel_Diagrama.getTransforms().get(0);
+        // Obtener la transformación de escala actual
+        Scale escalaTransformacion = (Scale) panel_Diagrama.getTransforms().get(0);
 
-            // Aplicar el factor de escala
-            escalaTransformacion.setX(escalaTransformacion.getX() * scaleFactor);
-            escalaTransformacion.setY(escalaTransformacion.getY() * scaleFactor);
+        // Aplicar el factor de escala
+        escalaTransformacion.setX(escalaTransformacion.getX() * 1.1);
+        escalaTransformacion.setY(escalaTransformacion.getY() * 1.1);
 
-            // Ajustar dimensiones del panel
-            ajustar_Panes(panel_Diagrama.getWidth(),
-                    panel_Diagrama.getHeight());
-            fondoCuadriculado(panel_Diagrama.getWidth()+120*(deltaY>0 ? 1.2 : 0.9),
-                    panel_Diagrama.getHeight()+120*(deltaY>0 ? 1.2 : 0.9));
+        // Ajustar dimensiones del panel
+        ajustar_Panes(panel_Diagrama.getWidth(),
+                panel_Diagrama.getHeight());
+        fondoCuadriculado(panel_Diagrama.getWidth()+120*(1.2),
+                panel_Diagrama.getHeight()+120*(1.2));
+    }
+    public void zoom_out() {
+        // Obtener la transformación de escala actual
+        Scale escalaTransformacion = (Scale) panel_Diagrama.getTransforms().get(0);
 
-        }
+        // Aplicar el factor de escala
+        escalaTransformacion.setX(escalaTransformacion.getX() * 0.9);
+        escalaTransformacion.setY(escalaTransformacion.getY() * 0.9);
+
+        // Ajustar dimensiones del panel
+        ajustar_Panes(panel_Diagrama.getWidth(),
+                panel_Diagrama.getHeight());
+        fondoCuadriculado(panel_Diagrama.getWidth()+120*(0.9),
+                panel_Diagrama.getHeight()+120*(0.9));
     }
 
     public void reset_zoom(){
@@ -714,23 +718,6 @@ public class AppController {
         } else { // ventana Minimizada
             ajustar_Panes(740, 654);
             fondoCuadriculado(740, 645 + 500);
-        }
-    }
-
-    public void altKeyPressed(KeyEvent event) {
-        if (event.getCode() == KeyCode.ALT) {
-            System.out.println("Presionando alt");
-            altPressed = true;
-            //desactivar movimiento Y del scroll
-            panel_contenedor.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        }
-    }
-
-    public void altKeyReleased(KeyEvent event) {
-        if (event.getCode() == KeyCode.ALT) {
-            altPressed = false;
-            //activar movimiento Y del scroll
-            panel_contenedor.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
         }
     }
 

@@ -48,9 +48,6 @@ public class App extends Application {
         URL estiloURL = getClass().getResource("style.css");
         if (estiloURL != null) {
             root.getStylesheets().add(estiloURL.toExternalForm());
-            root.setOnKeyPressed(event -> appController.altKeyPressed(event));
-            root.setOnKeyReleased(event -> appController.altKeyReleased(event));
-            root.setOnScroll(event -> appController.zoom(event));
         } else {
             System.err.println("No se pudo encontrar el archivo de estilos 'estilos.css'");
         }

@@ -47,8 +47,22 @@
     -fx-background-size: contain;
     -fx-background-color: transparent;
 }
+.boton_DisminuirZoom{
+    -fx-background-image: url("zoom_dis.png");
+    -fx-content-display: left;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-color: transparent;
+}
 .boton_CentrarZoom{
     -fx-background-image: url("Centrar.png");
+    -fx-content-display: left;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-color: transparent;
+}
+.boton_AumentarZoom{
+    -fx-background-image: url("zoom_aum.png");
     -fx-content-display: left;
     -fx-background-repeat: no-repeat;
     -fx-background-size: contain;
