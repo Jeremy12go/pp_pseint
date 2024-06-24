@@ -148,47 +148,18 @@ public class AppController {
         VG.cambiarUltimoCanvasFigura((Canvas)ins.getList_orden().get(0));
         VG.cambiarUltimoCanvasConexion((Canvas)ins.getList_orden().get(1));
 
-        editTextField.setVisible(false);
-    }
-    private String originalText;
 
-    @FXML
-    private void generarDiagrama() {
-        PseudocodeAdiagrama.generateFlowDiagram(pseudocode, panel_Diagrama);
     }
 
     //Editar-Pseudocode---------------------------------------------------------------------------------------
-    @FXML
-    public void handleEditButtonClicked() {
-        originalText = pseudocode.getText();
-        editTextField.setText(originalText);
-        pseudocode.setVisible(false);
-        editTextField.setVisible(true);
-        editTextField.requestFocus();
-    }
 
     @FXML
-    public void applyNewText() {
-        String newText = editTextField.getText();
-        newText = newText.replace("\n", System.lineSeparator()); // Convertir "\n" a salto de línea real
-        pseudocode.setText(newText);
-        editTextField.setVisible(false);
-        pseudocode.setVisible(true);
+    private void generateDiagramFromPseudocode() {
+        // Lógica para generar el diagrama desde el pseudocódigo
+        PseudocodeAdiagrama.generateFlowDiagram(pseudocode, panel_Diagrama);
     }
 
-    @FXML
-    public void handleTextFieldKeyPressed(KeyEvent event) {
-        if (event.getCode() == KeyCode.ENTER && event.isShiftDown()) {
-            // Insertar salto de línea al presionar Shift + Enter
-            int caretPosition = editTextField.getCaretPosition();
-            editTextField.setText(editTextField.getText().substring(0, caretPosition) +
-                    "\n" + editTextField.getText().substring(caretPosition));
-            editTextField.positionCaret(caretPosition + 1); // Mover el cursor después del salto de línea
-        } else if (event.getCode() == KeyCode.ENTER) {
-            applyNewText();
-        }
-    }
-    //----------------------------------------------------------------------------------------
+        //----------------------------------------------------------------------------------------
     Diagrama ins = Diagrama.getInstance();
     private boolean altPressed = false;
 
@@ -275,7 +246,7 @@ public class AppController {
             VG.cambiarUltimaFiguraAñadida((Figura) ins.getList_figuras().get(0));
             VG.cambiarUltimoCanvasFigura((Canvas)ins.getList_orden().get(0));
             VG.cambiarUltimoCanvasConexion((Canvas)ins.getList_orden().get(1));
-
+            pseudocode.setText("Aquí va el pseudocódigo del diagrama de flujo");
         }catch (NullPointerException e){
             System.out.println("Ups... DLC \'borrar todo\' debe adquirirse por separado :)");
         }

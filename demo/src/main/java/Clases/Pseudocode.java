@@ -3,10 +3,10 @@ package Clases;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.canvas.Canvas;
 
-import java.net.URL;
 import java.util.List;
 import java.util.Stack;
 
@@ -21,32 +21,94 @@ public class Pseudocode {
         contentPane.getChildren().add(pseudocode);
         pseudocodeTab.setContent(contentPane);
 
-        // Crear un boton
-        Button boton_nuevo = new Button();
-        boton_nuevo.setText("       A Pseudocódigo");
-        boton_nuevo.setOnMouseEntered(e -> boton_nuevo.setStyle("-fx-border-color: #000000;"+
-        "-fx-background-radius: 25 25 25 25;"+
-        "-fx-border-radius: 0 0 0 0;"+
-        "-fx-border-width: 2.5;"));
-        boton_nuevo.setOnMouseExited(e -> boton_nuevo.setStyle("-fx-background-color: #242c3c;" +
-                "    -fx-border-color: transparent;"+
-                "    -fx-text-origin: bold;"+
-                "    -fx-background-radius: 25 25 25 25;"+
-                "    -fx-border-radius: 25 25 25 25;"+
-                "    -fx-border-width: 2.5;"));
+        //Crear boton editar
+        Button botonEditar = new Button();
+        botonEditar.setText("Editar Pseudocódigo");
+        botonEditar.setOnMouseEntered(e -> botonEditar.setStyle("-fx-border-color: #000000;" +
+                "-fx-background-radius: 25 25 25 25;" +
+                "-fx-border-radius: 0 0 0 0;" +
+                "-fx-border-width: 2.5;"));
+        botonEditar.setOnMouseExited(e -> botonEditar.setStyle(
+                "    -fx-border-color: transparent;" +
+                        "    -fx-text-origin: bold;" +
+                        "    -fx-background-radius: 25 25 25 25;" +
+                        "    -fx-border-radius: 25 25 25 25;" +
+                        "    -fx-border-width: 2.5;"));
+        botonEditar.setLayoutX(300);
+        botonEditar.setLayoutY(5);
 
+        // Crear el botón guardar
+        Button botonGuardar = new Button();
+        botonGuardar.setText("Guardar");
+        botonGuardar.setOnMouseEntered(e -> botonGuardar.setStyle("-fx-border-color: #000000;" +
+                "-fx-background-radius: 25 25 25 25;" +
+                "-fx-border-radius: 0 0 0 0;" +
+                "-fx-border-width: 2.5;"));
+        botonGuardar.setOnMouseExited(e -> botonGuardar.setStyle(
+                "    -fx-border-color: transparent;" +
+                        "    -fx-text-origin: bold;" +
+                        "    -fx-background-radius: 25 25 25 25;" +
+                        "    -fx-border-radius: 25 25 25 25;" +
+                        "    -fx-border-width: 2.5;"));
+        botonGuardar.setLayoutX(400);
+        botonGuardar.setLayoutY(5);
+        botonGuardar.setVisible(false); // Inicialmente oculto
 
-        boton_nuevo.setOnAction(actionEvent -> {
+        //crear boton a diagrama
+        Button botonaDiagrama = new Button();
+        botonaDiagrama.setText(" A Diagrama");
+        botonaDiagrama.setOnMouseEntered(e -> botonaDiagrama.setStyle("-fx-border-color: #000000;" +
+                "-fx-background-radius: 25 25 25 25;" +
+                "-fx-border-radius: 0 0 0 0;" +
+                "-fx-border-width: 2.5;"));
+        botonaDiagrama.setOnMouseExited(e -> botonaDiagrama.setStyle(
+                "    -fx-border-color: transparent;" +
+                        "    -fx-text-origin: bold;" +
+                        "    -fx-background-radius: 25 25 25 25;" +
+                        "    -fx-border-radius: 25 25 25 25;" +
+                        "    -fx-border-width: 2.5;"));
+        // Establecer las coordenadas del botón
+        botonaDiagrama.setLayoutX(500); // Coordenada X
+        botonaDiagrama.setLayoutY(5);  // Coordenada Y
+
+        // Crear un TextArea para la edición del pseudocódigo
+        TextArea textAreaPseudocode = new TextArea();
+        textAreaPseudocode.setLayoutX(20);
+        textAreaPseudocode.setLayoutY(50);
+        textAreaPseudocode.setPrefWidth(860);
+        textAreaPseudocode.setPrefHeight(500);
+        textAreaPseudocode.setVisible(false); // Inicialmente oculto
+
+        // Acción del botón "Editar Pseudocódigo"
+        botonEditar.setOnAction(actionEvent -> {
+            textAreaPseudocode.setText(pseudocode.getText());
+            pseudocode.setVisible(false);
+            textAreaPseudocode.setVisible(true);
+            botonEditar.setVisible(false);
+            botonGuardar.setVisible(true);
+        });
+
+        // Acción del botón "Guardar"
+        botonGuardar.setOnAction(actionEvent -> {
+            pseudocode.setText(textAreaPseudocode.getText());
+            textAreaPseudocode.setVisible(false);
+            pseudocode.setVisible(true);
+            botonEditar.setVisible(true);
+            botonGuardar.setVisible(false);
+        });
+
+        //accion del boton A Diagrama
+        botonaDiagrama.setOnAction(actionEvent -> {
             //lo que quieres que haga :v
         });
-        contentPane.getChildren().add(boton_nuevo);
 
+        contentPane.getChildren().addAll(botonEditar, botonGuardar, botonaDiagrama,textAreaPseudocode);
     }
 
     public static String generatePseudocode(AnchorPane panel_Diagrama, Label pseudocode) {
-        StringBuilder pseudocodeContent = new StringBuilder("\n\nInicio Titulo\n");
+        StringBuilder pseudocodeContent = new StringBuilder("\n\nInicio\n");
         Stack<String> indentStack = new Stack<>();
-        indentStack.push(""); // Initial indentation level
+        indentStack.push("   "); // Initial indentation level
 
         // Obtener las figuras del AnchorPane
         List<Canvas> figuras = panel_Diagrama.getChildren().filtered(node -> node instanceof Canvas).stream()
