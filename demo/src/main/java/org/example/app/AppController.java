@@ -139,6 +139,7 @@ public class AppController {
         VG.cambiarUltimaFiguraAñadida((Figura) ins.getList_figuras().get(0));
         VG.cambiarUltimoCanvasFigura((Canvas)ins.getList_orden().get(0));
         VG.cambiarUltimoCanvasConexion((Canvas)ins.getList_orden().get(1));
+        VG.setUltimoIndiceConexion(0);
     }
 
     Diagrama ins = Diagrama.getInstance();
@@ -227,6 +228,7 @@ public class AppController {
             VG.cambiarUltimaFiguraAñadida((Figura) ins.getList_figuras().get(0));
             VG.cambiarUltimoCanvasFigura((Canvas)ins.getList_orden().get(0));
             VG.cambiarUltimoCanvasConexion((Canvas)ins.getList_orden().get(1));
+            VG.setUltimoIndiceConexion(0);
 
         }catch (NullPointerException e){
             System.out.println("Ups... DLC \'borrar todo\' debe adquirirse por separado :)");
@@ -277,7 +279,10 @@ public class AppController {
                 if (pre_canvas.getLayoutY() < y && y < actual_canvas.getLayoutY()) {
                     //System.out.println(pre_canvas.getLayoutY()+" < "+ y + " < "+actual_canvas.getLayoutY());
                     //System.out.println("f:"+(pre_canvas.getLayoutY()+diferencia));
-                    return pre_canvas.getLayoutY()+diferencia;
+                    System.out.println("pre:"+pre_canvas.getLayoutY()+"Ultimo:"+VG.getUltimoCanvasConexion().getLayoutY());
+                    return  pre_canvas.getLayoutY()>=VG.getUltimoCanvasConexion().getLayoutY() ? pre_canvas.getLayoutY()+diferencia
+                            : pre_canvas.getLayoutY()+diferencia+135;
+                    //todo:pendiente
                 }
             }
             pre_canvas = obj;
@@ -306,6 +311,7 @@ public class AppController {
 
                 // Obtener la posición Y ajustada para la nueva figura
                 double nuevaPosY = ubicacionY_newFigura(y,25);
+                //System.out.println("NuevaPosY:"+nuevaPosY);
                 condicional.setVertice_conexion(new Vertice((panel_Diagrama.getMinWidth() / 2), nuevaPosY));
 
 
@@ -316,7 +322,7 @@ public class AppController {
                 ins.agregarElemento(condicional, 1, indice_Fposterior);
 
                 // Agregar la nueva figura a la lista de canvas, antes de canvas conexión-figura
-                int indice_Cposterior = determinarIndiceCanvas_InList_orden(canvas_Fcondicional) - 1;
+                int indice_Cposterior = determinarIndiceCanvas_InList_orden(canvas_Fcondicional,VG.getUltimoIndiceConexion()) - 1;
                 ins.agregarElemento(canvas_Fcondicional, 1, indice_Cposterior);
                 VG.cambiarUltimoCanvasConexion(conectar(VG.getUltimaFiguraAñadida(), condicional));
 
@@ -579,22 +585,24 @@ public class AppController {
                 moverfiguras_agregando(para, 100, 100);
             }*/
         }
+        VG.setHistorial(ins);
     }
 
     public void moverfiguras_agregando(Figura figura, double posY){
 
-        boolean condicion = false;
+        boolean condicion_inicial = false;
+        boolean condicion_agregacion = false;
 
         Figura pre_figura = (Figura)ins.getList_figuras().get(0);
         Canvas pre_canvas = null;
         Canvas actual_canvas = null;
         Canvas canva_conector_siguiente = null;
 
-        int largo = ins.getList_orden().size();
+
 
         ArrayList<Canvas> list_canvas = ins.getList_orden();
 
-        for (int i = 0; i < largo; i++ ) {
+        for (int i = 0; i < ins.getList_orden().size(); i++ ) {
             actual_canvas = list_canvas.get(i);
 
             Figura figura_InList = obtenerFiguraDesdeCanvas(actual_canvas);
@@ -602,29 +610,25 @@ public class AppController {
 
             if(figura_InList != null){
                 //todo: seguir desarrollando esta funcion
-                if (!condicion) {
+                if (!condicion_inicial) {
                     //guardar ubicacion de precanvas para determinar un min
                     pre_canvas = list_canvas.get(i);
-                    condicion = true;
+                    condicion_inicial = true;
                 }
-                if (condicion) {
+                if (condicion_inicial) {
                     if (pre_canvas.getLayoutY() < posY && posY < actual_canvas.getLayoutY() && determinar_NImaximo(figura_InList)) {
                         //System.out.println(pre_canvas.getLayoutY()+" < "+ y + " < "+actual_canvas.getLayoutY());
                         //System.out.println("f:"+(pre_canvas.getLayoutY()+diferencia));
-                        System.out.println("M1");
+                        condicion_agregacion = true;
+                        //System.out.println("M1");
                         actual_canvas.setLayoutY(pre_canvas.getLayoutY()+pre_canvas.getHeight());
 
                     }
                 }
-                if (posY < list_canvas.get(largo - 1).getLayoutY() && determinar_NImaximo(figura_InList)) {
-                    //todo: si y esta entre el largo coneccion y posicion ultima figura sucede
-                    //cambiar condicional, cuando sea la ultima figura añadida, activar esto
-                    System.out.println("M2");
-
-                    //condiderar mover -5 para la figura documento
-                    //todo: arreglar desplazamiento de figura final
-                    list_canvas.get(largo - 1).setLayoutY(list_canvas.get(i).getLayoutY() + list_canvas.get(i).getHeight()-5);
-                    //list_canvas.get(largo - 1).setLayoutY(actual_canvas.getLayoutY()+actual_canvas.getHeight()+50);
+                if (pre_figura.getContenido() != "Algoritmo titulo" && !condicion_agregacion) {
+                    //System.out.println("M2");
+                    //list_canvas.get(ins.getList_orden().size()-1).setLayoutY(list_canvas.get(i).getLayoutY()+25);
+                    list_canvas.get(ins.getList_orden().size() - 1).setLayoutY(list_canvas.get(i).getLayoutY() + list_canvas.get(i).getHeight()-20);
                 }
 
                 pre_canvas = list_canvas.get(i);
@@ -632,7 +636,7 @@ public class AppController {
             pre_figura = figura_InList;
             canva_conector_siguiente = list_canvas.get(i);
         }
-        System.out.println();
+        //System.out.println();
     }
 
     public boolean determinar_NImaximo(Figura figura){
@@ -668,6 +672,60 @@ public class AppController {
     }
 
     public void deshacer(){
+        //todo:pendiente
+        Diagrama historial = VG.getHistorial();
+        try {
+            ArrayList<Canvas> list_orden_ = new ArrayList<>(historial.getList_orden());
+            ArrayList<Conector> list_conexiones_ = new ArrayList<>(historial.getList_conexiones());
+            ArrayList<Figura> list_figuras_ = new ArrayList<>(historial.getList_figuras());
+
+            // Asegurarse de que no se borren los elementos iniciales
+            if (list_orden_.size() <= 5 || list_figuras_.size() <= 3) {
+                System.out.println("No se puede deshacer más, elementos iniciales.");
+                return;
+            }
+
+            // Remover la última figura nueva y el último conector
+            panel_Diagrama.getChildren().remove(list_orden_.get(list_orden_.size() - 2));
+            list_orden_.remove(list_orden_.get(list_orden_.size() - 2)); // Eliminar conector2
+
+            panel_Diagrama.getChildren().remove(list_orden_.get(list_orden_.size() - 2));
+            list_orden_.remove(list_orden_.get(list_orden_.size() - 2)); // Eliminar figuraNueva
+            /*
+            list_conexiones_.remove(list_conexiones_.size() - 1); // Eliminar conector2
+            list_figuras_.remove(list_figuras_.size() - 2); // Eliminar figuraNueva
+
+            try {
+                for (Canvas canvas : list_orden_) {
+                    panel_Diagrama.getChildren().add(canvas);
+                }
+            } catch (IllegalArgumentException e) {
+                System.out.println("CSM: " + e.getMessage());
+            }
+
+            //panel_Diagrama.getChildren().addAll(list_orden_);
+
+
+            ins.setList_orden(list_orden_);
+            ins.setList_conexiones(list_conexiones_);
+            ins.setList_figuras(list_figuras_);
+
+            if (!list_orden_.isEmpty()) {
+                VG.cambiarUltimoCanvasFigura(list_orden_.get(list_orden_.size() - 1));
+                if (list_orden_.size() > 1) {
+                    VG.cambiarUltimoCanvasConexion(list_orden_.get(list_orden_.size() - 2));
+                } else {
+                    VG.cambiarUltimoCanvasConexion(null);
+                }
+            } else {
+                VG.cambiarUltimoCanvasFigura(null);
+                VG.cambiarUltimoCanvasConexion(null);
+            }*/
+
+        }catch (NullPointerException e){
+            System.out.println("Ups...");
+        }
+
 
     }
 
@@ -690,6 +748,7 @@ public class AppController {
         fondoCuadriculado(panel_Diagrama.getWidth()+120*(1.2),
                 panel_Diagrama.getHeight()+120*(1.2));
     }
+
     public void zoom_out() {
         // Obtener la transformación de escala actual
         Scale escalaTransformacion = (Scale) panel_Diagrama.getTransforms().get(0);
@@ -816,12 +875,18 @@ public class AppController {
         return indiceFiguraDestino;
     }
 
-    public int determinarIndiceCanvas_InList_orden(Canvas canvas){
+    public int determinarIndiceCanvas_InList_orden(Canvas canvas, int ultimadato){
         int indiceCanvasDestino = 0;
         for(Object obj : ins.getList_orden()){
             if(obj instanceof Canvas){
                 if(obj == canvas){
-                    return indiceCanvasDestino;
+                    if(indiceCanvasDestino > ultimadato){
+                        VG.setUltimoIndiceConexion(indiceCanvasDestino);
+                        return indiceCanvasDestino;
+                    }else{
+                        VG.setUltimoIndiceConexion(ultimadato+2);
+                        return ultimadato+2;
+                    }
                 }
             }
             indiceCanvasDestino++;
@@ -853,8 +918,8 @@ public class AppController {
 
         // Agregar el canvas conector a la lista de conectores
         Canvas canvasF = obtenerCanvasDesdeFigura(figuraDestino);
-        int indice_C = determinarIndiceCanvas_InList_orden(canvasF)+1;
-        System.out.println("Indice:"+indice_C);
+        int indice_C = determinarIndiceCanvas_InList_orden(canvasF,VG.getUltimoIndiceConexion())+1;
+        //System.out.println("Indice:"+indice_C);
         ins.agregarElemento(conectorCanvas,1,indice_C);
 
         // Agregar el conector a la lista de conectores

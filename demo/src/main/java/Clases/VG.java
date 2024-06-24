@@ -9,6 +9,8 @@ public class VG {
     private static Canvas ultimoCanvasFigura;
     private static Canvas ultimoCanvasConexion;
     private static int numero_figura;
+    private static Diagrama historial;
+    private static int ultimoIndiceConexion;
 
     private static ArrayList<Figura> historialFiguras;
 
@@ -26,6 +28,14 @@ public class VG {
 
     public static void GuardarHistorialFigura(ArrayList<Figura> figuras) {
         historialFiguras = figuras;
+    }
+
+    public static void setUltimoIndiceConexion(int ultimo){
+        ultimoIndiceConexion = ultimo;
+    }
+
+    public static void setHistorial(Diagrama hist){
+        historial = hist;
     }
 
     public static void setNumero_figura(int n){
@@ -55,4 +65,8 @@ public class VG {
     public static ArrayList<Figura> getHistorialFiguras() {return historialFiguras;}
 
     public static int getNumero_figura() {return numero_figura;}
+
+    public static Diagrama getHistorial() {return historial;}
+
+    public static int getUltimoIndiceConexion() {return ultimoIndiceConexion;}
 }
