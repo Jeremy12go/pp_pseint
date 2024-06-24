@@ -16,6 +16,7 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import java.io.IOException;
+import java.net.URL;
 import java.util.*;
 import javafx.scene.shape.ArcType;
 import java.math.*;
@@ -106,7 +107,7 @@ public class AppController {
     public void initialize() throws IOException {
         fondoCuadriculado(740,1500);
         figurasInicio_fin();
-
+        URL estiloURL = getClass().getResource("style.css");
         Pseudocode.initializePseudocodeTab(pseudocodeTab,pseudocode);
 
         Image image1 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("figura_proceso.png")));
@@ -282,7 +283,26 @@ public class AppController {
     }
     @FXML
     private void guardarApseudocode() {
-        Pseudocode.generatePseudocode(panel_Diagrama, pseudocode);
+        // Generar pseudocódigo
+        String pseudocodeContent = Pseudocode.generatePseudocode(panel_Diagrama, pseudocode);
+
+        // Validar pseudocódigo
+        String validationErrors = Validar.validarPseudocodigo(pseudocodeContent);
+
+        // Mostrar errores si existen
+        if (!validationErrors.equals("No se encontraron errores.")) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errores de Validación");
+            alert.setHeaderText(null);
+            alert.setContentText(validationErrors);
+            alert.showAndWait();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Validación Exitosa");
+            alert.setHeaderText(null);
+            alert.setContentText("El pseudocódigo se generó y validó correctamente.");
+            alert.showAndWait();
+        }
     }
     @FXML
     protected void fondoCuadriculado(double width, double height) {
