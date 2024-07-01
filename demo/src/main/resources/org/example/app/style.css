@@ -84,7 +84,7 @@
 }
 
 .boton_Ejecutar{
-    -fx-background-image: url("ejecutar.jpg");
+    -fx-background-image: url("ejecutar.png");
     -fx-content-display: left;
     -fx-background-repeat: no-repeat;
     -fx-background-size: contain;
