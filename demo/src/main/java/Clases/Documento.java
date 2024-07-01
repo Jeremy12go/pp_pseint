@@ -18,7 +18,7 @@ public class Documento extends Figura {
         super(contenido, vertice_cordenada, vertice_conexion, dimenciones,numero_identificador);
     }
 
-    public void dibujo_documento(double posY, Canvas canvas, Figura figura, AnchorPane panel_Diagrama) {
+    public static void dibujo(double posY, Canvas canvas, Figura figura, AnchorPane panel_Diagrama) {
         String finalTexto = figura.getContenido();
         javafx.scene.text.Text text = new javafx.scene.text.Text(figura.getContenido());
 
@@ -105,7 +105,7 @@ public class Documento extends Figura {
             if (VG.getClickCount() == 2) {
                 // Restablecer el contador
                 VG.setClickCount(0);
-                edición_Documento(canvas,figura, panel_Diagrama);
+                edición(canvas,figura, panel_Diagrama);
             } else {
                 Timeline timeline = new Timeline(new KeyFrame(Duration.millis(300), e -> {
                     VG.setClickCount(0);
@@ -115,7 +115,7 @@ public class Documento extends Figura {
         });
     }
 
-    public void edición_Documento(Canvas canvas, Figura figura, AnchorPane panel_Diagrama){
+    public static void edición(Canvas canvas, Figura figura, AnchorPane panel_Diagrama){
         TextField textContenido = new TextField();
         textContenido.setOpacity(0.0);
         textContenido.setDisable(true);
@@ -137,7 +137,7 @@ public class Documento extends Figura {
         String pre_text = figura.getContenido();
         figura.setContenido("");
         limpiar_canvas(canvas);
-        dibujo_documento(currentY-60, canvas,figura, panel_Diagrama);
+        dibujo(currentY-60, canvas,figura, panel_Diagrama);
 
         // Agregar evento de tecla para actualizar el contenido al presionar Enter
         textContenido.setOnKeyPressed(event_2 -> {
@@ -168,7 +168,7 @@ public class Documento extends Figura {
 
                 //redibujo
                 limpiar_canvas(canvas);
-                dibujo_documento(currentY-60, canvas, figura, panel_Diagrama);
+                dibujo(currentY-60, canvas, figura, panel_Diagrama);
                 textContenido.clear();
                 panel_Diagrama.getChildren().remove(textContenido);
             }

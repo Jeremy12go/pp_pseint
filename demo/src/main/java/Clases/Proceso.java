@@ -25,7 +25,7 @@ public class Proceso extends Figura{
         this.operandos = operandos;
     }
 
-    public void dibujo_rectangulo(Canvas canvas, Figura figura, AnchorPane panel_Diagrama) {
+    public static void dibujo(Canvas canvas, Figura figura, AnchorPane panel_Diagrama) {
         String finalTexto = figura.getContenido();
         javafx.scene.text.Text text = new javafx.scene.text.Text(figura.getContenido());
 
@@ -103,7 +103,7 @@ public class Proceso extends Figura{
             if (VG.getClickCount() == 2) {
                 // Restablecer el contador
                 VG.setClickCount(0);
-                edición_rectangulo(canvas, figura, panel_Diagrama);
+                edición(canvas, figura, panel_Diagrama);
             } else {
                 Timeline timeline = new Timeline(new KeyFrame(Duration.millis(300), e -> {
                     VG.setClickCount(0);
@@ -113,7 +113,7 @@ public class Proceso extends Figura{
         });
     }
 
-    public void edición_rectangulo(Canvas canvas, Figura figura, AnchorPane panel_Diagrama){
+    public static void edición(Canvas canvas, Figura figura, AnchorPane panel_Diagrama){
         TextField textContenido = new TextField();
         textContenido.setOpacity(0.0);
         textContenido.setDisable(true);
@@ -136,7 +136,7 @@ public class Proceso extends Figura{
         String pre_text = figura.getContenido();
         figura.setContenido("");
         limpiar_canvas(canvas);
-        dibujo_rectangulo(canvas,figura,panel_Diagrama);
+        dibujo(canvas,figura,panel_Diagrama);
 
         // Agregar evento de tecla para actualizar el contenido al presionar Enter
         textContenido.setOnKeyPressed(event_2 -> {
@@ -167,7 +167,7 @@ public class Proceso extends Figura{
 
                 //redibujo
                 limpiar_canvas(canvas);
-                dibujo_rectangulo(canvas, figura, panel_Diagrama);
+                dibujo(canvas, figura, panel_Diagrama);
                 textContenido.clear();
                 panel_Diagrama.getChildren().remove(textContenido);
             }

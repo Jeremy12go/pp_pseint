@@ -9,6 +9,9 @@ public class Para extends Figura{
         super(contenido, vertice_direccion, vertice_conexion, dimension, numero_identificador);
         this.contenido_validado = contenido_validado;
     }
+    public static void dibujo(){}
+
+    public static void edición(){}
     public void validacion(String contenido){
 
     }

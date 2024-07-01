@@ -19,7 +19,7 @@ public class Salida extends Figura{
     public Salida(String contenido, Vertice vertice_direccion, Vertice vertice_conexion, Arista dimension,int numero_identificador) {
         super(contenido, vertice_direccion, vertice_conexion, dimension, numero_identificador);
     }
-    public void dibujo_paralelogramo(Canvas canvas, Figura figura, AnchorPane panel_Diagrama){
+    public static void dibujo(Canvas canvas, Figura figura, AnchorPane panel_Diagrama){
         // Calcular los otros vértices
         ArrayList<Vertice> vertices = Figura.calcular_vertices(canvas);
 
@@ -113,7 +113,7 @@ public class Salida extends Figura{
             if (VG.getClickCount() == 2) {
                 // Restablecer el contador
                 VG.setClickCount(0);
-                edición_paralelogramo(canvas,figura,panel_Diagrama);
+                edición(canvas,figura,panel_Diagrama);
             } else {
                 Timeline timeline = new Timeline(new KeyFrame(Duration.millis(300), e -> {
                     VG.setClickCount(0);
@@ -124,7 +124,7 @@ public class Salida extends Figura{
 
     }
 
-    public void edición_paralelogramo(Canvas canvas, Figura figura, AnchorPane panel_Diagrama){
+    public static void edición(Canvas canvas, Figura figura, AnchorPane panel_Diagrama){
         TextField textContenido = new TextField();
 
         double _diferencia = figura.getDimenciones().getAncho()/2;
@@ -141,7 +141,7 @@ public class Salida extends Figura{
         String pre_text = figura.getContenido();
         figura.setContenido("");
         limpiar_canvas(canvas);
-        dibujo_paralelogramo(canvas,figura,panel_Diagrama);
+        dibujo(canvas,figura,panel_Diagrama);
 
         textContenido.setOnKeyPressed(event_2 -> {
             if (event_2.getCode() == KeyCode.ENTER) {
@@ -170,7 +170,7 @@ public class Salida extends Figura{
 
                 //redibujo
                 limpiar_canvas(canvas);
-                dibujo_paralelogramo(canvas,figura,panel_Diagrama);
+                dibujo(canvas,figura,panel_Diagrama);
                 textContenido.clear();
                 panel_Diagrama.getChildren().remove(textContenido);
             }
