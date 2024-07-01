@@ -1,6 +1,4 @@
 package org.example.app;
-import Clases.Diagrama;
-import Clases.Persistencia;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
@@ -54,14 +52,7 @@ public class App extends Application {
         stage.show();
     }
 
-    private static Parent loadFXMl(String fxml) throws IOException{
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
-        return fxmlLoader.load();
-    }
     public static void main(String[] args) {
-        Persistencia persi = new Persistencia();
-        Diagrama ins = new Diagrama();
-        ins.setList_elementos(persi.deserializar_figuras(ins.getList_figuras()),persi.deserializar_conexiones(ins.getList_conexiones()));
         launch();
     }
 }

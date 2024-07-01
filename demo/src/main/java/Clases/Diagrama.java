@@ -4,7 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Diagrama<T> implements Serializable {
+public class Diagrama<T>{
+
     public String titulo;
 
     public ArrayList<Figura>  list_figuras = new ArrayList<Figura>();
@@ -102,10 +103,11 @@ public class Diagrama<T> implements Serializable {
         this.list_figuras = list_figuras;
     }
 
-    public static Diagrama getInstance(){
-        if(ins == null){
-            return new Diagrama();
-        }
+    public static Diagrama getIns() {
         return ins;
+    }
+
+    public static void setIns(Diagrama ins) {
+        Diagrama.ins = ins;
     }
 }
