@@ -4,8 +4,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Diagrama<T> implements Serializable {
+public class Diagrama<T>{
+
     public String titulo;
+
     public ArrayList<Figura>  list_figuras = new ArrayList<Figura>();
 
     public ArrayList<Conector> list_conexiones = new ArrayList<Conector>();
@@ -33,6 +35,7 @@ public class Diagrama<T> implements Serializable {
         }
 
     }
+
     public void agregarElemento(T data, int metodo, int indice){
 
         ArrayList<String> tag_figuras = new ArrayList<String>(Arrays.asList("Inicio_Fin",
@@ -88,10 +91,23 @@ public class Diagrama<T> implements Serializable {
         this.list_conexiones = list_conexiones;
     }
 
-    public static Diagrama getInstance(){
-        if(ins == null){
-            return new Diagrama();
-        }
+    public void setList_conexiones(ArrayList<Conector> list_conexiones) {
+        this.list_conexiones = list_conexiones;
+    }
+
+    public void setList_orden(ArrayList<Canvas> list_orden) {
+        this.list_orden = list_orden;
+    }
+
+    public void setList_figuras(ArrayList<Figura> list_figuras) {
+        this.list_figuras = list_figuras;
+    }
+
+    public static Diagrama getIns() {
         return ins;
+    }
+
+    public static void setIns(Diagrama ins) {
+        Diagrama.ins = ins;
     }
 }
