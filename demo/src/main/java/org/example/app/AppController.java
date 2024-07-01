@@ -77,6 +77,11 @@ public class AppController {
     @FXML
     private boolean maximizar;
     @FXML
+    private Button editButton;
+
+    private String pseudocodeContent;
+    private PseudocodeInterpreter interpreter;
+    @FXML
     public void initialize(){
         Diagrama.setIns(new Diagrama<>());
         fondoCuadriculado(740,1500);
@@ -146,10 +151,7 @@ public class AppController {
     }
     private String originalText;
 
-    @FXML
-    private void generarDiagrama() {
-        PseudocodeAdiagrama.generateFlowDiagram(pseudocode, panel_Diagrama);
-    }
+    
     //----------------------------------------------------------------------------------------
     private boolean altPressed = false;
 
@@ -244,6 +246,7 @@ public class AppController {
             System.out.println("Ups... DLC \'borrar todo\' debe adquirirse por separado :)");
         }
     }
+
     @FXML
     private void guardarApseudocode() {
         Pseudocode.generatePseudocode(panel_Diagrama, pseudocode);
@@ -884,4 +887,42 @@ public class AppController {
     public boolean getMaximizar(){
         return maximizar;
     }
+
+    @FXML
+    private void ejecutar() {
+        // Generar pseudocódigo
+        String pseudocodeContent = Pseudocode.generarPseudo(panel_Diagrama, pseudocode);
+
+        // Validar pseudocódigo
+        String validationErrors = Validar.validarPseudocodigo(pseudocodeContent);
+
+        // Mostrar errores si existen
+        if (!validationErrors.equals("No se encontraron errores.")) {
+            mostrarAlertaError("Errores de Validación", validationErrors);
+        } else {
+            // Ejecutar el pseudocódigo
+            interpreter.ejecutarPseudocodigo(pseudocodeContent);
+            mostrarAlertaInformacion("Ejecución Exitosa", "El pseudocódigo se ejecutó correctamente.");
+            interpreter.imprimirVariables();
+        }
+    }
+
+
+    private void mostrarAlertaError(String titulo, String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+
+    private void mostrarAlertaInformacion(String titulo, String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+
+
 }
