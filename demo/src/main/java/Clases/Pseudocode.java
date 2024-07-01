@@ -158,4 +158,52 @@ public class Pseudocode {
         pseudocode.setText(pseudocodeContent.toString());
         return pseudocodeContent.toString();
     }
+
+    public static String generarPseudo(AnchorPane panel_Diagrama, Label pseudocode) {
+        StringBuilder pseudocodeContent = new StringBuilder("\n\nInicio\n");
+        Stack<String> indentStack = new Stack<>();
+        indentStack.push("   "); // Initial indentation level
+
+        // Obtener las figuras del AnchorPane
+        List<Canvas> figuras = panel_Diagrama.getChildren().stream()
+                .filter(node -> node instanceof Canvas)
+                .map(node -> (Canvas) node)
+                .collect(Collectors.toList());
+
+        // Recorrer las figuras y generar el pseudocódigo
+        for (Canvas canvas : figuras) {
+            Figura figura = (Figura) canvas.getUserData();
+            String currentIndent = indentStack.peek();
+
+            if (figura instanceof Entrada) {
+                pseudocodeContent.append(currentIndent).append(figura.getContenido().trim()).append("\n");
+            } else if (figura instanceof Salida) {
+                pseudocodeContent.append(currentIndent).append(figura.getContenido().trim()).append("\n");
+            } else if (figura instanceof Proceso) {
+                pseudocodeContent.append(currentIndent).append(figura.getContenido().trim()).append("\n");
+            } else if (figura instanceof Condicional) {
+                pseudocodeContent.append(currentIndent).append(figura.getContenido().trim()).append("\n");
+                pseudocodeContent.append(currentIndent).append("\tSi ").append(figura.getContenido()).append(":\n");
+                indentStack.push(currentIndent + "\t");
+                pseudocodeContent.append(currentIndent).append("\tSino:\n");
+                indentStack.pop();
+            } else if (figura instanceof Hacer_Mientras) {
+                pseudocodeContent.append(currentIndent).append(figura.getContenido().trim()).append(":\n");
+                indentStack.push(currentIndent + "\t");
+                indentStack.pop();
+            } else if (figura instanceof Mientras) {
+                pseudocodeContent.append(currentIndent).append(figura.getContenido().trim()).append(":\n");
+                indentStack.push(currentIndent + "\t");
+                indentStack.pop();
+            } else if (figura instanceof Para) {
+                pseudocodeContent.append(currentIndent).append(figura.getContenido().trim()).append(":\n");
+                indentStack.push(currentIndent + "\t");
+                indentStack.pop();
+            }
+        }
+
+        pseudocodeContent.append("Fin");
+        pseudocode.setText(pseudocodeContent.toString());
+        return pseudocodeContent.toString();
+    }
 }

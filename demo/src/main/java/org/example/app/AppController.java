@@ -103,6 +103,9 @@ public class AppController {
     @FXML
     private Button editButton;
 
+    private String pseudocodeContent;
+    private PseudocodeInterpreter interpreter;
+
     @FXML
     public void initialize() throws IOException {
         fondoCuadriculado(740,1500);
@@ -147,6 +150,8 @@ public class AppController {
         VG.cambiarUltimaFiguraAñadida((Figura) ins.getList_figuras().get(0));
         VG.cambiarUltimoCanvasFigura((Canvas)ins.getList_orden().get(0));
         VG.cambiarUltimoCanvasConexion((Canvas)ins.getList_orden().get(1));
+
+        interpreter = new PseudocodeInterpreter();
 
 
     }
@@ -252,10 +257,11 @@ public class AppController {
         }
 
     }
+
     @FXML
     private void guardarApseudocode() {
         // Generar pseudocódigo
-        String pseudocodeContent = Pseudocode.generatePseudocode(panel_Diagrama, pseudocode);
+        pseudocodeContent = Pseudocode.generatePseudocode(panel_Diagrama, pseudocode);
 
         // Validar pseudocódigo
         String validationErrors = Validar.validarPseudocodigo(pseudocodeContent);
@@ -2158,4 +2164,42 @@ public class AppController {
     public boolean getMaximizar(){
         return maximizar;
     }
+
+    @FXML
+    private void ejecutar() {
+        // Generar pseudocódigo
+        String pseudocodeContent = Pseudocode.generarPseudo(panel_Diagrama, pseudocode);
+
+        // Validar pseudocódigo
+        String validationErrors = Validar.validarPseudocodigo(pseudocodeContent);
+
+        // Mostrar errores si existen
+        if (!validationErrors.equals("No se encontraron errores.")) {
+            mostrarAlertaError("Errores de Validación", validationErrors);
+        } else {
+            // Ejecutar el pseudocódigo
+            interpreter.ejecutarPseudocodigo(pseudocodeContent);
+            mostrarAlertaInformacion("Ejecución Exitosa", "El pseudocódigo se ejecutó correctamente.");
+            interpreter.imprimirVariables();
+        }
+    }
+
+
+    private void mostrarAlertaError(String titulo, String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+
+    private void mostrarAlertaInformacion(String titulo, String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+
+
 }
