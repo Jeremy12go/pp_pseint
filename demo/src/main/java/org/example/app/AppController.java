@@ -143,7 +143,6 @@ public class AppController {
         VG.setColorTexto(Color.web("#ffffff"));
         VG.setColorFlecha(Color.web("#ffffff"));
         borrarTodo();
-        editTextField.setVisible(false);
     }
     private String originalText;
 
@@ -151,40 +150,7 @@ public class AppController {
     private void generarDiagrama() {
         PseudocodeAdiagrama.generateFlowDiagram(pseudocode, panel_Diagrama);
     }
-
-    //Editar-Pseudocode---------------------------------------------------------------------------------------
-    @FXML
-    public void handleEditButtonClicked() {
-        originalText = pseudocode.getText();
-        editTextField.setText(originalText);
-        pseudocode.setVisible(false);
-        editTextField.setVisible(true);
-        editTextField.requestFocus();
-    }
-
-    @FXML
-    public void applyNewText() {
-        String newText = editTextField.getText();
-        newText = newText.replace("\n", System.lineSeparator()); // Convertir "\n" a salto de línea real
-        pseudocode.setText(newText);
-        editTextField.setVisible(false);
-        pseudocode.setVisible(true);
-    }
-
-    @FXML
-    public void handleTextFieldKeyPressed(KeyEvent event) {
-        if (event.getCode() == KeyCode.ENTER && event.isShiftDown()) {
-            // Insertar salto de línea al presionar Shift + Enter
-            int caretPosition = editTextField.getCaretPosition();
-            editTextField.setText(editTextField.getText().substring(0, caretPosition) +
-                    "\n" + editTextField.getText().substring(caretPosition));
-            editTextField.positionCaret(caretPosition + 1); // Mover el cursor después del salto de línea
-        } else if (event.getCode() == KeyCode.ENTER) {
-            applyNewText();
-        }
-    }
     //----------------------------------------------------------------------------------------
-    Diagrama ins = Diagrama.getInstance();
     private boolean altPressed = false;
 
     //MOUSE_FUNCIONES------------------------------------------------------------------------------

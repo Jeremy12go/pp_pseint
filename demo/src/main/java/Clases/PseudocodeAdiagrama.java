@@ -37,13 +37,13 @@ public class PseudocodeAdiagrama {
     }
 
     private static void createEntrada(AnchorPane panel_Diagrama, String contenido, double yPosition) {
-        Figura entrada = new Entrada(contenido); // Crear figura Entrada
-        createCanvas(panel_Diagrama, entrada, yPosition);
+        //Figura entrada = new Entrada(contenido); // Crear figura Entrada
+        //createCanvas(panel_Diagrama, entrada, yPosition);
     }
 
     private static void createSalida(AnchorPane panel_Diagrama, String contenido, double yPosition) {
-        Figura salida = new Salida(contenido); // Crear figura Salida
-        createCanvas(panel_Diagrama, salida, yPosition);
+        //Figura salida = new Salida(contenido); // Crear figura Salida
+        //createCanvas(panel_Diagrama, salida, yPosition);
     }
 
     private static void createDocumento(AnchorPane panel_Diagrama, String contenido, double yPosition) {
@@ -52,28 +52,28 @@ public class PseudocodeAdiagrama {
     }
 
     private static void createProceso(AnchorPane panel_Diagrama, String contenido, double yPosition) {
-        Figura proceso = new Proceso(contenido); // Crear figura Proceso
-        createCanvas(panel_Diagrama, proceso, yPosition);
+        //Figura proceso = new Proceso(contenido); // Crear figura Proceso
+        //createCanvas(panel_Diagrama, proceso, yPosition);
     }
 
     private static void createCondicional(AnchorPane panel_Diagrama, String contenido, double yPosition) {
-        Figura condicional = new Condicional(contenido); // Crear figura Condicional
-        createCanvas(panel_Diagrama, condicional, yPosition);
+        //Figura condicional = new Condicional(contenido); // Crear figura Condicional
+        //createCanvas(panel_Diagrama, condicional, yPosition);
     }
 
     private static void createHacerMientras(AnchorPane panel_Diagrama, String contenido, double yPosition) {
-        Figura hacerMientras = new Hacer_Mientras(contenido); // Crear figura Hacer Mientras
-        createCanvas(panel_Diagrama, hacerMientras, yPosition);
+        //Figura hacerMientras = new Hacer_Mientras(contenido); // Crear figura Hacer Mientras
+        //createCanvas(panel_Diagrama, hacerMientras, yPosition);
     }
 
     private static void createMientras(AnchorPane panel_Diagrama, String contenido, double yPosition) {
-        Figura mientras = new Mientras(contenido); // Crear figura Mientras
-        createCanvas(panel_Diagrama, mientras, yPosition);
+        //Figura mientras = new Mientras(contenido); // Crear figura Mientras
+        //createCanvas(panel_Diagrama, mientras, yPosition);
     }
 
     private static void createPara(AnchorPane panel_Diagrama, String contenido, double yPosition) {
-        Figura para = new Para(contenido); // Crear figura Para
-        createCanvas(panel_Diagrama, para, yPosition);
+        //Figura para = new Para(contenido); // Crear figura Para
+        //createCanvas(panel_Diagrama, para, yPosition);
     }
 
     private static void createCanvas(AnchorPane panel_Diagrama, Figura figura, double yPosition) {
