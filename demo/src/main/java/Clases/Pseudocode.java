@@ -6,11 +6,11 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.canvas.Canvas;
-
 import java.util.List;
 import java.util.Stack;
 
 public class Pseudocode {
+    static String text;
 
     public static void initializePseudocodeTab(Tab pseudocodeTab, Label pseudocode) {
         // Crear un AnchorPane para el contenido del Tab
@@ -20,7 +20,6 @@ public class Pseudocode {
 
         contentPane.getChildren().add(pseudocode);
         pseudocodeTab.setContent(contentPane);
-
         //Crear boton editar
         Button botonEditar = new Button();
         botonEditar.setText("Editar Pseudocódigo");
@@ -70,7 +69,7 @@ public class Pseudocode {
         // Establecer las coordenadas del botón
         botonaDiagrama.setLayoutX(500); // Coordenada X
         botonaDiagrama.setLayoutY(5);  // Coordenada Y
-
+        //---------------------------------------------------------------------------------
         // Crear un TextArea para la edición del pseudocódigo
         TextArea textAreaPseudocode = new TextArea();
         textAreaPseudocode.setLayoutX(20);
@@ -81,7 +80,8 @@ public class Pseudocode {
 
         // Acción del botón "Editar Pseudocódigo"
         botonEditar.setOnAction(actionEvent -> {
-            textAreaPseudocode.setText(pseudocode.getText());
+            //String currentText = pseudocode.getText();
+            //textAreaPseudocode.setText("Inicio\n" + currentText + "\nFin");
             pseudocode.setVisible(false);
             textAreaPseudocode.setVisible(true);
             botonEditar.setVisible(false);
@@ -89,8 +89,10 @@ public class Pseudocode {
         });
 
         // Acción del botón "Guardar"
-        botonGuardar.setOnAction(actionEvent -> {
-            pseudocode.setText(textAreaPseudocode.getText());
+        botonGuardar.setOnAction(actionEvent -> {;
+            text = textAreaPseudocode.getText();
+            //text = text.replaceFirst("^Inicio\\n", "").replaceFirst("\\nFin$", "");
+            pseudocode.setText(text);
             textAreaPseudocode.setVisible(false);
             pseudocode.setVisible(true);
             botonEditar.setVisible(true);
@@ -99,11 +101,12 @@ public class Pseudocode {
 
         //accion del boton A Diagrama
         botonaDiagrama.setOnAction(actionEvent -> {
-            //lo que quieres que haga :v
+            PseudocodeAdiagrama.crearDiagramaDesdePseudocodigo(text);
         });
 
         contentPane.getChildren().addAll(botonEditar, botonGuardar, botonaDiagrama,textAreaPseudocode);
     }
+
 
     public static String generatePseudocode(AnchorPane panel_Diagrama, Label pseudocode) {
         StringBuilder pseudocodeContent = new StringBuilder("\n\nInicio\n");
@@ -180,8 +183,11 @@ public class Pseudocode {
             }
         }
 
+
+
         pseudocodeContent.append("Fin");
         pseudocode.setText(pseudocodeContent.toString());
         return pseudocodeContent.toString();
     }
+
 }
