@@ -6,6 +6,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.canvas.Canvas;
+import org.example.app.AppController;
 
 import java.net.URL;
 
@@ -18,7 +19,6 @@ public class Pseudocode {
     public static void initializePseudocodeTab(Tab pseudocodeTab, Label pseudocode) {
         // Crear un AnchorPane para el contenido del Tab
         AnchorPane contentPane = new AnchorPane();
-
         pseudocode.setWrapText(true);
 
         contentPane.getChildren().add(pseudocode);
