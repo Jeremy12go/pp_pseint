@@ -43,35 +43,35 @@ public class AppController {
     @FXML
     private ImageView figura_procesoE;
     @FXML
-    private static ImageView figura_proceso;
+    private ImageView figura_proceso;
     @FXML
     private ImageView figura_entradaE;
     @FXML
-    private static ImageView figura_entrada;
+    private ImageView figura_entrada;
     @FXML
     private ImageView figura_salidaE;
     @FXML
-    private static ImageView figura_salida;
+    private ImageView figura_salida;
     @FXML
     private ImageView figura_condiconalE;
     @FXML
-    private static ImageView figura_condiconal;
+    private ImageView figura_condiconal;
     @FXML
     private ImageView figura_documentoE;
     @FXML
-    private static ImageView figura_documento;
+    private ImageView figura_documento;
     @FXML
     private ImageView figura_mientrasE;
     @FXML
-    private static ImageView figura_mientras;
+    private ImageView figura_mientras;
     @FXML
     private ImageView figura_hacer_mientrasE;
     @FXML
-    private static ImageView figura_hacer_mientras;
+    private ImageView figura_hacer_mientras;
     @FXML
     private ImageView figura_paraE;
     @FXML
-    private static ImageView figura_para;
+    private ImageView figura_para;
     @FXML
     private ImageView trash;
     @FXML
@@ -81,6 +81,9 @@ public class AppController {
 
     private String pseudocodeContent;
     private PseudocodeInterpreter interpreter;
+    private String originalText;
+    private int count_deshacer;
+
     @FXML
     public void initialize(){
         interpreter = new PseudocodeInterpreter();
@@ -121,6 +124,17 @@ public class AppController {
         Scale escalaReset = new Scale(1,1,0,0);
         panel_Diagrama.getTransforms().addAll(escalaTransformacion,escalaReset);
 
+        VG.setCount_deshacer(0);
+
+        VG.setFigura_proceso(figura_proceso);
+        VG.setFigura_entrada(figura_entrada);
+        VG.setFigura_salida(figura_salida);
+        VG.setFigura_condiconal(figura_condiconal);
+        VG.setFigura_documento(figura_documento);
+        VG.setFigura_mientras(figura_mientras);
+        VG.setFigura_hacer_mientras(figura_hacer_mientras);
+        VG.setFigura_para(figura_para);
+
         /*
         VG.setTextContenido(new TextField());
         VG.getTextContenido().setOpacity(0.0);
@@ -150,10 +164,6 @@ public class AppController {
         VG.setColorFlecha(Color.web("#ffffff"));
         borrarTodo();
     }
-    private String originalText;
-
-    //----------------------------------------------------------------------------------------
-    private boolean altPressed = false;
 
     //MOUSE_FUNCIONES------------------------------------------------------------------------------
     @FXML
@@ -165,7 +175,6 @@ public class AppController {
         originalY = sourceDiagram.getLayoutY();
         basurero.setVisible(true);
     }
-
     @FXML
     private void onMouseDragged(MouseEvent event) {
         ImageView sourceDiagram = (ImageView) event.getSource();
@@ -242,11 +251,12 @@ public class AppController {
             VG.cambiarUltimoCanvasConexion((Canvas)Diagrama.getIns().getList_orden().get(1));
             VG.setUltimoIndiceConexion(0);
 
+            count_deshacer = 0;
+
         }catch (NullPointerException e){
             System.out.println("Ups... DLC \'borrar todo\' debe adquirirse por separado :)");
         }
     }
-
     @FXML
     private void guardarApseudocode() {
         Pseudocode.generatePseudocode(panel_Diagrama, pseudocode);
@@ -346,7 +356,7 @@ public class AppController {
         if ((panel_Diagrama.getWidth() / 2) - 150 < x && x < (panel_Diagrama.getWidth() / 2) + 150) {
             //if (_inicial.getVertice_conexion().getY() < y && y < _final.getLayoutY()+80) {
 
-            if (figura_condiconal == sourceDiagram) {
+            if (VG.getFigura_condiconal() == sourceDiagram) {
                 Vertice p_Fcondicional_direccion = new Vertice(32.5, 25); //no cambiar
                 Vertice p_Fcondicional_conexion = new Vertice(0, 0);
                 Arista dimencion_Fentrada = new Arista(160, 80);
@@ -387,7 +397,7 @@ public class AppController {
 
                 //prueba();
 
-            }else if (figura_documento == sourceDiagram) {
+            }else if (VG.getFigura_documento() == sourceDiagram) {
                 Vertice p_Fdocumento_direccion = new Vertice(32.5, 25); //no cambiar
                 Vertice p_Fdocumento_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
                 Arista dimencion_Fentrada = new Arista(120, 70);
@@ -421,7 +431,7 @@ public class AppController {
                 //funcion que mueve las figuras por debajo de la nueva figura
                 moverfiguras_agregando(documento.getNumero_identificador());
 
-            } else if (figura_entrada == sourceDiagram) {
+            } else if (VG.getFigura_entrada() == sourceDiagram) {
                 Vertice p_Fentrada_direccion = new Vertice(32.5, 25); //no cambiar
                 Vertice p_Fentrada_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
                 contenido = " Entrada ";
@@ -455,7 +465,7 @@ public class AppController {
                 //funcion que mueve las figuras por debajo de la nueva figura
                 moverfiguras_agregando(entrada.getNumero_identificador());
 
-            } else if (figura_salida == sourceDiagram) {
+            } else if (VG.getFigura_salida() == sourceDiagram) {
 
                 Vertice p_Fsalida_direccion = new Vertice(32.5, 25); //no cambiar
                 Vertice p_Fsalida_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
@@ -490,7 +500,7 @@ public class AppController {
                 //funcion que mueve las figuras por debajo de la nueva figura
                 moverfiguras_agregando(salida.getNumero_identificador());
 
-            } else if (figura_proceso == sourceDiagram) {
+            } else if (VG.getFigura_proceso() == sourceDiagram) {
                 Vertice p_Fproceso_direccion = new Vertice(32.5, 25); //no cambiar
                 Vertice p_Fproeso_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
                 contenido = " Proceso ";
@@ -527,7 +537,7 @@ public class AppController {
                 //funcion que mueve las figuras por debajo de la nueva figura
                 moverfiguras_agregando(proceso.getNumero_identificador());
 
-            } else if (figura_hacer_mientras == sourceDiagram) {
+            } else if (VG.getFigura_hacer_mientras() == sourceDiagram) {
                 Vertice p_Fhacer_mientras_direccion = new Vertice(32.5, 25);
                 Vertice p_Fhacer_mientras_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
                 Arista dimencion_Fentrada = new Arista(120, 70);
@@ -562,7 +572,7 @@ public class AppController {
                 //funcion que mueve las figuras por debajo de la nueva figura
                 moverfiguras_agregando(hacer_mientras.getNumero_identificador());
 
-            } else if (figura_mientras == sourceDiagram) {
+            } else if (VG.getFigura_mientras() == sourceDiagram) {
                 Vertice p_Fcondicional_direccion = new Vertice(32.5, 25);
                 Vertice p_Fcondicional_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
                 Arista dimencion_Fentrada = new Arista(120, 70);
@@ -597,7 +607,7 @@ public class AppController {
                 //funcion que mueve las figuras por debajo de la nueva figura
                 moverfiguras_agregando(mientras.getNumero_identificador());
 
-            } else if (figura_para == sourceDiagram) {
+            } else if (VG.getFigura_para() == sourceDiagram) {
                 Vertice p_Fpara_direccion = new Vertice(32.5, 25);
                 Vertice p_Fpara_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
                 Arista dimencion_Fpara = new Arista(120, 70);
@@ -634,6 +644,9 @@ public class AppController {
             }
         }
         VG.setHistorial(Diagrama.getIns());
+        //todo: ver posible error no se queda el historial
+        System.out.println("largoHistorial:"+VG.getHistorial().getList_orden().size()+" -- largo:"+Diagrama.getIns().getList_orden().size());
+        VG.setCount_deshacer(0);
     }
 
     public static void moverfiguras_agregando(int numero_identificador){
@@ -679,8 +692,20 @@ public class AppController {
         }
     }
 
+    public Diagrama clonarHistorial() {
+        Diagrama clon = new Diagrama();
+        clon.setList_orden(new ArrayList<>(Diagrama.getIns().getList_orden()));
+        clon.setList_conexiones(new ArrayList<>(Diagrama.getIns().getList_conexiones()));
+        clon.setList_figuras(new ArrayList<>(Diagrama.getIns().getList_figuras()));
+        return clon;
+    }
+
     public void deshacer(){
+        VG.setCount_deshacer(VG.getCount_deshacer()+1);
+
+        Diagrama clon = clonarHistorial();
         Diagrama historial = VG.getHistorial();
+
         try {
             ArrayList<Canvas> list_orden_ = new ArrayList<>(historial.getList_orden());
             ArrayList<Conector> list_conexiones_ = new ArrayList<>(historial.getList_conexiones());
@@ -694,20 +719,48 @@ public class AppController {
 
             //Eliminar Ultimo conector
             panel_Diagrama.getChildren().remove(list_orden_.get(list_orden_.size() - 2));
-            Diagrama.getIns().getList_orden().remove(list_orden_.get(list_orden_.size() - 2));// Eliminar conector
+            Diagrama.getIns().getList_orden().remove(list_orden_.get(list_orden_.size() - 2));
 
             //Eliminar ultima figura
             panel_Diagrama.getChildren().remove(list_orden_.get(list_orden_.size() - 3));
             Diagrama.getIns().getList_orden().remove(list_orden_.get(list_orden_.size() - 3));
 
+            VG.setHistorial(clon);
+
             moverfiguras_eliminando();
         }catch (NullPointerException e){
             System.out.println("Ups...");
         }
+        System.out.println("largoHistorial:"+historial.getList_orden().size()+" -- largo:"+Diagrama.getIns().getList_orden().size());
     }
 
     public void rehacer(){
+        Diagrama historial = VG.getHistorial();
+        try {
+            ArrayList<Canvas> list_orden_ = new ArrayList<>(historial.getList_orden());
+            ArrayList<Conector> list_conexiones_ = new ArrayList<>(historial.getList_conexiones());
+            ArrayList<Figura> list_figuras_ = new ArrayList<>(historial.getList_figuras());
 
+            // Asegurarse de que no se borren los elementos iniciales
+            System.out.println("count_deshacer:"+VG.getCount_deshacer());
+            if (VG.getCount_deshacer() < 1) {
+                System.out.println("No se puede rehacer más, elementos iniciales.");
+                return;
+            }
+            System.out.println("largoHistorial:"+VG.getHistorial().getList_orden().size()+" -- largo:"+Diagrama.getIns().getList_orden().size());
+
+            //agregar Ultimo conector
+            panel_Diagrama.getChildren().add(list_orden_.get(list_orden_.size() - 2));
+            Diagrama.getIns().getList_orden().add(list_orden_.get(list_orden_.size() - 2));
+
+            //agregar ultima figura
+            panel_Diagrama.getChildren().add(list_orden_.get(list_orden_.size() - 3));
+            Diagrama.getIns().getList_orden().add(list_orden_.get(list_orden_.size() - 3));
+
+            //moverfiguras_eliminando();
+        }catch (IllegalArgumentException e){
+            System.out.println("Ups...");
+        }
     }
 
     public void zoom_in() {
@@ -926,7 +979,6 @@ public class AppController {
         }
     }
 
-
     private void mostrarAlertaError(String titulo, String mensaje) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(titulo);
@@ -942,6 +994,5 @@ public class AppController {
         alert.setContentText(mensaje);
         alert.showAndWait();
     }
-
 
 }

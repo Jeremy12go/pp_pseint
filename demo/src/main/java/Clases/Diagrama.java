@@ -22,7 +22,6 @@ public class Diagrama<T>{
         this.list_conexiones = list_conexiones;
         this.list_orden = list_orden;
     }
-
     public Diagrama() {}
 
     public void eliminarElementos(int metodo, int indice){

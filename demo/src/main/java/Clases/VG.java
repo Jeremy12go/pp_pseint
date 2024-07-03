@@ -1,11 +1,14 @@
 package Clases;
 
+import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import org.example.app.AppController;
+
 import java.util.ArrayList;
 
 public class VG {
@@ -32,6 +35,18 @@ public class VG {
     private static Color colorRelleno;
     private static Color colorTexto;
     private static Color colorFlecha;
+
+
+    private static ImageView figura_proceso;
+    private static ImageView figura_entrada;
+    private static ImageView figura_salida;
+    private static ImageView figura_condiconal;
+    private static ImageView figura_documento;
+    private static ImageView figura_mientras;
+    private static ImageView figura_hacer_mientras;
+    private static ImageView figura_para;
+
+    private static int count_deshacer;
 
     //Getter and Setter
     public static void cambiarUltimaFiguraAñadida(Figura f) {
@@ -192,5 +207,78 @@ public class VG {
 
     public static void setBasurero(Pane basurero) {
         VG.basurero = basurero;
+    }
+
+
+
+    public static ImageView getFigura_proceso() {
+        return figura_proceso;
+    }
+
+    public static void setFigura_proceso(ImageView figura_proceso_) {
+        figura_proceso = figura_proceso_;
+    }
+
+    public static ImageView getFigura_entrada() {
+        return figura_entrada;
+    }
+
+    public static void setFigura_entrada(ImageView figura_entrada_) {
+        figura_entrada = figura_entrada_;
+    }
+
+    public static ImageView getFigura_salida() {
+        return figura_salida;
+    }
+
+    public static void setFigura_salida(ImageView figura_salida_) {figura_salida = figura_salida_;
+    }
+
+    public static ImageView getFigura_condiconal() {
+        return figura_condiconal;
+    }
+
+    public static void setFigura_condiconal(ImageView figura_condiconal_) {
+        figura_condiconal = figura_condiconal_;
+    }
+
+    public static ImageView getFigura_documento() {
+        return figura_documento;
+    }
+
+    public static void setFigura_documento(ImageView figura_documento_) {
+        figura_documento = figura_documento_;
+    }
+
+    public static ImageView getFigura_mientras() {
+        return figura_mientras;
+    }
+
+    public static void setFigura_mientras(ImageView figura_mientras_) {
+        figura_mientras = figura_mientras_;
+    }
+
+    public static ImageView getFigura_hacer_mientras() {
+        return figura_hacer_mientras;
+    }
+
+    public static void setFigura_hacer_mientras(ImageView figura_hacer_mientras_) {
+        figura_hacer_mientras = figura_hacer_mientras_;
+    }
+
+    public static ImageView getFigura_para() {
+        return figura_para;
+    }
+
+    public static void setFigura_para(ImageView figura_para_) {
+        figura_para = figura_para_;
+    }
+
+    public static int getCount_deshacer() {
+        return count_deshacer;
+    }
+
+    public static void setCount_deshacer(int count_deshacer) {
+        VG.count_deshacer = count_deshacer;
     }
 }
