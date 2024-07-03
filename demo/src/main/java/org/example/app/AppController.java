@@ -644,7 +644,6 @@ public class AppController {
             }
         }
         VG.setHistorial(Diagrama.getIns());
-        //todo: ver posible error no se queda el historial
         System.out.println("largoHistorial:"+VG.getHistorial().getList_orden().size()+" -- largo:"+Diagrama.getIns().getList_orden().size());
         VG.setCount_deshacer(0);
     }
