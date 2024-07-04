@@ -9,6 +9,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
@@ -19,46 +20,52 @@ public class Entrada extends Figura{
     public Entrada(String contenido, Vertice vertice_direccion, Vertice vertice_conexion, Arista dimension,int numero_identificador) {
         super(contenido, vertice_direccion, vertice_conexion, dimension,numero_identificador);
     }
-    public static void dibujo(Canvas canvas, Figura figura, AnchorPane panel_Diagrama){
+    public static void dibujo(double posY, Canvas canvas, Figura figura, AnchorPane panel_Diagrama){
         // Calcular los otros vértices
-        ArrayList<Vertice> vertices = Figura.calcular_vertices(canvas);
+        ArrayList<Vertice> vertices = Figura.calcular_vertices(canvas,0);
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        int delta = 14; //inclinacion
+
+        gc.setFill(Color.BLUE); // Cambia a tu color preferido
+        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+        int delta = 10; //inclinacion
 
         // Dibujar el paralelogramo
         gc.setLineWidth(VG.getTamaño_Lbordes());
         gc.setStroke(VG.getColorBordes());
 
-        canvas.setLayoutX(figura.getVertice_conexion().getX() - 80);
-        canvas.setLayoutY(figura.getVertice_conexion().getY() + 50);
+        canvas.setLayoutX((panel_Diagrama.getMinWidth() / 2) - canvas.getWidth()/2);
+        canvas.setLayoutY(posY);
 
         // Rellenar figura
         gc.setFill(VG.getColorRelleno());
-        double[] xPoints = {vertices.get(0).getX() + figura.getDimenciones().getAncho()/delta, vertices.get(1).getX(),
-                vertices.get(2).getX() - figura.getDimenciones().getAncho()/delta, vertices.get(3).getX()};
+        double[] xPoints = {vertices.get(0).getX() + canvas.getWidth()/delta, vertices.get(1).getX(),
+                vertices.get(2).getX() - canvas.getWidth()/delta, vertices.get(3).getX()};
         double[] yPoints = {vertices.get(0).getY(), vertices.get(1).getY(), vertices.get(2).getY(), vertices.get(3).getY()};
 
         gc.fillPolygon(xPoints, yPoints, vertices.size());
 
         // Línea p1-p2
-        gc.strokeLine(vertices.get(0).getX() + figura.getDimenciones().getAncho()/delta, vertices.get(0).getY(),
-                vertices.get(1).getX(), vertices.get(1).getY());
+        gc.strokeLine(vertices.get(0).getX() + canvas.getWidth()/delta, vertices.get(0).getY()+1,
+                vertices.get(1).getX(), vertices.get(1).getY()+1);
         // Línea p2-p3
+
         gc.strokeLine(vertices.get(1).getX(), vertices.get(1).getY(),
-                vertices.get(2).getX() - figura.getDimenciones().getAncho()/delta, vertices.get(2).getY());
+                vertices.get(2).getX() - canvas.getWidth()/delta, vertices.get(2).getY());
+
         // Línea p3-p4
-        gc.strokeLine(vertices.get(2).getX() - figura.getDimenciones().getAncho()/delta,
-                vertices.get(2).getY(), vertices.get(3).getX(), vertices.get(3).getY());
+        gc.strokeLine(vertices.get(2).getX() - canvas.getWidth()/delta,
+                vertices.get(2).getY()-1, vertices.get(3).getX(), vertices.get(3).getY()-1);
         // Línea p4-p1
         gc.strokeLine(vertices.get(3).getX(), vertices.get(3).getY(),
-                vertices.get(0).getX() + figura.getDimenciones().getAncho()/delta, vertices.get(0).getY());
+                vertices.get(0).getX() + canvas.getWidth()/delta, vertices.get(0).getY());
 
         //dibujo flecha
         gc.setStroke(VG.getColorBordes());
         gc.setFill(VG.getColorBordes());
 
-        dibujar_flecha(canvas, vertices.get(1).getX()-10, vertices.get(1).getY()/3, -135,10);
+        dibujar_flecha(canvas, vertices.get(1).getX()-13, vertices.get(1).getY()+8, -125,10);
 
         //contenido
         gc.setLineWidth(VG.getTamañoTxt());
@@ -113,7 +120,7 @@ public class Entrada extends Figura{
             if (VG.getClickCount() == 2) {
                 // Restablecer el contador
                 VG.setClickCount(0);
-                edición(canvas,figura,panel_Diagrama);
+                edicion(posY,canvas,figura,panel_Diagrama);
             } else {
                 Timeline timeline = new Timeline(new KeyFrame(Duration.millis(300), e -> {
                     VG.setClickCount(0);
@@ -124,7 +131,7 @@ public class Entrada extends Figura{
 
     }
 
-    public static void edición(Canvas canvas, Figura figura, AnchorPane panel_Diagrama){
+    public static void edicion(double posY, Canvas canvas, Figura figura, AnchorPane panel_Diagrama){
         TextField textContenido = new TextField();
 
         double _diferencia = figura.getDimenciones().getAncho()/2;
@@ -141,7 +148,7 @@ public class Entrada extends Figura{
         String pre_text = figura.getContenido();
         figura.setContenido("");
         limpiar_canvas(canvas);
-        dibujo(canvas,figura,panel_Diagrama);
+        dibujo(posY,canvas,figura,panel_Diagrama);
 
         textContenido.setOnKeyPressed(event_2 -> {
             if (event_2.getCode() == KeyCode.ENTER) {
@@ -170,7 +177,7 @@ public class Entrada extends Figura{
 
                 //redibujo
                 limpiar_canvas(canvas);
-                dibujo(canvas,figura,panel_Diagrama);
+                dibujo(posY,canvas,figura,panel_Diagrama);
                 textContenido.clear();
                 panel_Diagrama.getChildren().remove(textContenido);
             }

@@ -122,7 +122,7 @@ public class Proceso extends Figura{
         double currentY = canvas.getLayoutY();
         double size = Math.max(figura.getDimenciones().getAncho()/2, figura.getDimenciones().getAlto()/2)+20;
 
-        // Habilitar la edición del contenido
+        // Habilitar la edicion del contenido
         textContenido.setOpacity(1.0);
         textContenido.setDisable(false);
         panel_Diagrama.getChildren().add(textContenido);

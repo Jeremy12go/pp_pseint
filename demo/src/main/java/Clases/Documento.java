@@ -9,6 +9,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
@@ -22,15 +23,18 @@ public class Documento extends Figura {
         String finalTexto = figura.getContenido();
         javafx.scene.text.Text text = new javafx.scene.text.Text(figura.getContenido());
 
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.setFill(Color.BLUE); // Cambia a tu color preferido
+        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
         double width = figura.getDimenciones().getAncho();
         double height = figura.getDimenciones().getAlto();
         double curveHeight = 20;
 
         //posicion de la figura en relacion al AnchorPane
-        double diferencia = figura.getDimenciones().getAncho() / 2;
-        canvas.setLayoutX((panel_Diagrama.getMinWidth() / 2) - diferencia+15);
-        canvas.setLayoutY(posY + 58);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
+        canvas.setLayoutX((panel_Diagrama.getMinWidth() / 2) - canvas.getWidth()/2);
+        canvas.setLayoutY(posY);
+        //GraphicsContext gc = canvas.getGraphicsContext2D();
 
         // Dibujar el cuerpo del documento (rectángulo)
         gc.setFill(VG.getColorRelleno());
@@ -105,7 +109,7 @@ public class Documento extends Figura {
             if (VG.getClickCount() == 2) {
                 // Restablecer el contador
                 VG.setClickCount(0);
-                edición(canvas,figura, panel_Diagrama);
+                edicion(canvas,figura, panel_Diagrama);
             } else {
                 Timeline timeline = new Timeline(new KeyFrame(Duration.millis(300), e -> {
                     VG.setClickCount(0);
@@ -115,7 +119,7 @@ public class Documento extends Figura {
         });
     }
 
-    public static void edición(Canvas canvas, Figura figura, AnchorPane panel_Diagrama){
+    public static void edicion(Canvas canvas, Figura figura, AnchorPane panel_Diagrama){
         TextField textContenido = new TextField();
         textContenido.setOpacity(0.0);
         textContenido.setDisable(true);
@@ -123,7 +127,7 @@ public class Documento extends Figura {
         double currentX = canvas.getLayoutX();
         double currentY = canvas.getLayoutY();
 
-        // Tu código para habilitar la edición del contenido
+        // Tu código para habilitar la edicion del contenido
         textContenido.setOpacity(1.0);
         textContenido.setDisable(false);
         panel_Diagrama.getChildren().add(textContenido);

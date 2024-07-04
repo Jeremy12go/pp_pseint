@@ -178,7 +178,7 @@ public class Mientras extends Figura{
         double height = figura.getDimenciones().getAlto()/2;
         double size = Math.max(width, height);//+40
 
-        // Habilitar la edición del contenido
+        // Habilitar la edicion del contenido
         textContenido.setOpacity(1.0);
         textContenido.setDisable(false);
         textContenido.getStyleClass().add("Contenido_edit");
@@ -202,7 +202,7 @@ public class Mientras extends Figura{
 
                 // Elimina el campo de texto del panel
                 panel_Diagrama.getChildren().remove(textContenido);
-                // Deshabilita la edición del contenido
+                // Deshabilita la edicion del contenido
                 textContenido.clear();
                 textContenido.setOpacity(0.0);
                 textContenido.setDisable(true);

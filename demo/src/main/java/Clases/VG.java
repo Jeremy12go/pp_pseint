@@ -209,8 +209,6 @@ public class VG {
         VG.basurero = basurero;
     }
 
-
-
     public static ImageView getFigura_proceso() {
         return figura_proceso;
     }

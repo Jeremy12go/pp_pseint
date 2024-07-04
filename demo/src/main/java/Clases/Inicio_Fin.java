@@ -20,7 +20,7 @@ public class Inicio_Fin extends Figura{
 
     public static void dibujar(Canvas canvas, Figura figura) {
 
-        ArrayList<Vertice> vertices = calcular_vertices(canvas);
+        ArrayList<Vertice> vertices = calcular_vertices(canvas,1);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         // Rellenar figura
@@ -41,7 +41,7 @@ public class Inicio_Fin extends Figura{
         gc.fillPolygon(xPoints, yPoints, xPoints.length);
 
         //lineas Horizontales
-        gc.setLineWidth(VG.getTamaño_Lbordes()+1);
+        gc.setLineWidth(VG.getTamaño_Lbordes());
         gc.setStroke(VG.getColorBordes());
         gc.strokeLine(vertices.get(0).getX() - diferencia_restante + 28, vertices.get(0).getY()+1, vertices.get(0).getX() + diferencia_restante - 28, vertices.get(0).getY()+1);
         gc.strokeLine(vertices.get(0).getX() - diferencia_restante + 28, vertices.get(2).getY()-1, vertices.get(0).getX() + diferencia_restante - 28, vertices.get(2).getY()-1);

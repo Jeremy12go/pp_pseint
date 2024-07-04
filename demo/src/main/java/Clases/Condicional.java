@@ -30,9 +30,7 @@ public class Condicional extends Figura{
         double size = Math.max(width, height); // +40
 
         //posicion de la figura en relacion al AnchorPane
-        double centerX = (panel_Diagrama.getMinWidth() / 2) - canvas.getWidth()/4;
-
-        canvas.setLayoutX(centerX);
+        canvas.setLayoutX((panel_Diagrama.getMinWidth() / 2) - canvas.getWidth()/4);
         canvas.setLayoutY(y);
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -104,6 +102,8 @@ public class Condicional extends Figura{
 
             // Verificar si las coordenadas del evento están dentro de los límites del Pane Basurero
             if (basureroBounds.contains(releaseX, releaseY)) {
+                System.out.println("s");
+                //todo:revisar
                 panel_Diagrama.getChildren().remove(canvas);
             }
             VG.getBasurero().setVisible(false);
@@ -160,7 +160,7 @@ public class Condicional extends Figura{
 
                 // Elimina el campo de texto del panel
                 panel_Diagrama.getChildren().remove(textContenido);
-                // Deshabilita la edición del contenido
+                // Deshabilita la edicion del contenido
                 textContenido.clear();
                 textContenido.setOpacity(0.0);
                 textContenido.setDisable(true);

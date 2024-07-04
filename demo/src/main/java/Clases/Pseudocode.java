@@ -74,7 +74,7 @@ public class Pseudocode {
         botonaDiagrama.setLayoutX(500); // Coordenada X
         botonaDiagrama.setLayoutY(5);  // Coordenada Y
 
-        // Crear un TextArea para la edición del pseudocódigo
+        // Crear un TextArea para la edicion del pseudocódigo
         TextArea textAreaPseudocode = new TextArea();
         textAreaPseudocode.setLayoutX(20);
         textAreaPseudocode.setLayoutY(50);
