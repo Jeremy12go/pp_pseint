@@ -2168,38 +2168,28 @@ public class AppController {
     @FXML
     private void ejecutar() {
         // Generar pseudocódigo
-        String pseudocodeContent = Pseudocode.generarPseudo(panel_Diagrama, pseudocode);
+        pseudocodeContent = Pseudocode.generarPseudo(panel_Diagrama, pseudocode);
 
         // Validar pseudocódigo
         String validationErrors = Validar.validarPseudocodigo(pseudocodeContent);
 
         // Mostrar errores si existen
         if (!validationErrors.equals("No se encontraron errores.")) {
-            mostrarAlertaError("Errores de Validación", validationErrors);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errores de Validación");
+            alert.setHeaderText(null);
+            alert.setContentText(validationErrors);
+            alert.showAndWait();
         } else {
             // Ejecutar el pseudocódigo
             interpreter.ejecutarPseudocodigo(pseudocodeContent);
-            mostrarAlertaInformacion("Ejecución Exitosa", "El pseudocódigo se ejecutó correctamente.");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Ejecución Exitosa");
+            alert.setHeaderText(null);
+            alert.setContentText("El pseudocódigo se ejecutó correctamente.");
+            alert.showAndWait();
             interpreter.imprimirVariables();
         }
     }
-
-
-    private void mostrarAlertaError(String titulo, String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-        alert.showAndWait();
-    }
-
-    private void mostrarAlertaInformacion(String titulo, String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-        alert.showAndWait();
-    }
-
 
 }
