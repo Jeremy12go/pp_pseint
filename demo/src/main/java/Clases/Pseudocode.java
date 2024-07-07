@@ -1,9 +1,7 @@
 package Clases;
 
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TextArea;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.canvas.Canvas;
 
@@ -15,9 +13,12 @@ import java.util.stream.Collectors;
 
 public class Pseudocode {
 
+    static TextArea textAreaPseudocode = new TextArea();
+    static PseudocodeInterpreter interpreter = new PseudocodeInterpreter();
     public static void initializePseudocodeTab(Tab pseudocodeTab, Label pseudocode) {
         // Crear un AnchorPane para el contenido del Tab
         AnchorPane contentPane = new AnchorPane();
+
 
         pseudocode.setWrapText(true);
 
@@ -39,6 +40,22 @@ public class Pseudocode {
                         "    -fx-border-width: 2.5;"));
         botonEditar.setLayoutX(300);
         botonEditar.setLayoutY(5);
+
+        //Crear boton ejecutar
+        Button botonEjecutar = new Button();
+        botonEjecutar.setText("Ejecutar");
+        botonEjecutar.setOnMouseEntered(e -> botonEjecutar.setStyle("-fx-border-color: #000000;" +
+                "-fx-background-radius: 25 25 25 25;" +
+                "-fx-border-radius: 0 0 0 0;" +
+                "-fx-border-width: 2.5;"));
+        botonEjecutar.setOnMouseExited(e -> botonEjecutar.setStyle(
+                "    -fx-border-color: transparent;" +
+                        "    -fx-text-origin: bold;" +
+                        "    -fx-background-radius: 25 25 25 25;" +
+                        "    -fx-border-radius: 25 25 25 25;" +
+                        "    -fx-border-width: 2.5;"));
+        botonEjecutar.setLayoutX(200);
+        botonEjecutar.setLayoutY(5);
 
         // Crear el botón guardar
         Button botonGuardar = new Button();
@@ -75,7 +92,6 @@ public class Pseudocode {
         botonaDiagrama.setLayoutY(5);  // Coordenada Y
 
         // Crear un TextArea para la edición del pseudocódigo
-        TextArea textAreaPseudocode = new TextArea();
         textAreaPseudocode.setLayoutX(20);
         textAreaPseudocode.setLayoutY(50);
         textAreaPseudocode.setPrefWidth(860);
@@ -89,6 +105,11 @@ public class Pseudocode {
             textAreaPseudocode.setVisible(true);
             botonEditar.setVisible(false);
             botonGuardar.setVisible(true);
+        });
+
+        // Acción del botón "Ejecutar"
+        botonEjecutar.setOnAction(actionEvent -> {
+            ejecutarPseudocodigo();
         });
 
         // Acción del botón "Guardar"
@@ -105,7 +126,7 @@ public class Pseudocode {
             //lo que quieres que haga :v
         });
 
-        contentPane.getChildren().addAll(botonEditar, botonGuardar, botonaDiagrama,textAreaPseudocode);
+        contentPane.getChildren().addAll(botonEditar, botonGuardar, botonaDiagrama, botonEjecutar, textAreaPseudocode);
     }
 
     public static String generatePseudocode(AnchorPane panel_Diagrama, Label pseudocode) {
@@ -205,5 +226,28 @@ public class Pseudocode {
         pseudocodeContent.append("Fin");
         pseudocode.setText(pseudocodeContent.toString());
         return pseudocodeContent.toString();
+    }
+    @FXML
+    private static void ejecutarPseudocodigo() {
+        // Validar pseudocódigo
+        String validationErrors = Validar.validarPseudocodigo(textAreaPseudocode.getText());
+
+        // Mostrar errores si existen
+        if (!validationErrors.equals("No se encontraron errores.")) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errores de Validación");
+            alert.setHeaderText(null);
+            alert.setContentText(validationErrors);
+            alert.showAndWait();
+        } else {
+            // Ejecutar el pseudocódigo
+            interpreter.ejecutarPseudocodigo(textAreaPseudocode.getText());
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Ejecución Exitosa");
+            alert.setHeaderText(null);
+            alert.setContentText("El pseudocódigo se ejecutó correctamente.");
+            alert.showAndWait();
+            interpreter.imprimirVariables();
+        }
     }
 }

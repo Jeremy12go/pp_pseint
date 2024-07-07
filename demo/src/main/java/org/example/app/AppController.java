@@ -103,8 +103,9 @@ public class AppController {
     @FXML
     private Button editButton;
 
-    private String pseudocodeContent;
-    private PseudocodeInterpreter interpreter;
+    public String pseudocodeContent;
+    public PseudocodeInterpreter interpreter;
+
 
     @FXML
     public void initialize() throws IOException {
@@ -2166,7 +2167,7 @@ public class AppController {
     }
 
     @FXML
-    private void ejecutar() {
+    private void ejecutarDiagrama() {
         // Generar pseudocódigo
         pseudocodeContent = Pseudocode.generarPseudo(panel_Diagrama, pseudocode);
 
@@ -2192,4 +2193,30 @@ public class AppController {
         }
     }
 
+    @FXML
+    private void ejecutarPseudocodigo() {
+        // Generar pseudocódigo
+        pseudocodeContent = Pseudocode.generarPseudo(panel_Diagrama, pseudocode);
+
+        // Validar pseudocódigo
+        String validationErrors = Validar.validarPseudocodigo(pseudocodeContent);
+
+        // Mostrar errores si existen
+        if (!validationErrors.equals("No se encontraron errores.")) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errores de Validación");
+            alert.setHeaderText(null);
+            alert.setContentText(validationErrors);
+            alert.showAndWait();
+        } else {
+            // Ejecutar el pseudocódigo
+            interpreter.ejecutarPseudocodigo(pseudocodeContent);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Ejecución Exitosa");
+            alert.setHeaderText(null);
+            alert.setContentText("El pseudocódigo se ejecutó correctamente.");
+            alert.showAndWait();
+            interpreter.imprimirVariables();
+        }
+    }
 }
