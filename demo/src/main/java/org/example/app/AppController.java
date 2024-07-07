@@ -81,8 +81,6 @@ public class AppController {
 
     private String pseudocodeContent;
     private PseudocodeInterpreter interpreter;
-    private String originalText;
-    private int count_deshacer;
 
     @FXML
     public void initialize(){
@@ -91,7 +89,7 @@ public class AppController {
         fondoCuadriculado(740,1500);
         VG.setNumero_figura(-2);
         Inicio_Fin.Figuras_Iniciales(panel_Diagrama);
-        Pseudocode.initializePseudocodeTab(pseudocodeTab,pseudocode);
+        Pseudocode.initializePseudocodeTab(pseudocodeTab,pseudocode,panel_Diagrama);
 
         Image image1 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("figura_proceso.png")));
         figura_proceso.setImage(image1);
@@ -135,11 +133,6 @@ public class AppController {
         VG.setFigura_hacer_mientras(figura_hacer_mientras);
         VG.setFigura_para(figura_para);
 
-        /*
-        VG.setTextContenido(new TextField());
-        VG.getTextContenido().setOpacity(0.0);
-        VG.getTextContenido().setDisable(true);
-        panel_Diagrama.getChildren().add(VG.getTextContenido());*/
         VG.cambiarUltimaFiguraAñadida((Figura) Diagrama.getIns().getList_figuras().get(0));
         VG.cambiarUltimoCanvasFigura((Canvas)Diagrama.getIns().getList_orden().get(0));
         VG.cambiarUltimoCanvasConexion((Canvas)Diagrama.getIns().getList_orden().get(1));
@@ -228,7 +221,7 @@ public class AppController {
                 double[] coordinates = obtenerCoordenadas(event);
                 double x = coordinates[0];
                 double y = coordinates[1];
-                dibujarFigura(x, y,sourceDiagram,panel_Diagrama);
+                Dibujar.dibujarFigura(x, y,sourceDiagram,"","figura",panel_Diagrama);
             }
         }
         basurero.setVisible(false);
@@ -251,7 +244,7 @@ public class AppController {
             VG.cambiarUltimoCanvasConexion((Canvas)Diagrama.getIns().getList_orden().get(1));
             VG.setUltimoIndiceConexion(0);
 
-            count_deshacer = 0;
+            //count_deshacer = 0;
 
         }catch (NullPointerException e){
             System.out.println("Ups... DLC \'borrar todo\' debe adquirirse por separado :)");
@@ -304,6 +297,7 @@ public class AppController {
         return Math.min(max, Math.max(min, value));
     }
 
+    /*
     public static double ubicacionY_newFigura(double y) {
         ArrayList<Canvas> list_canvas = Diagrama.getIns().getList_orden();
         int i = 1;
@@ -340,12 +334,14 @@ public class AppController {
         }
     }
 
+     */
     public double ubicacionX_newFigura(){
 
         //-(panel_Diagrama.getMinWidth()/2)>x ? : ;
         return 0;
     }
 
+    /*
     public static void dibujarFigura(double x, double y, ImageView sourceDiagram, AnchorPane panel_Diagrama) {
         String contenido = "";
         Figura _inicial = (Figura) Diagrama.getIns().getList_figuras().get(0);
@@ -502,13 +498,13 @@ public class AppController {
 
             } else if (VG.getFigura_proceso() == sourceDiagram) {
                 Vertice p_Fproceso_direccion = new Vertice(32.5, 25); //no cambiar
-                Vertice p_Fproeso_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
+                Vertice p_Fproceso_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
                 contenido = " Proceso ";
                 Arista dimencion_Fproceso = new Arista(120, 40);
                 String contenidoValidado = ""; //Ajustar
                 ArrayList<String> operaciones = new ArrayList<String>(); //Ajustar
                 ArrayList<String> operandos = new ArrayList<String>(); //Ajustar
-                Proceso proceso = new Proceso(contenido, p_Fproceso_direccion, p_Fproeso_conexion, dimencion_Fproceso, contenidoValidado, operaciones, operandos,VG.getNumero_figura());
+                Proceso proceso = new Proceso(contenido, p_Fproceso_direccion, p_Fproceso_conexion, dimencion_Fproceso, contenidoValidado, operaciones, operandos,VG.getNumero_figura());
                 Canvas canvas_Fproceso = new Canvas(dimencion_Fproceso.getAncho(), dimencion_Fproceso.getAlto());
 
                 // Obtener la posición Y ajustada para la nueva figura
@@ -648,6 +644,9 @@ public class AppController {
         VG.setCount_deshacer(0);
     }
 
+     */
+
+    /*
     public static void moverfiguras_agregando(int numero_identificador){
 
         ArrayList<Canvas> list_canvas = Diagrama.getIns().getList_orden();
@@ -668,13 +667,14 @@ public class AppController {
                 i--;
             }
         }
-    }
+    }*/
 
     public void  moverfiguras_eliminando(){
         ArrayList<Canvas> list_canvas = Diagrama.getIns().getList_orden();
         list_canvas.get(list_canvas.size()-1).setLayoutY(list_canvas.get(list_canvas.size()-2).getLayoutY()
                 +list_canvas.get(list_canvas.size()-2).getHeight());
     }
+
 
     public void prueba(){
         int aux = 0;
@@ -814,6 +814,8 @@ public class AppController {
         panel_ventanas.setMinSize(width, height);
     }
 
+    /*
+
     public static int determinarIndiceFigura_InList_figuras(Figura figuraOrigen, double x, double y) {
         List<Figura> listaFiguras = Diagrama.getIns().getList_figuras(); // Obtener la lista de figuras
 
@@ -844,6 +846,8 @@ public class AppController {
         return indiceFiguraDestino;
     }
 
+     */
+    /*
     public static int determinarIndiceCanvas_InList_orden(Canvas canvas, int ultimadato){
         int indiceCanvasDestino = 0;
         for(Object obj : Diagrama.getIns().getList_orden()){
@@ -867,6 +871,8 @@ public class AppController {
         return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
     }
 
+     */
+    /*
     public static Canvas conectar(Figura figuraOrigen, Figura figuraDestino, AnchorPane panel_Diagrama) {
         //canvas conector
         Vertice origen = new Vertice((figuraOrigen.getVertice_conexion().getX()), figuraOrigen.getVertice_conexion().getY()-figuraOrigen.getDimenciones().getAlto());
@@ -897,6 +903,9 @@ public class AppController {
         return conectorCanvas;
     }
 
+     */
+
+    /*
     private static Figura obtenerFiguraDesdeCanvas(Canvas canvas) {
         ArrayList<Canvas> list_canvas = Diagrama.getIns().getList_orden();
         ArrayList<Figura> list_figura = Diagrama.getIns().getList_figuras();
@@ -916,6 +925,8 @@ public class AppController {
         return list_figura.get(list_figura.size()-1);
     }
 
+     */
+    /*
     private static Canvas obtenerCanvasDesdeFigura(Figura figura) {
         ArrayList<Canvas> list_orden = Diagrama.getIns().getList_orden();
         ArrayList<Figura> list_figuras = Diagrama.getIns().getList_figuras();
@@ -936,6 +947,8 @@ public class AppController {
         }
         return list_orden.get(indexCanvas);
     }
+
+     */
 
     // Método para centrar el Pane basurero y el ícono del basurero
     private void centrarPane() {
