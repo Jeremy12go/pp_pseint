@@ -219,7 +219,6 @@ public class AppController {
 
             // Verificar si las coordenadas del evento están dentro de los límites del Pane Basurero
             if (basureroBounds.contains(releaseX, releaseY)) {
-                System.out.println("borrar");
                 panel_Diagrama.getChildren().remove(sourceDiagram);
             } else {
                 double[] coordinates = obtenerCoordenadas(event);
@@ -438,7 +437,6 @@ public class AppController {
                 //psudocodigo
                 canvas_Fdocumento.setUserData(documento);
 
-                //prueba();
                 //funcion que mueve las figuras por debajo de la nueva figura
                 moverfiguras_agregando(documento.getNumero_identificador());
 
@@ -1047,38 +1045,42 @@ public class AppController {
     }
 
     @FXML
-    private void ejecutar() {
+    private void ejecutarDiagrama() {
         // Generar pseudocódigo
-        String pseudocodeContent = Pseudocode.generarPseudo(panel_Diagrama, pseudocode);
+        pseudocodeContent = Pseudocode.generarPseudo(panel_Diagrama, pseudocode);
 
         // Validar pseudocódigo
         String validationErrors = Validar.validarPseudocodigo(pseudocodeContent);
 
         // Mostrar errores si existen
         if (!validationErrors.equals("No se encontraron errores.")) {
-            mostrarAlertaError("Errores de Validación", validationErrors);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errores de Validación");
+            alert.setHeaderText(null);
+            alert.setContentText(validationErrors);
+            alert.showAndWait();
         } else {
             // Ejecutar el pseudocódigo
-            interpreter.ejecutarPseudocodigo(pseudocodeContent);
-            mostrarAlertaInformacion("Ejecución Exitosa", "El pseudocódigo se ejecutó correctamente.");
-            interpreter.imprimirVariables();
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            // Intenta ejecutar el pseudocódigo
+            try {
+                interpreter.ejecutarPseudocodigo(pseudocodeContent);
+
+                // Si no hay excepciones, muestra un mensaje de ejecución exitosa
+                alert.setTitle("Ejecución Exitosa");
+                alert.setHeaderText(null);
+                alert.setContentText("El pseudocódigo se ejecutó correctamente.");
+                alert.showAndWait();
+
+                // Opcional: imprimir las variables para depuración
+                interpreter.imprimirVariables();
+            } catch (Exception e) {
+                // Captura y muestra cualquier excepción que pueda ocurrir durante la ejecución
+                alert.setTitle("Error durante la ejecución");
+                alert.setHeaderText(null);
+                alert.setContentText("Ocurrió un error durante la ejecución del pseudocódigo: " + e.getMessage());
+                alert.showAndWait();
+            }
         }
     }
-
-    private void mostrarAlertaError(String titulo, String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-        alert.showAndWait();
-    }
-
-    private void mostrarAlertaInformacion(String titulo, String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-        alert.showAndWait();
-    }
-
 }

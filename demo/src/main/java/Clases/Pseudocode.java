@@ -1,24 +1,22 @@
 package Clases;
 
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TextArea;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.canvas.Canvas;
-import org.example.app.AppController;
-
-import java.net.URL;
-
 import java.util.List;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
 public class Pseudocode {
 
+    static TextArea textAreaPseudocode = new TextArea();
+    static PseudocodeInterpreter interpreter = new PseudocodeInterpreter();
     public static void initializePseudocodeTab(Tab pseudocodeTab, Label pseudocode) {
         // Crear un AnchorPane para el contenido del Tab
         AnchorPane contentPane = new AnchorPane();
+
+
         pseudocode.setWrapText(true);
 
         contentPane.getChildren().add(pseudocode);
@@ -39,6 +37,22 @@ public class Pseudocode {
                         "    -fx-border-width: 2.5;"));
         botonEditar.setLayoutX(300);
         botonEditar.setLayoutY(5);
+
+        //Crear boton ejecutar
+        Button botonEjecutar = new Button();
+        botonEjecutar.setText("Ejecutar");
+        botonEjecutar.setOnMouseEntered(e -> botonEjecutar.setStyle("-fx-border-color: #000000;" +
+                "-fx-background-radius: 25 25 25 25;" +
+                "-fx-border-radius: 0 0 0 0;" +
+                "-fx-border-width: 2.5;"));
+        botonEjecutar.setOnMouseExited(e -> botonEjecutar.setStyle(
+                "    -fx-border-color: transparent;" +
+                        "    -fx-text-origin: bold;" +
+                        "    -fx-background-radius: 25 25 25 25;" +
+                        "    -fx-border-radius: 25 25 25 25;" +
+                        "    -fx-border-width: 2.5;"));
+        botonEjecutar.setLayoutX(200);
+        botonEjecutar.setLayoutY(5);
 
         // Crear el botón guardar
         Button botonGuardar = new Button();
@@ -74,8 +88,7 @@ public class Pseudocode {
         botonaDiagrama.setLayoutX(500); // Coordenada X
         botonaDiagrama.setLayoutY(5);  // Coordenada Y
 
-        // Crear un TextArea para la edicion del pseudocódigo
-        TextArea textAreaPseudocode = new TextArea();
+        // Crear un TextArea para la edición del pseudocódigo
         textAreaPseudocode.setLayoutX(20);
         textAreaPseudocode.setLayoutY(50);
         textAreaPseudocode.setPrefWidth(860);
@@ -89,6 +102,11 @@ public class Pseudocode {
             textAreaPseudocode.setVisible(true);
             botonEditar.setVisible(false);
             botonGuardar.setVisible(true);
+        });
+
+        // Acción del botón "Ejecutar"
+        botonEjecutar.setOnAction(actionEvent -> {
+            ejecutarPseudocodigo();
         });
 
         // Acción del botón "Guardar"
@@ -105,7 +123,7 @@ public class Pseudocode {
             //lo que quieres que haga :v
         });
 
-        contentPane.getChildren().addAll(botonEditar, botonGuardar, botonaDiagrama,textAreaPseudocode);
+        contentPane.getChildren().addAll(botonEditar, botonGuardar, botonaDiagrama, botonEjecutar, textAreaPseudocode);
     }
 
     public static String generatePseudocode(AnchorPane panel_Diagrama, Label pseudocode) {
@@ -205,5 +223,41 @@ public class Pseudocode {
         pseudocodeContent.append("Fin");
         pseudocode.setText(pseudocodeContent.toString());
         return pseudocodeContent.toString();
+    }
+    @FXML
+    private static void ejecutarPseudocodigo() {
+        // Validar pseudocódigo
+        String validationErrors = Validar.validarPseudocodigo(textAreaPseudocode.getText());
+
+        // Mostrar errores si existen
+        if (!validationErrors.equals("No se encontraron errores.")) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errores de Validación");
+            alert.setHeaderText(null);
+            alert.setContentText(validationErrors);
+            alert.showAndWait();
+        } else {
+            // Ejecutar el pseudocódigo
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            // Intenta ejecutar el pseudocódigo
+            try {
+                interpreter.ejecutarPseudocodigo(textAreaPseudocode.getText());
+
+                // Si no hay excepciones, muestra un mensaje de ejecución exitosa
+                alert.setTitle("Ejecución Exitosa");
+                alert.setHeaderText(null);
+                alert.setContentText("El pseudocódigo se ejecutó correctamente.");
+                alert.showAndWait();
+
+                // Opcional: imprimir las variables para depuración
+                interpreter.imprimirVariables();
+            } catch (Exception e) {
+                // Captura y muestra cualquier excepción que pueda ocurrir durante la ejecución
+                alert.setTitle("Error durante la ejecución");
+                alert.setHeaderText(null);
+                alert.setContentText("Ocurrió un error durante la ejecución del pseudocódigo: " + e.getMessage());
+                alert.showAndWait();
+            }
+        }
     }
 }
