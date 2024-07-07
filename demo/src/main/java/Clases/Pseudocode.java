@@ -12,10 +12,11 @@ public class Pseudocode {
 
     static TextArea textAreaPseudocode = new TextArea();
     static PseudocodeInterpreter interpreter = new PseudocodeInterpreter();
-    public static void initializePseudocodeTab(Tab pseudocodeTab, Label pseudocode) {
+
+    public static void initializePseudocodeTab(Tab pseudocodeTab, Label pseudocode,AnchorPane panel_diagrama) {
+
         // Crear un AnchorPane para el contenido del Tab
         AnchorPane contentPane = new AnchorPane();
-
 
         pseudocode.setWrapText(true);
 
@@ -120,7 +121,7 @@ public class Pseudocode {
 
         //accion del boton A Diagrama
         botonaDiagrama.setOnAction(actionEvent -> {
-            //lo que quieres que haga :v
+            PseudocodeAdiagrama.generateFlowDiagram(pseudocode,panel_diagrama);
         });
 
         contentPane.getChildren().addAll(botonEditar, botonGuardar, botonaDiagrama, botonEjecutar, textAreaPseudocode);

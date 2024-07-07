@@ -82,7 +82,7 @@ public class AppController {
 
     private String pseudocodeContent;
     private PseudocodeInterpreter interpreter;
-    private String originalText;
+   
     private int count_deshacer;
 
     @FXML
@@ -92,7 +92,7 @@ public class AppController {
         fondoCuadriculado(740,1500);
         VG.setNumero_figura(-2);
         Inicio_Fin.Figuras_Iniciales(panel_Diagrama);
-        Pseudocode.initializePseudocodeTab(pseudocodeTab,pseudocode);
+        Pseudocode.initializePseudocodeTab(pseudocodeTab,pseudocode,panel_Diagrama);
 
         Image image1 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("figura_proceso.png")));
         figura_proceso.setImage(image1);
@@ -224,7 +224,7 @@ public class AppController {
                 double[] coordinates = obtenerCoordenadas(event);
                 double x = coordinates[0];
                 double y = coordinates[1];
-                dibujarFigura(x, y,sourceDiagram,panel_Diagrama);
+                Dibujar.dibujarFigura(x, y,sourceDiagram,"","figura",panel_Diagrama);
             }
         }
         basurero.setVisible(false);
