@@ -7,6 +7,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import org.example.app.AppController;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -14,7 +15,7 @@ import java.util.Objects;
 public class PseudocodeAdiagrama {
 
     public static void generateFlowDiagram(Label pseudocodeLabel, AnchorPane panel_Diagrama) {
-        Image image5 = new Image(Objects.requireNonNull(PseudocodeAdiagrama.class.getResourceAsStream("trash.png")));
+        Image image5 = new Image(Objects.requireNonNull(PseudocodeAdiagrama.class.getResourceAsStream("codigo.png")));
         ImageView trash;
         trash = new ImageView(image5);
 
@@ -26,7 +27,7 @@ public class PseudocodeAdiagrama {
         for (String line : lineas) {
             int x=20;
             if (line.startsWith("Entrada:")) {
-                Dibujar.dibujarFigura(x, yPosition,trash,line.replace("Entrada: ", "").trim(),"entrada",panel_Diagrama);
+                Dibujar.dibujarFigura(x, yPosition,trash,(line.replace("Entrada: ", "").trim()),"entrada",panel_Diagrama);
             } else if (line.startsWith("Salida:")) {
                 Dibujar.dibujarFigura(x, yPosition,trash,line.replace("Salida: ", "").trim(),"salida",panel_Diagrama);
             } else if (line.startsWith("Documento:")) {

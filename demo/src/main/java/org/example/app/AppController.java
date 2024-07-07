@@ -224,7 +224,7 @@ public class AppController {
                 double[] coordinates = obtenerCoordenadas(event);
                 double x = coordinates[0];
                 double y = coordinates[1];
-                Dibujar.dibujarFigura(x, y,sourceDiagram,"","figura",panel_Diagrama);
+                dibujarFigura(x, y,sourceDiagram,"","figura",panel_Diagrama);
             }
         }
         basurero.setVisible(false);
@@ -354,8 +354,8 @@ public class AppController {
         }
     }
 
-    public static void dibujarFigura(double x, double y, ImageView sourceDiagram, AnchorPane panel_Diagrama) {
-        String contenido = "";
+    public static void dibujarFigura(double x, double y, ImageView sourceDiagram,String contenido,String figura, AnchorPane panel_Diagrama) {
+
         Figura _inicial = (Figura) Diagrama.getIns().getList_figuras().get(0);
         Canvas _final = obtenerCanvasDesdeFigura((Figura) Diagrama.getIns().getList_figuras().get(Diagrama.getIns().getList_figuras().size() - 1));
         VG.aumentar_numero_figura();
