@@ -26,9 +26,6 @@ public class Entrada extends Figura{
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
-        gc.setFill(Color.BLUE); // Cambia a tu color preferido
-        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
         int delta = 10; //inclinacion
 
         // Dibujar el paralelogramo

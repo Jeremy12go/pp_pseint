@@ -48,6 +48,8 @@ public class VG {
 
     private static int count_deshacer;
 
+    private static ArrayList<Diagrama> list_diagramas;
+
     //Getter and Setter
     public static void cambiarUltimaFiguraAñadida(Figura f) {
         ultimaFiguraAñadida = f;
@@ -278,5 +280,13 @@ public class VG {
 
     public static void setCount_deshacer(int count_deshacer) {
         VG.count_deshacer = count_deshacer;
+    }
+
+    public static ArrayList<Diagrama> getList_diagramas() {
+        return list_diagramas;
+    }
+
+    public static void setList_diagramas(ArrayList<Diagrama> list_diagramas) {
+        VG.list_diagramas = list_diagramas;
     }
 }

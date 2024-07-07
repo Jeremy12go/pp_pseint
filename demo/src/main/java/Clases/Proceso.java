@@ -9,6 +9,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import java.util.ArrayList;
@@ -25,26 +26,39 @@ public class Proceso extends Figura{
         this.operandos = operandos;
     }
 
-    public static void dibujo(Canvas canvas, Figura figura, AnchorPane panel_Diagrama) {
+    public static void dibujo(double posY,Canvas canvas, Figura figura, AnchorPane panel_Diagrama) {
         String finalTexto = figura.getContenido();
         javafx.scene.text.Text text = new javafx.scene.text.Text(figura.getContenido());
 
-        double width = figura.getDimenciones().getAncho() / 2;
-        double height = figura.getDimenciones().getAlto() / 2;
-        double size = Math.max(width, height) + 20;
-
         // Posicion de la figura en relación al AnchorPane
-        double diferencia = figura.getDimenciones().getAncho() / 2;
-        canvas.setLayoutX((panel_Diagrama.getMinWidth() / 2) - diferencia + 15);
-        canvas.setLayoutY(figura.getVertice_conexion().getY() + 50);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
+        canvas.setLayoutX((panel_Diagrama.getMinWidth() / 2) - canvas.getWidth()/2);
+        canvas.setLayoutY(posY);
 
-        // Dibujar el rectángulo
-        gc.setFill(VG.getColorRelleno());
-        gc.fillRect(0, 0, size + (size * 0.5), size);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.setLineWidth(VG.getTamaño_Lbordes());
         gc.setStroke(VG.getColorBordes());
-        gc.setLineWidth(VG.getTamaño_Lbordes() * 2);
-        gc.strokeRect(0, 0, size + (size * 0.5), size);
+
+        // Rellenar figura
+        ArrayList<Vertice> vertices = Figura.calcular_vertices(canvas,0);
+        gc.setFill(VG.getColorRelleno());
+        double[] xPoints = {vertices.get(0).getX(), vertices.get(1).getX(),
+                vertices.get(2).getX(), vertices.get(3).getX()};
+        double[] yPoints = {vertices.get(0).getY(), vertices.get(1).getY(), vertices.get(2).getY(), vertices.get(3).getY()};
+
+        gc.fillPolygon(xPoints, yPoints, vertices.size());
+
+        gc.setFill(VG.getColorBordes());
+        // Línea p1-p2
+        gc.strokeLine(vertices.get(0).getX(), vertices.get(0).getY()+1, vertices.get(1).getX(), vertices.get(1).getY()+1);
+
+        // Línea p2-p3
+        gc.strokeLine(vertices.get(1).getX()-1, vertices.get(1).getY(), vertices.get(2).getX()-1, vertices.get(2).getY());
+
+        // Línea p3-p4
+        gc.strokeLine(vertices.get(2).getX(), vertices.get(2).getY()-1, vertices.get(3).getX(), vertices.get(3).getY()-1);
+
+        // Línea p4-p1
+        gc.strokeLine(vertices.get(3).getX()+1, vertices.get(3).getY(), vertices.get(0).getX()+1, vertices.get(0).getY());
 
         // Contenido
         gc.setLineWidth(VG.getTamañoTxt());
@@ -103,7 +117,7 @@ public class Proceso extends Figura{
             if (VG.getClickCount() == 2) {
                 // Restablecer el contador
                 VG.setClickCount(0);
-                edición(canvas, figura, panel_Diagrama);
+                edicion(posY, canvas, figura, panel_Diagrama);
             } else {
                 Timeline timeline = new Timeline(new KeyFrame(Duration.millis(300), e -> {
                     VG.setClickCount(0);
@@ -113,7 +127,7 @@ public class Proceso extends Figura{
         });
     }
 
-    public static void edición(Canvas canvas, Figura figura, AnchorPane panel_Diagrama){
+    public static void edicion(double posY, Canvas canvas, Figura figura, AnchorPane panel_Diagrama){
         TextField textContenido = new TextField();
         textContenido.setOpacity(0.0);
         textContenido.setDisable(true);
@@ -136,7 +150,7 @@ public class Proceso extends Figura{
         String pre_text = figura.getContenido();
         figura.setContenido("");
         limpiar_canvas(canvas);
-        dibujo(canvas,figura,panel_Diagrama);
+        dibujo(posY,canvas,figura,panel_Diagrama);
 
         // Agregar evento de tecla para actualizar el contenido al presionar Enter
         textContenido.setOnKeyPressed(event_2 -> {
@@ -159,15 +173,9 @@ public class Proceso extends Figura{
                     textContenido.setMinWidth(canvas.getWidth()*0.6);
                 }
 
-                //Para que funcione tuve que comentar esta parte
-                //editar posicion en relacion al largo(mitad del panel)
-                //double _diferencia_ = figura.getDimenciones().getAncho()/2;
-                //Vertice reajuste_v = new Vertice((panel_Diagrama.getMinWidth()/2)-_diferencia_,figura.getDimenciones().getAlto());
-                //figura.setVertice_conexion(reajuste_v);
-
                 //redibujo
                 limpiar_canvas(canvas);
-                dibujo(canvas, figura, panel_Diagrama);
+                dibujo(posY, canvas, figura, panel_Diagrama);
                 textContenido.clear();
                 panel_Diagrama.getChildren().remove(textContenido);
             }

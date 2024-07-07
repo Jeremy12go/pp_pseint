@@ -8,8 +8,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.ArcType;
 import javafx.scene.text.TextAlignment;
-import org.example.app.AppController;
-
 import java.util.ArrayList;
 
 public class Inicio_Fin extends Figura{

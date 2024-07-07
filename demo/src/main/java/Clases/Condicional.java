@@ -8,17 +8,19 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
-import java.util.ArrayList;
 
 public class Condicional extends Figura{
-    public ArrayList<Diagrama> diagrama_false;
+    public Diagrama diagrama_false;
+    public Diagrama diagrama_true;
     public Vertice vertice_conexion_false;
 
     public Condicional(String contenido, Vertice vertice_direccion, Vertice vertice_conexion_true,  Vertice vertice_conexion_false,Arista dimension,
-                       ArrayList<Diagrama> diagrama_false, int numero_identificador) {
+                       Diagrama diagrama_true, Diagrama diagrama_false, int numero_identificador) {
         super(contenido, vertice_direccion, vertice_conexion_true, dimension, numero_identificador);
+        this.diagrama_true = diagrama_true;
         this.diagrama_false = diagrama_false;
     }
 
@@ -30,6 +32,7 @@ public class Condicional extends Figura{
         double size = Math.max(width, height); // +40
 
         //posicion de la figura en relacion al AnchorPane
+
         canvas.setLayoutX((panel_Diagrama.getMinWidth() / 2) - canvas.getWidth()/4);
         canvas.setLayoutY(y);
 
@@ -51,7 +54,7 @@ public class Condicional extends Figura{
         gc.fillText(finalTexto, canvas.getWidth()/4 , canvas.getHeight()/2);
 
         //Caracter T
-        gc.setLineWidth(VG.getTamaño_Lbordes());
+        gc.setLineWidth(VG.getTamaño_Lbordes()-1);
         gc.setStroke(VG.getColorRelleno());
         gc.strokeLine(30, canvas.getHeight()/2+25, 40, canvas.getHeight()/2+25);
         gc.strokeLine(35, canvas.getHeight()/2+25,35, canvas.getHeight()/2+35);
@@ -63,11 +66,12 @@ public class Condicional extends Figura{
 
         //Linea de conexiones false
         gc.setLineWidth(VG.getTamaño_Lconexiones()+3);
-        gc.strokeLine(canvas.getWidth()/2-15, canvas.getHeight()/2, canvas.getWidth()/2-15+separacion_figurasFalso, canvas.getHeight()/2);
-        gc.strokeLine(canvas.getWidth()/2-15+separacion_figurasFalso, canvas.getHeight()/2, canvas.getWidth()/2-15+separacion_figurasFalso, canvas.getHeight());
+        gc.strokeLine(canvas.getWidth()/2-15, canvas.getHeight()/2, canvas.getWidth()-2, canvas.getHeight()/2);
+        gc.strokeLine(canvas.getWidth()-2, canvas.getHeight()/2, canvas.getWidth()-2, canvas.getHeight());
 
         //asignar punto de conexion falso
-        figura.setVertice_conexion_false(new Vertice(canvas.getWidth()/2-15+separacion_figurasFalso, canvas.getHeight()));
+        //figura.setVertice_conexion_false(new Vertice(x+(canvas.getWidth()/1.5)+28, canvas.getHeight()));
+
 
         //MOVIMIENTO_FIGURA----------------------------------------------------
         canvas.setOnMousePressed(event -> {
@@ -168,11 +172,63 @@ public class Condicional extends Figura{
         });
     }
 
-    public Vertice getVertice_conexion_false() {
-        return vertice_conexion_false;
+    public static void agregar_conectores_extra(Canvas canvas_Fcondicional, AnchorPane panel_Diagrama,int indice){
+        //agregar conector extraInicial
+        Canvas conectorCanvas = new Canvas(50,70);
+        GraphicsContext gc = conectorCanvas.getGraphicsContext2D();
+        gc.setFill(Color.GREEN); // Cambia a tu color preferido
+        gc.fillRect(0, 0, conectorCanvas.getWidth(), conectorCanvas.getHeight());
+
+        //posicionamiento del canvas
+        double layoutX = canvas_Fcondicional.getLayoutX()+canvas_Fcondicional.getWidth() - conectorCanvas.getWidth()/2-2.5;//(panel_Diagrama.getMinWidth() / 2) - conectorCanvas.getWidth() / 2;
+        double layoutY = canvas_Fcondicional.getLayoutY()+canvas_Fcondicional.getHeight()-1; //20 Ajustar la posición Y del conector
+
+        conectorCanvas.setLayoutX(layoutX);
+        conectorCanvas.setLayoutY(layoutY);
+        Figura.dibujar_flecha(conectorCanvas,conectorCanvas.getWidth()/2,0,-90,conectorCanvas.getWidth()+5);
+
+
+        //agregar conector extraFinal
+        Canvas conector2Canvas = new Canvas(220,20);
+        GraphicsContext gc1 = conector2Canvas.getGraphicsContext2D();
+        //gc1.setFill(Color.PINK); // Cambia a tu color preferido
+        //gc1.fillRect(0, 0, conector2Canvas.getWidth(), conector2Canvas.getHeight());
+
+        //posicionamiento del canvas
+        layoutX = canvas_Fcondicional.getLayoutX()+canvas_Fcondicional.getWidth()/3-20;//(panel_Diagrama.getMinWidth() / 2) - conectorCanvas.getWidth() / 2;
+        layoutY = 50+canvas_Fcondicional.getLayoutY()+canvas_Fcondicional.getHeight()-1; //20 Ajustar la posición Y del conector
+
+        conector2Canvas.setLayoutX(layoutX);
+        conector2Canvas.setLayoutY(layoutY);
+        Figura.dibujar_flecha(conector2Canvas,conector2Canvas.getWidth(),conector2Canvas.getHeight()/2,180,conector2Canvas.getWidth()-10);
+
+        //panel_Diagrama.getChildren().add(conectorCanvas);
+        //panel_Diagrama.getChildren().add(conector2Canvas);
+
+        //Diagrama.getIns().getList_orden().add(indice, conector2Canvas);
+        //Diagrama.getIns().getList_orden().add(indice, conectorCanvas);
     }
 
     public void setVertice_conexion_false(Vertice vertice_conexion_false) {
         this.vertice_conexion_false = vertice_conexion_false;
     }
+
+    public Vertice getVertice_conexion_false() {return vertice_conexion_false;}
+
+    public Diagrama getDiagrama_true() {
+        return diagrama_true;
+    }
+
+    public void setDiagrama_true(Diagrama diagrama_true) {
+        this.diagrama_true = diagrama_true;
+    }
+
+    public Diagrama getDiagrama_false() {
+        return diagrama_false;
+    }
+
+    public void setDiagrama_false(Diagrama diagrama_false) {
+        this.diagrama_false = diagrama_false;
+    }
+
 }

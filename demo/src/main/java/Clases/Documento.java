@@ -9,23 +9,19 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
 public class Documento extends Figura {
 
-    public Documento(String contenido, Vertice vertice_cordenada, Vertice vertice_conexion, Arista dimenciones,int numero_identificador) {
+    public Documento(String contenido, Vertice vertice_cordenada, Vertice vertice_conexion, Arista dimenciones, int numero_identificador) {
         super(contenido, vertice_cordenada, vertice_conexion, dimenciones,numero_identificador);
     }
 
     public static void dibujo(double posY, Canvas canvas, Figura figura, AnchorPane panel_Diagrama) {
         String finalTexto = figura.getContenido();
-        javafx.scene.text.Text text = new javafx.scene.text.Text(figura.getContenido());
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setFill(Color.BLUE); // Cambia a tu color preferido
-        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
         double width = figura.getDimenciones().getAncho();
         double height = figura.getDimenciones().getAlto();
@@ -34,7 +30,6 @@ public class Documento extends Figura {
         //posicion de la figura en relacion al AnchorPane
         canvas.setLayoutX((panel_Diagrama.getMinWidth() / 2) - canvas.getWidth()/2);
         canvas.setLayoutY(posY);
-        //GraphicsContext gc = canvas.getGraphicsContext2D();
 
         // Dibujar el cuerpo del documento (rectángulo)
         gc.setFill(VG.getColorRelleno());

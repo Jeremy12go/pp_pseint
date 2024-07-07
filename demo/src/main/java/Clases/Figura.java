@@ -55,7 +55,7 @@ public class Figura {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
-    protected static void dibujar_flecha(Canvas canvas, double origenX, double origenY, double angulo, double longitud){
+    public static void dibujar_flecha(Canvas canvas, double origenX, double origenY, double angulo, double longitud){
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
