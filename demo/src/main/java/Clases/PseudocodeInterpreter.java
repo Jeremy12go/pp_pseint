@@ -26,7 +26,6 @@ public class PseudocodeInterpreter {
         }
     }
 
-    // Método para procesar una línea de pseudocódigo
     private void procesarLinea(String linea) {
         // Eliminar espacios en blanco al inicio y final de la línea
         linea = linea.trim();
@@ -56,7 +55,6 @@ public class PseudocodeInterpreter {
         }
     }
 
-    // Método para evaluar una expresión aritmética
     private int evaluarExpresion(String expresion) {
         try {
             // Reemplazar variables en la expresión
