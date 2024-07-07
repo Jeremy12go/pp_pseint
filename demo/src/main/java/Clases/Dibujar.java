@@ -20,35 +20,35 @@ public class Dibujar {
 
         if ((panel_Diagrama.getWidth() / 2) - 150 < x && x < (panel_Diagrama.getWidth() / 2) + 150) {
             if (VG.getFigura_condiconal() == sourceDiagram || figura == "condicional") {
-                if(contenido != ""){
+                if(contenido.equals("")){
                     contenido= "A > B";}
                 dibujarCondicional(x, y,contenido, panel_Diagrama);
             } else if (VG.getFigura_documento() == sourceDiagram || figura == "documento") {
-                if(contenido != ""){
+                if(contenido.equals("")){
                     contenido= "Documento";}
                 dibujarDocumento(x, y,contenido, panel_Diagrama);
             } else if (VG.getFigura_entrada() == sourceDiagram || figura == "entrada") {
-                if(contenido != ""){
+                if(contenido.equals("")){
                     contenido= "Entrada";}
                 dibujarEntrada(x, y,contenido, panel_Diagrama);
             } else if (VG.getFigura_salida() == sourceDiagram || figura == "salida") {
-                if(contenido != ""){
+                if(contenido.equals("")){
                     contenido= "Salida";}
                 dibujarSalida(x, y,contenido, panel_Diagrama);
             } else if (VG.getFigura_proceso() == sourceDiagram || figura == "proceso") {
-                if(contenido != ""){
+                if(contenido.equals("")){
                     contenido= "Proceso";}
                 dibujarProceso(x, y,contenido, panel_Diagrama);
             } else if (VG.getFigura_hacer_mientras() == sourceDiagram || figura == "hacer mientras") {
-                if(contenido != ""){
+                if(contenido.equals("")){
                     contenido= "Hacer Mientras";}
                 dibujarHacerMientras(x, y,contenido, panel_Diagrama);
             } else if (VG.getFigura_mientras() == sourceDiagram || figura == "mientras") {
-                if(contenido != ""){
+                if(contenido.equals("")){
                     contenido= "Mientras";}
                 dibujarMientras(x, y,contenido, panel_Diagrama);
             } else if (VG.getFigura_para() == sourceDiagram || figura == "para") {
-                if(contenido != ""){
+                if(contenido.equals("")){
                     contenido= "Para";}
                 dibujarPara(x, y,contenido, panel_Diagrama);
             }
