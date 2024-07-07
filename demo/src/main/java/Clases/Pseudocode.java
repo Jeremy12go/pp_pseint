@@ -241,13 +241,26 @@ public class Pseudocode {
             alert.showAndWait();
         } else {
             // Ejecutar el pseudocódigo
-            interpreter.ejecutarPseudocodigo(textAreaPseudocode.getText());
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Ejecución Exitosa");
-            alert.setHeaderText(null);
-            alert.setContentText("El pseudocódigo se ejecutó correctamente.");
-            alert.showAndWait();
-            interpreter.imprimirVariables();
+            // Intenta ejecutar el pseudocódigo
+            try {
+                interpreter.ejecutarPseudocodigo(textAreaPseudocode.getText());
+
+                // Si no hay excepciones, muestra un mensaje de ejecución exitosa
+                alert.setTitle("Ejecución Exitosa");
+                alert.setHeaderText(null);
+                alert.setContentText("El pseudocódigo se ejecutó correctamente.");
+                alert.showAndWait();
+
+                // Opcional: imprimir las variables para depuración
+                interpreter.imprimirVariables();
+            } catch (Exception e) {
+                // Captura y muestra cualquier excepción que pueda ocurrir durante la ejecución
+                alert.setTitle("Error durante la ejecución");
+                alert.setHeaderText(null);
+                alert.setContentText("Ocurrió un error durante la ejecución del pseudocódigo: " + e.getMessage());
+                alert.showAndWait();
+            }
         }
     }
 }
