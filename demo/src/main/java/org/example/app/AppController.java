@@ -82,7 +82,7 @@ public class AppController {
 
     private String pseudocodeContent;
     private PseudocodeInterpreter interpreter;
-   
+
     private int count_deshacer;
 
     @FXML
@@ -203,6 +203,7 @@ public class AppController {
         initialX = mouseX;
         initialY = mouseY;
     }
+
     @FXML
     private void onMouseReleased(MouseEvent event) {
         // Devolver la imagen a su posición original
@@ -224,7 +225,24 @@ public class AppController {
                 double[] coordinates = obtenerCoordenadas(event);
                 double x = coordinates[0];
                 double y = coordinates[1];
-                dibujarFigura(x, y,sourceDiagram,"","figura",panel_Diagrama);
+                if (sourceDiagram == figura_condiconal) {
+                    Dibujar.dibujarFigura(x, y, "Condicional", "condicional", panel_Diagrama);
+                } else if (sourceDiagram == figura_documento) {
+                    Dibujar.dibujarFigura(x, y, "Documento", "documento", panel_Diagrama);
+                } else if (sourceDiagram == figura_entrada) {
+                    Dibujar.dibujarFigura(x, y, "Entrada", "entrada", panel_Diagrama);
+                } else if (sourceDiagram == figura_proceso) {
+                    Dibujar.dibujarFigura(x, y, "Proceso", "proceso", panel_Diagrama);
+                } else if (sourceDiagram == figura_salida) {
+                    Dibujar.dibujarFigura(x, y, "Salida", "salida", panel_Diagrama);
+                } else if (sourceDiagram == figura_mientras) {
+                    Dibujar.dibujarFigura(x, y, "Mientras", "mientras", panel_Diagrama);
+                } else if (sourceDiagram == figura_hacer_mientras) {
+                    Dibujar.dibujarFigura(x, y, "Hacer Mientras", "hacer mientras", panel_Diagrama);
+                } else if (sourceDiagram == figura_para) {
+                    Dibujar.dibujarFigura(x, y, "Para", "para", panel_Diagrama);
+                }
+
             }
         }
         basurero.setVisible(false);
@@ -675,7 +693,7 @@ public class AppController {
             }
             //System.out.println("NumeroIdentificador:"+obtenerFiguraDesdeCanvas(list_canvas.get(i)).getNumero_identificador()+"=="+numero_identificador);
             if (obtenerFiguraDesdeCanvas(list_canvas.get(i)).getNumero_identificador() == numero_identificador && !cond_identificado) {
-               // System.out.println("M1");
+                // System.out.println("M1");
                 cond_identificado = true;
                 i--;
             }

@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class Pseudocode {
 
-    static TextArea textAreaPseudocode = new TextArea();
+    public static TextArea textAreaPseudocode = new TextArea();
     static PseudocodeInterpreter interpreter = new PseudocodeInterpreter();
 
     public static void initializePseudocodeTab(Tab pseudocodeTab, Label pseudocode,AnchorPane panel_diagrama) {
@@ -128,7 +128,7 @@ public class Pseudocode {
     }
 
     public static String generatePseudocode(AnchorPane panel_Diagrama, Label pseudocode) {
-        StringBuilder pseudocodeContent = new StringBuilder("\n\nInicio\n");
+        StringBuilder pseudocodeContent = new StringBuilder();
         Stack<String> indentStack = new Stack<>();
         indentStack.push("   "); // Initial indentation level
 
@@ -173,13 +173,12 @@ public class Pseudocode {
             }
         }
 
-        pseudocodeContent.append("Fin");
         pseudocode.setText(pseudocodeContent.toString());
         return pseudocodeContent.toString();
     }
 
     public static String generarPseudo(AnchorPane panel_Diagrama, Label pseudocode) {
-        StringBuilder pseudocodeContent = new StringBuilder("\n\nInicio\n");
+        StringBuilder pseudocodeContent = new StringBuilder();
         Stack<String> indentStack = new Stack<>();
         indentStack.push("   "); // Initial indentation level
 
@@ -221,7 +220,6 @@ public class Pseudocode {
             }
         }
 
-        pseudocodeContent.append("Fin");
         pseudocode.setText(pseudocodeContent.toString());
         return pseudocodeContent.toString();
     }

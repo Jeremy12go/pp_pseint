@@ -15,64 +15,40 @@ import java.util.List;
 
 public class Dibujar {
 
-    public static void dibujarFigura(double x, double y, ImageView sourceDiagram,String contenido,String figura, AnchorPane panel_Diagrama) {
+    public static void dibujarFigura(double x, double y,String contenido,String figura, AnchorPane panel_Diagrama) {
+        System.out.println("Entra Dibujar\n");
         Figura _inicial = (Figura) Diagrama.getIns().getList_figuras().get(0);
         Canvas _final = obtenerCanvasDesdeFigura((Figura) Diagrama.getIns().getList_figuras().get(Diagrama.getIns().getList_figuras().size() - 1));
         VG.aumentar_numero_figura();
 
-        if ((panel_Diagrama.getWidth() / 2) - 150 < x && x < (panel_Diagrama.getWidth() / 2) + 150) {
-            if (VG.getFigura_condiconal() == sourceDiagram || figura == "condicional") {
-                if (contenido.equals("")) {
-                    dibujarCondicional(x, y, contenido, panel_Diagrama);
-                } else if (VG.getFigura_documento() == sourceDiagram || figura == "documento") {
-                    if (contenido.equals("")) {
-                        contenido = "Documento";
-                    }
+            if (figura.equals("condicional")) {
+                dibujarCondicional(x, y, contenido, panel_Diagrama);
+                } else if (figura.equals("documento")) {
                     dibujarDocumento(x, y, contenido, panel_Diagrama);
-                } else if (VG.getFigura_entrada() == sourceDiagram || figura == "entrada") {
-                    if (contenido.equals("")) {
-                        contenido = "Entrada";
-                    }
+                } else if (figura.equals("entrada")) {
                     dibujarEntrada(x, y, contenido, panel_Diagrama);
-                } else if (VG.getFigura_salida() == sourceDiagram || figura == "salida") {
-                    if (contenido.equals("")) {
-                        contenido = "Salida";
-                    }
+                } else if (figura.equals("salida")) {
                     dibujarSalida(x, y, contenido, panel_Diagrama);
-                } else if (VG.getFigura_proceso() == sourceDiagram || figura == "proceso") {
-                    if (contenido.equals("")) {
-                        contenido = "Proceso";
-                    }
+                } else if (figura.equals("proceso")) {
                     dibujarProceso(x, y, contenido, panel_Diagrama);
-                } else if (VG.getFigura_hacer_mientras() == sourceDiagram || figura == "hacer mientras") {
-                    if (contenido.equals("")) {
-                        contenido = "Hacer Mientras";
-                    }
+                } else if (figura.equals("hacer mientras")) {
                     dibujarHacerMientras(x, y, contenido, panel_Diagrama);
-                } else if (VG.getFigura_mientras() == sourceDiagram || figura == "mientras") {
-                    if (contenido.equals("")) {
-                        contenido = "Mientras";
-                    }
+                } else if (figura.equals("mientras")) {
                     dibujarMientras(x, y, contenido, panel_Diagrama);
-                } else if (VG.getFigura_para() == sourceDiagram || figura == "para") {
-                    if (contenido.equals("")) {
-                        contenido = "Para";
-                    }
+                } else if (figura.equals("para")) {
                     dibujarPara(x, y, contenido, panel_Diagrama);
                 }
-            }
             VG.setHistorial(Diagrama.getIns());
             System.out.println("largoHistorial:" + VG.getHistorial().getList_orden().size() + " -- largo:" + Diagrama.getIns().getList_orden().size());
             VG.setCount_deshacer(0);
         }
-    }
+
 
     // Métodos de dibujo específicos para cada tipo de figura
     private static void dibujarCondicional(double x, double y,String contenido, AnchorPane panel_Diagrama) {
         Vertice p_Fcondicional_direccion = new Vertice(32.5, 25); //no cambiar
         Arista dimencion_Fentrada = new Arista(160, 80);
         Vertice p_Fcondicional_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2) - dimencion_Fentrada.getAncho()/4, 0);
-        contenido = " A > B ";
 
         Diagrama figuras_true = new Diagrama();
         Diagrama figuras_false = new Diagrama();
@@ -115,7 +91,6 @@ public class Dibujar {
         Vertice p_Fdocumento_direccion = new Vertice(32.5, 25); //no cambiar
         Vertice p_Fdocumento_conexion = new Vertice(0, 0);
         Arista dimencion_Fentrada = new Arista(120, 70);
-        contenido = " Documento ";
         Documento documento = new Documento(contenido, p_Fdocumento_direccion, p_Fdocumento_conexion, dimencion_Fentrada,VG.getNumero_figura());
         Canvas canvas_Fdocumento = new Canvas(dimencion_Fentrada.getAncho(), dimencion_Fentrada.getAlto());
 
@@ -149,7 +124,6 @@ public class Dibujar {
     private static void dibujarEntrada(double x, double y,String contenido, AnchorPane panel_Diagrama) {
         Vertice p_Fentrada_direccion = new Vertice(32.5, 25); //no cambiar
         Vertice p_Fentrada_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
-        contenido = " Entrada ";
         Arista dimencion_Fentrada = new Arista(153, 50);
         Entrada entrada = new Entrada(contenido, p_Fentrada_direccion, p_Fentrada_conexion, dimencion_Fentrada,VG.getNumero_figura());
         Canvas canvas_Fentrada = new Canvas(dimencion_Fentrada.getAncho(), dimencion_Fentrada.getAlto());
@@ -184,7 +158,6 @@ public class Dibujar {
     private static void dibujarSalida(double x, double y,String contenido, AnchorPane panel_Diagrama) {
         Vertice p_Fsalida_direccion = new Vertice(32.5, 25); //no cambiar
         Vertice p_Fsalida_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
-        contenido = " Salida ";
         Arista dimencion_Fsalida = new Arista(153, 50);
         Salida salida = new Salida(contenido, p_Fsalida_direccion, p_Fsalida_conexion, dimencion_Fsalida,VG.getNumero_figura());
         Canvas canvas_Fsalida = new Canvas(dimencion_Fsalida.getAncho(), dimencion_Fsalida.getAlto());
@@ -219,7 +192,6 @@ public class Dibujar {
     private static void dibujarProceso(double x, double y,String contenido, AnchorPane panel_Diagrama) {
         Vertice p_Fproceso_direccion = new Vertice(32.5, 25); //no cambiar
         Vertice p_Fproeso_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
-        contenido = " Proceso ";
         Arista dimencion_Fproceso = new Arista(120, 40);
         String contenidoValidado = ""; //Ajustar
         ArrayList<String> operaciones = new ArrayList<String>(); //Ajustar
@@ -258,7 +230,6 @@ public class Dibujar {
         Vertice p_Fhacer_mientras_direccion = new Vertice(32.5, 25);
         Vertice p_Fhacer_mientras_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
         Arista dimencion_Fentrada = new Arista(120, 70);
-        contenido = " Hacer Mientras ";
         ArrayList<String> contenidoValidado = new ArrayList<>();
         Hacer_Mientras hacer_mientras = new Hacer_Mientras(contenido, p_Fhacer_mientras_direccion, p_Fhacer_mientras_conexion, dimencion_Fentrada, contenidoValidado,VG.getNumero_figura());
         Canvas canvas_Fhacer_mientras = new Canvas(dimencion_Fentrada.getAncho(), dimencion_Fentrada.getAlto());
@@ -294,7 +265,6 @@ public class Dibujar {
         Vertice p_Fcondicional_direccion = new Vertice(32.5, 25);
         Vertice p_Fcondicional_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
         Arista dimencion_Fentrada = new Arista(120, 70);
-        contenido = " Mientras ";
         ArrayList<String> contenidoValidado = new ArrayList<>();
         Mientras mientras = new Mientras(contenido, p_Fcondicional_direccion, p_Fcondicional_conexion, dimencion_Fentrada, contenidoValidado,VG.getNumero_figura());
         Canvas canvas_Fmientras = new Canvas(dimencion_Fentrada.getAncho(), dimencion_Fentrada.getAlto());
@@ -330,7 +300,6 @@ public class Dibujar {
         Vertice p_Fpara_direccion = new Vertice(32.5, 25);
         Vertice p_Fpara_conexion = new Vertice((panel_Diagrama.getMinWidth() / 2), y - 40);
         Arista dimencion_Fpara = new Arista(120, 70);
-        contenido = " Para ";
         ArrayList<String> contenidoValidado = new ArrayList<>();
         Para para = new Para(contenido, p_Fpara_direccion, p_Fpara_conexion, dimencion_Fpara, contenidoValidado,VG.getNumero_figura());
         Canvas canvas_Fpara = new Canvas(dimencion_Fpara.getAncho(), dimencion_Fpara.getAlto());
