@@ -94,8 +94,6 @@ public class Figura {
         Canvas f_conector = new Canvas(50,dimencion_conector);
 
         GraphicsContext gc = f_conector.getGraphicsContext2D();
-        gc.setFill(Color.RED); // Cambia a tu color preferido
-        gc.fillRect(0, 0, f_conector.getWidth(), f_conector.getHeight());
         dibujar_flecha(f_conector,f_conector.getWidth()/2,0,-90, dimencion_conector-10);//ajustar longitud en relacion a los puntos
 
         return f_conector;

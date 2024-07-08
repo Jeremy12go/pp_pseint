@@ -9,7 +9,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
@@ -25,8 +24,6 @@ public class Salida extends Figura{
         ArrayList<Vertice> vertices = Figura.calcular_vertices(canvas,0);
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setFill(Color.BLUE); // Cambia a tu color preferido
-        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
         int delta = 10; //inclinacion
 

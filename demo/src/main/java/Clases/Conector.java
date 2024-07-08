@@ -8,19 +8,4 @@ public class Conector {
         this.vertice_inicial = vertice_inicial;
         this.vertice_final = vertice_final;
     }
-
-    public Vertice getVertice_inicial() {
-        return vertice_inicial;
-    }
-
-    public Vertice getVertice_final() {
-        return vertice_final;
-    }
-
-    public void reconexion(Vertice vertice_inicial, Vertice vertice_nuevaFigura, Vertice vertice_final){
-
-    }
-    public void dibujar(Vertice vertice_inicial, Vertice vertice_final){
-
-    }
 }

@@ -48,7 +48,6 @@ public class VG {
 
     private static int count_deshacer;
 
-    private static ArrayList<Diagrama> list_diagramas;
 
     //Getter and Setter
     public static void cambiarUltimaFiguraAñadida(Figura f) {
@@ -61,10 +60,6 @@ public class VG {
 
     public static void cambiarUltimoCanvasConexion(Canvas c) {
         ultimoCanvasConexion = c;
-    }
-
-    public static void GuardarHistorialFigura(ArrayList<Figura> figuras) {
-        historialFiguras = figuras;
     }
 
     public static void setUltimoIndiceConexion(int ultimo){
@@ -81,10 +76,6 @@ public class VG {
 
     public static void aumentar_numero_figura() {
         numero_figura++;
-    }
-
-    public static void disminuir_numero_figura() {
-        numero_figura--;
     }
 
     public static Figura getUltimaFiguraAñadida() {
@@ -155,10 +146,6 @@ public class VG {
         VG.tamaño_Lbordes = tamaño_Lbordes;
     }
 
-    public static double getTamaño_Lfechas() {
-        return tamaño_Lfechas;
-    }
-
     public static void setTamaño_Lfechas(double tamaño_Lfechas) {
         VG.tamaño_Lfechas = tamaño_Lfechas;
     }
@@ -193,10 +180,6 @@ public class VG {
 
     public static void setColorTexto(Color colorTexto) {
         VG.colorTexto = colorTexto;
-    }
-
-    public static Color getColorFlecha() {
-        return colorFlecha;
     }
 
     public static void setColorFlecha(Color colorFlecha) {
@@ -282,11 +265,4 @@ public class VG {
         VG.count_deshacer = count_deshacer;
     }
 
-    public static ArrayList<Diagrama> getList_diagramas() {
-        return list_diagramas;
-    }
-
-    public static void setList_diagramas(ArrayList<Diagrama> list_diagramas) {
-        VG.list_diagramas = list_diagramas;
-    }
 }
